@@ -1,0 +1,40 @@
+{
+  "name": "meanMoneyManager",
+  "version": "1.0.0",
+  "description": "Money Manager Application - powered by MEAN farmework",
+  "main": "server.js",
+  "dependencies": {
+    "express": "latest",
+    "express-session": "latest",
+    "mongoose": "latest",
+    "body-parser": "latest",
+    "cookie-parser": "latest",
+    "grunt-cli": "latest",
+    "compression": "latest",
+    "method-override": "latest"
+    
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/v8-suresh/meanMoneyManager.git"
+  },
+  "keywords": [
+    "money_manager",
+    "mean",
+    "angularJS",
+    "mongoDB",
+    "nodeJS",
+    "Express"
+  ],
+  "author": "suresh.sivanantham@gmail.com",
+  "license": "GPL V2",
+  "bugs": {
+    "url": "https://github.com/v8-suresh/meanMoneyManager/issues"
+  },
+  "homepage": "https://github.com/v8-suresh/meanMoneyManager"
+}
