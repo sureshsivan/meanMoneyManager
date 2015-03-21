@@ -26,3 +26,9 @@ node_modules
 
 # Users Environment Variables
 .lock-wscript
+
+# IDE specific
+.idea
+.settings
+.project
+.classpath
