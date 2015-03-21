@@ -21,59 +21,22 @@
 
 	<br/><br/>
 	
-	<div class="row">
-		<div class="col-sm-6">
+	<div class="row" >
+		<div class="col-sm-6" ng-repeat="alert in alerts">
 			<div class="row">
-				<div class="col-xs-2">ICON</div>
-				<div class="col-xs-10">Context</div>
+				<div class="col-xs-4">
+					<h1 class="pull-right">
+					<button type="button" class="btn" ng-class="alert.btnStyle">
+						<i class="glyphicon" ng-class="alert.iconCls"></i>
+					</button>
+					</h1>
+				</div>
+				<div class="col-xs-8">
+					<h1>{{ alert.val }}</h1>
+				</div>
 			</div>
 			<div class="row">
-				<div class="col-xs-10 col-xs-offset-2">Content Note</div>
-			</div>
-		</div>
-		<div class="col-sm-6">
-			<div class="row">
-				<div class="col-xs-2">ICON</div>
-				<div class="col-xs-10">Context</div>
-			</div>
-			<div class="row">
-				<div class="col-xs-10 col-xs-offset-2">Content Note</div>
-			</div>
-		</div>
-		<div class="col-sm-6">
-			<div class="row">
-				<div class="col-xs-2">ICON</div>
-				<div class="col-xs-10">Context</div>
-			</div>
-			<div class="row">
-				<div class="col-xs-10 col-xs-offset-2">Content Note</div>
-			</div>
-		</div>
-		<div class="col-sm-6">
-			<div class="row">
-				<div class="col-xs-2">ICON</div>
-				<div class="col-xs-10">Context</div>
-			</div>
-			<div class="row">
-				<div class="col-xs-10 col-xs-offset-2">Content Note</div>
-			</div>
-		</div>
-		<div class="col-sm-6">
-			<div class="row">
-				<div class="col-xs-2">ICON</div>
-				<div class="col-xs-10">Context</div>
-			</div>
-			<div class="row">
-				<div class="col-xs-10 col-xs-offset-2">Content Note</div>
-			</div>
-		</div>
-		<div class="col-sm-6">
-			<div class="row">
-				<div class="col-xs-2">ICON</div>
-				<div class="col-xs-10">Context</div>
-			</div>
-			<div class="row">
-				<div class="col-xs-10 col-xs-offset-2">Content Note</div>
+				<div class="col-xs-8 col-xs-offset-4">{{ alert.note }}</div>
 			</div>
 		</div>
 	</div>
