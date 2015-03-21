@@ -1,53 +1,36 @@
+'use strict';
+/**
+ * Module dependencies.
+ */
+var init = require('./config/init')(),
+	config = require('./config/config'),
+	mongoose = require('mongoose'),
+	chalk = require('chalk');
 
 /**
- * All Modules
+ * Main application entry file.
+ * Please note that the order of loading is important.
  */
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
-var router = express.Router();
-/**
- * Configurations
- */
-var port = process.env.PORT || 8080;
 
-/**
- * App - Module Usage apply
- */
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use('/api', router);
-app.use('/', function(req, res) {
-    res.json({
-    	message: 'Default response for root - send /api/listall - to see all the api url-s' 
-    });   
+// Bootstrap db connection
+var db = mongoose.connect(config.db, function(err) {
+	if (err) {
+		console.error(chalk.red('Could not connect to MongoDB!'));
+		console.log(chalk.red(err));
+	}
 });
 
-/**
- * Routers
- */
-router.get('/listall', function(req, res) {
-    res.json({
-    	apis: [{
-    		url: '/api/one/one',
-    		description: 'One Summa'
-    	}, {
-    		url: '/api/two/two',
-    		description: 'two Summa'
-    	}, {
-    		url: '/api/three/three',
-    		description: 'Three Summa'
-    	}]
-    });   
-});
+// Init the express application
+var app = require('./config/express')(db);
 
+// Bootstrap passport config
+require('./config/passport')();
 
+// Start the app by listening on <port>
+app.listen(config.port);
 
-//app.use(express.static(__dirname + "/public"));
+// Expose app
+exports = module.exports = app;
 
-
-/**
- * Start Server
- */
-app.listen(port);
-console.log('Server Started and Listening in port 3000');
+// Logging initialization
+console.log('MEAN.JS application started on port ' + config.port);
