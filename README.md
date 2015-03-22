@@ -2,16 +2,12 @@
 
 [![Build Status](https://travis-ci.org/meanjs/mean.svg?branch=master)](https://travis-ci.org/meanjs/mean)
 [![Dependencies Status](https://david-dm.org/meanjs/mean.svg)](https://david-dm.org/meanjs/mean)
-
+[ ![Codeship Status for v8-suresh/meanMoneyManager](https://codeship.com/projects/9d514200-b285-0132-2cec-56c94900f89a/status?branch=master)](https://codeship.com/projects/70039)
 
 ===========================================================================================================================
 # meanMoneyManager
 App to manage Money IN/OUT flow
 (Adding Codeship hook)
-https://codeship.com/projects/9d514200-b285-0132-2cec-56c94900f89a/status?branch=master
-[ ![Codeship Status for v8-suresh/meanMoneyManager](https://codeship.com/projects/9d514200-b285-0132-2cec-56c94900f89a/status?branch=master)](https://codeship.com/projects/70039)
-"!https://codeship.com/projects/9d514200-b285-0132-2cec-56c94900f89a/status?branch=master!":https://codeship.com/projects/70039
-{<img alt="Status?branch=master" src="https://codeship.com/projects/9d514200-b285-0132-2cec-56c94900f89a/status?branch=master" />}[https://codeship.com/projects/70039]
 ===========================================================================================================================
 
 
