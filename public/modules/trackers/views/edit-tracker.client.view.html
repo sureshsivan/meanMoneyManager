@@ -1,50 +1,48 @@
-<section data-ng-controller="TrackersController as trackersUpdateCtrl">
+<section data-ng-controller="TrackersUpdateController as trackersUpdateCtrl">
     <div class="modal-header">
         <h3 class="modal-title">Update: {{tracker.displayName}}</h3>
     </div>
-<!--     <div class="modal-body"> -->
-<!--         <form name="createTrackerForm"> -->
-<!--             <fieldset> -->
+    <div class="modal-body">
+        <form name="createTrackerForm">
+            <fieldset>
 
-<!--                 <div class="row"> -->
-<!--                     <div class="form-group"> -->
-<!--                         <div data-ng-show="error" class="text-center text-danger"> -->
-<!--                             <div class="alert alert-danger" role="alert"> -->
-<!--                                 <strong data-ng-bind="error"></strong> -->
-<!--                             </div> -->
-<!--                         </div> -->
-<!--                     </div> -->
-<!--                     <div class="col-sm-6 text-center"> -->
-<!--                         <i class="glyphicon glyphicon-user cust-profile"></i> -->
-<!--                     </div> -->
-<!--                     <div class="col-sm-6"> -->
-<!--                         <div class="form-group"> -->
-<!--                             <label class="control-label" for="displayName"> Display Name</label> -->
-<!--                             <div class="controls"> -->
-<!--                                 <input type="text" data-ng-model="tracker.displayName" id="displayName" class="form-control" required> -->
-<!--                             </div> -->
-<!--                         </div> -->
-<!--                         <div class="form-group"> -->
-<!--                             <label class="control-label" for="description"> Description</label> -->
-<!--                             <div class="controls"> -->
-<!--                                 <input type="text" data-ng-model="tracker.description" id="description" class="form-control" required> -->
-<!--                             </div> -->
-<!--                         </div> -->
-<!--                         <div class="form-group"> -->
-<!--                             <label class="control-label" for="currency"> Currency</label> -->
-<!--                             <div class="controls"> -->
-<!--                                 <input type="text" data-ng-model="tracker.currency" id="currency" class="form-control" required> -->
-<!--                             </div> -->
-<!--                         </div> -->
-<!--                     </div> -->
-<!--                 </div> -->
-
-<!--             </fieldset> -->
-<!--         </form> -->
-<!--     </div> -->
+                <div class="row">
+                    <div class="form-group">
+                        <div data-ng-show="error" class="text-center text-danger">
+                            <div class="alert alert-danger" role="alert">
+                                <strong data-ng-bind="error"></strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <label class="control-label" for="displayName"> Display Name</label>
+                            <div class="controls">
+                                <input type="text" data-ng-model="tracker.displayName" id="displayName" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="description"> Description</label>
+                            <div class="controls">
+                                <input type="text" data-ng-model="tracker.description" id="description" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="currency"> Currency</label>
+							<div class="controls">
+                                <select data-ng-model="tracker.currency" id="currency" class="form-control" ng-options="currencyItem.id as currencyItem.label for currencyItem in currencyOptions">
+                                    <option value="" disabled>-- Choose Currency --</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
     <div class="modal-footer">
-        <button class="btn btn-success btn-lg" ng-click="trackersUpdateCtrl.update(tracker); ok()">Update & Close</button>
+        <button class="btn btn-success btn-sm" ng-click="trackersUpdateCtrl.update(tracker); ok()">Update & Close</button>
         <!-- ng-disabled="updateTrackerForm.$invalid -->
-        <button class="btn btn-warning btn-lg" ng-click="cancel()">Cancel</button>
+        <button class="btn btn-warning btn-sm" ng-click="cancel()">Cancel</button>
     </div>
 </section>

@@ -7,23 +7,19 @@
     <div class="modal-body">
         <form name="createTrackerForm">
             <fieldset>
-
                 <div class="row">
-                    <div class="form-group">
+                    <div class="form-group-xs">
                         <div data-ng-show="error" class="text-center text-danger">
                             <div class="alert alert-danger" role="alert">
                                 <strong data-ng-bind="error"></strong>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6 text-center">
-                        <i class="glyphicon glyphicon-user cust-profile"></i>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
+                    <div class="col-sm-9">
+                        <div class="form-group form-group-sm">
                             <label class="control-label" for="displayName"> Display Name</label>
                             <div class="controls">
-                                <input type="text" data-ng-model="trackerCreateCtrl.displayName" id="displayName" class="form-control" required>
+                                <input type="text" data-ng-model="trackerCreateCtrl.displayName" id="displayName" class="form-control" required="true">
                             </div>
                         </div>
                         <div class="form-group">
@@ -34,8 +30,10 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="currency"> Currency</label>
-                            <div class="controls">
-                                <input type="text" data-ng-model="trackerCreateCtrl.currency" id="currency" class="form-control" required>
+							<div class="controls">
+                                <select data-ng-model="trackerCreateCtrl.currency" id="channel" class="form-control" ng-options="currencyItem.id as currencyItem.label for currencyItem in currencyOptions">
+                                    <option value="">-- choose channel --</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -47,8 +45,8 @@
 
 
     <div class="modal-footer">
-        <button class="btn btn-success btn-lg" ng-click="trackerCreateCtrl.create(); ok()" ng-disabled="createTrackerForm.$invalid">Save & Close</button>
+        <button class="btn btn-success btn-sm" ng-click="trackerCreateCtrl.create(); ok()" ng-disabled="createTrackerForm.$invalid">Save & Close</button>
          <!-- ng-disabled="createCustomerForm.$invalid -->
-        <button class="btn btn-warning btn-lg" ng-click="cancel()">Cancel</button>
+        <button class="btn btn-warning btn-sm" ng-click="cancel()">Cancel</button>
     </div>
 </section>

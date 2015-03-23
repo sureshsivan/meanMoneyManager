@@ -29,6 +29,8 @@ var TrackerSchema = new Schema({
 		}],
 		default: ['INR']
 	},
+//	currency: {
+//	},
 	owner: {
 		type: Schema.ObjectId,
 		ref: 'User'

@@ -38,6 +38,19 @@ angular.module('trackers')
 	            var modalInstance = $modal.open({
 	                templateUrl: 'modules/trackers/views/edit-tracker.client.view.html',
 	                controller: function($scope, $modalInstance, tracker) {
+	        			$scope.currencyOptions = [
+	        				      		            {id: 'INR', label: 'Indian Rupee'},
+	        				      		            {id: 'USD', label: 'US Dollor'},
+	        				      		            {id: 'AUD', label: 'Australian Dollor'},
+	        				      		            {id: 'JPY', label: 'Japanese YEN'},
+	        				      		            {id: 'EUR', label: 'Euro'},
+	        				      	            ];
+//	        			for(var idx in $scope.currencyOptions){
+//	                    	var currentOption = $scope.currencyOptions[idx];
+//	                    	if(currentOption.id === tracker.currency.id){
+//	                    		tracker.currency = currentOption;
+//	                    	}
+//	                    };
 	                    $scope.tracker = tracker;
 	                    $scope.ok = function() {
 	                        // if (updateCustomerForm.$valid){
@@ -143,6 +156,13 @@ angular.module('trackers')
 	
 	.controller('TrackersCreateController', ['$scope', 'Trackers', 'Notify',
 	    function($scope, Trackers, Notify) {
+			$scope.currencyOptions = [
+			      		            {id: 'INR', label: 'Indian Rupee'},
+			      		            {id: 'USD', label: 'US Dollor'},
+			      		            {id: 'AUD', label: 'Australian Dollor'},
+			      		            {id: 'JPY', label: 'Japanese YEN'},
+			      		            {id: 'EUR', label: 'Euro'},
+			      	            ];
 	        this.create = function() {
 	            var tracker = new Trackers({
 	                displayName: this.displayName,
@@ -179,13 +199,6 @@ angular.module('trackers')
 	])
 	.controller('TrackersUpdateController', ['$scope', 'Trackers',
 	    function($scope, Trackers) {
-	        $scope.channelOptions = [
-	            {id: 1 , item: 'Facebook'},
-	            {id: 2 , item: 'Twitter'},
-	            {id: 3 , item: 'Email'},
-	            ];
-	
-	
 	        // Update existing Customer
 	        this.update = function(updatedTracker) {
 	            var tracker = updatedTracker;
