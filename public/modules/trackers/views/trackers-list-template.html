@@ -1,0 +1,27 @@
+<div class="list-group">
+	<div class="col-xs-12 col-xs-offset2"
+		data-ng-repeat="tracker in trackersCtrl.trackers | filter:searchText">
+		<a ng-click="trackersCtrl.modalUpdate('lg', tracker)" class="list-group-item">
+			<div class="row">
+				<div class="col-xs-10 col-xs-offset-1">
+					<h4>{{tracker.displayName}}</h4>
+					<small class="list-group-item-text text-muted"> 
+						<span>
+							data-ng-bind="tracker.created">
+						</span>
+						<span class="pull-right">
+							<button class="btn btn-default btn-sm" ng-click="trackersCtrl.remove(tracker)">
+								<i class="glyphicon glyphicon-trash"></i>
+							</button>
+						</span>
+					</small>
+				</div>
+			</div>
+		</a>
+	</div>
+</div>
+<div class="alert alert-warning text-center"
+	data-ng-hide="!trackers.$resolved || trackers.length">
+	No trackers yet, why don't you <a href="/#!/trackers/create">create
+		one</a>?
+</div>
