@@ -43,12 +43,52 @@ angular.element(document).ready(function() {
 });
 'use strict';
 
+// Use application configuration module to register a new module
+ApplicationConfiguration.registerModule('admin');
+
+'use strict';
+
 // Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('core');
 'use strict';
 
+// Use applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('trackers');
+'use strict';
+
 // Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('users');
+'use strict';
+
+// Admin module config
+angular.module('admin').run(['Menus',
+	function(Menus) {
+		Menus.addMenuItem('topbar', 'Administer', 'admin', 'dropdown', '/admin(/admin)?', false, ['admin']);
+		Menus.addSubMenuItem('topbar', 'admin', 'List Trackers', 'trackersall', null, false, ['admin']);
+		Menus.addSubMenuItem('topbar', 'admin', 'List Users', 'usersall', null, false, ['admin']);
+	}
+]);
+'use strict';
+
+//Setting up route
+angular.module('admin').config(['$stateProvider',
+	function($stateProvider) {
+		// Admin state routing
+		$stateProvider.
+		state('admin', {
+			url: '/admin',
+			templateUrl: 'modules/admin/views/admin.client.view.html'
+		});
+	}
+]);
+'use strict';
+
+angular.module('admin').controller('AdminControllerController', ['$scope',
+	function($scope) {
+		// Admin controller controller logic
+		// ...
+	}
+]);
 'use strict';
 
 // Setting up route
@@ -286,9 +326,309 @@ angular.module('core').service('Menus', [
 		};
 
 		//Adding the topbar menu
-		this.addMenu('topbar');
+		this.addMenu('topbar', false, ['user', 'admin']);
 	}
 ]);
+'use strict';
+
+// Configuring the Articles module
+angular.module('trackers').run(['Menus',
+	function(Menus) {
+		// Set top bar menu items
+		Menus.addMenuItem('topbar', 'Trackers', 'trackers', 'dropdown', '/trackers(/create)?');
+		Menus.addSubMenuItem('topbar', 'trackers', 'List Trackers', 'trackers');
+		Menus.addSubMenuItem('topbar', 'trackers', 'New Tracker', 'trackers/create');
+	}
+]);
+'use strict';
+
+//Setting up route
+angular.module('trackers').config(['$stateProvider',
+	function($stateProvider) {
+		// Trackers state routing
+		$stateProvider.
+		state('listTrackers', {
+			url: '/trackers',
+			templateUrl: 'modules/trackers/views/list-trackers.client.view.html'
+//		}).
+//		state('createTracker', {
+//			url: '/trackers/create',
+//			templateUrl: 'modules/trackers/views/create-tracker.client.view.html'
+//		}).
+//		state('viewTracker', {
+//			url: '/trackers/:trackerId',
+//			templateUrl: 'modules/trackers/views/view-tracker.client.view.html'
+//		}).
+//		state('editTracker', {
+//			url: '/trackers/:trackerId/edit',
+//			templateUrl: 'modules/trackers/views/edit-tracker.client.view.html'
+		});
+	}
+]);
+'use strict';
+
+// Trackers controller
+
+angular.module('trackers')
+	.controller('TrackersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Trackers', '$modal', '$log',
+		function($scope, $stateParams, $location, Authentication, Trackers, $modal, $log) {
+			this.authentication = Authentication;
+			this.trackers = Trackers.query();
+			//open a modal window to create a single customer record
+	        this.modalCreate = function(size) {
+	            var modalInstance = $modal.open({
+	                templateUrl: 'modules/trackers/views/create-tracker.client.view.html',
+	                controller: ["$scope", "$modalInstance", function($scope, $modalInstance) {
+	                    $scope.ok = function() {
+	                        // if (createCustomerForm.$valid){
+	                        $modalInstance.close();
+	                        // }
+	                    };
+	                    $scope.cancel = function() {
+	                        $modalInstance.dismiss('cancel');
+	                    };
+	                }],
+	                size: size
+	            });
+	            modalInstance.result.then(function(selectedItem) {
+	            	
+	            	}, function() {
+		                $log.info('Modal dismissed at: ' + new Date());
+	            });
+	        };
+
+
+	        //pasted in from angular-ui bootstrap modal example
+	        //open a modal window to update a single customer record
+	        this.modalUpdate = function(size, selectedTracker) {
+
+	            var modalInstance = $modal.open({
+	                templateUrl: 'modules/trackers/views/edit-tracker.client.view.html',
+	                controller: ["$scope", "$modalInstance", "tracker", function($scope, $modalInstance, tracker) {
+	        			$scope.currencyOptions = [
+	        				      		            {id: 'INR', label: 'Indian Rupee'},
+	        				      		            {id: 'USD', label: 'US Dollor'},
+	        				      		            {id: 'AUD', label: 'Australian Dollor'},
+	        				      		            {id: 'JPY', label: 'Japanese YEN'},
+	        				      		            {id: 'EUR', label: 'Euro'},
+	        				      	            ];
+//	        			for(var idx in $scope.currencyOptions){
+//	                    	var currentOption = $scope.currencyOptions[idx];
+//	                    	if(currentOption.id === tracker.currency.id){
+//	                    		tracker.currency = currentOption;
+//	                    	}
+//	                    };
+	                    $scope.tracker = tracker;
+	                    $scope.ok = function() {
+	                        // if (updateCustomerForm.$valid){
+	                        $modalInstance.close($scope.tracker);
+	                        // }
+	                    };
+	                    $scope.cancel = function() {
+	                        $modalInstance.dismiss('cancel');
+	                    };
+	                }],
+	                size: size,
+	                resolve: {
+	                    tracker: function() {
+	                        return selectedTracker;
+	                    }
+	                }
+	            });
+
+	            modalInstance.result.then(function(selectedItem) {
+	                $scope.selected = selectedItem;
+	            }, function() {
+	                $log.info('Modal dismissed at: ' + new Date());
+	            });
+	        };
+
+
+	        // Remove existing Customer
+	        this.remove = function(tracker) {
+	            if (tracker) {
+	            	tracker.$remove();
+
+	                for (var i in this.trackers) {
+	                    if (this.trackers[i] === tracker) {
+	                        this.trackers.splice(i, 1);
+	                    }
+	                }
+	            } else {
+	                this.tracker.$remove(function() {});
+	            }
+	        };
+	        
+	        
+//			// Create new Tracker
+//			$scope.create = function() {
+//				// Create new Tracker object
+//				var tracker = new Trackers ({
+//					name: this.name
+//				});
+//	
+//				// Redirect after save
+//				tracker.$save(function(response) {
+//					$location.path('trackers/' + response._id);
+//	
+//					// Clear form fields
+//					$scope.name = '';
+//				}, function(errorResponse) {
+//					$scope.error = errorResponse.data.message;
+//				});
+//			};
+//	
+//			// Remove existing Tracker
+//			$scope.remove = function(tracker) {
+//				if ( tracker ) { 
+//					tracker.$remove();
+//	
+//					for (var i in $scope.trackers) {
+//						if ($scope.trackers [i] === tracker) {
+//							$scope.trackers.splice(i, 1);
+//						}
+//					}
+//				} else {
+//					$scope.tracker.$remove(function() {
+//						$location.path('trackers');
+//					});
+//				}
+//			};
+//	
+//			// Update existing Tracker
+//			$scope.update = function() {
+//				var tracker = $scope.tracker;
+//	
+//				tracker.$update(function() {
+//					$location.path('trackers/' + tracker._id);
+//				}, function(errorResponse) {
+//					$scope.error = errorResponse.data.message;
+//				});
+//			};
+//	
+//			// Find a list of Trackers
+//			$scope.find = function() {
+//				$scope.trackers = Trackers.query();
+//			};
+//	
+//			// Find existing Tracker
+//			$scope.findOne = function() {
+//				$scope.tracker = Trackers.get({ 
+//					trackerId: $stateParams.trackerId
+//				});
+//			};
+		}
+	])
+	
+	
+	.controller('TrackersCreateController', ['$scope', 'Trackers', 'Notify',
+	    function($scope, Trackers, Notify) {
+			$scope.currencyOptions = [
+			      		            {id: 'INR', label: 'Indian Rupee'},
+			      		            {id: 'USD', label: 'US Dollor'},
+			      		            {id: 'AUD', label: 'Australian Dollor'},
+			      		            {id: 'JPY', label: 'Japanese YEN'},
+			      		            {id: 'EUR', label: 'Euro'},
+			      	            ];
+	        this.create = function() {
+	            var tracker = new Trackers({
+	                displayName: this.displayName,
+	                description: this.description,
+	                currency: this.currency,
+	                owner: this.owner,
+	                users: this.users,
+	                created: this.created
+	            });
+	
+	            // Redirect after save
+	            tracker.$save(function(response) {
+	
+	                Notify.sendMsg('NewTracker', {
+	                    'id': response._id
+	                });
+	
+	                // // Clear form fields
+	                // $scope.firstName = '';
+	                // $scope.lastName = '';
+	                // $scope.city = '';
+	                // $scope.country = '';
+	                // $scope.industry = '';
+	                // $scope.email = '';
+	                // $scope.phone = '';
+	                // $scope.referred = '';
+	                // $scope.channel = '';
+	            }, function(errorResponse) {
+	                $scope.error = errorResponse.data.message;
+	            });
+	        };
+	
+	    }
+	])
+	.controller('TrackersUpdateController', ['$scope', 'Trackers',
+	    function($scope, Trackers) {
+	        // Update existing Customer
+	        this.update = function(updatedTracker) {
+	            var tracker = updatedTracker;
+	
+	            tracker.$update(function() {
+	
+	            }, function(errorResponse) {
+	                $scope.error = errorResponse.data.message;
+	            });
+	        };
+	
+	    }
+	])
+	
+	.directive('trackersList', ['Trackers', 'Notify', function(Trackers, Notify) {
+	    return {
+	        restrict: 'E',
+	        transclude: true,
+	        templateUrl: 'modules/trackers/views/trackers-list-template.html',
+	        link: function(scope, element, attrs) {
+	            //when a new customer is added, update the customer list
+	            Notify.getMsg('NewTracker', function(event, data) {
+	                scope.trackersCtrl.trackers = Trackers.query();
+	
+	            });
+	        }
+	    };
+	}]);
+'use strict';
+
+//Trackers service used to communicate Trackers REST endpoints
+angular.module('trackers')
+
+	.factory('Trackers', ['$resource',
+		function($resource) {
+			return $resource('trackers/:trackerId', { trackerId: '@_id'
+			}, {
+				update: {
+					method: 'PUT'
+				}
+			});
+		}
+	])
+	
+	.factory('Notify', ['$rootScope', function($rootScope) {
+        var notify = {};
+
+        notify.sendMsg = function(msg, data) {
+            data = data || {};
+            $rootScope.$emit(msg, data);
+            console.log('message sent!');
+        };
+
+        notify.getMsg = function(msg, func, scope) {
+            var unbind = $rootScope.$on(msg, func);
+
+            if (scope) {
+                scope.$on('destroy', unbind);
+            }
+        };
+ 
+        return notify;
+    }]);
 'use strict';
 
 // Config HTTP Error Handling
