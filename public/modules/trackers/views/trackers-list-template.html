@@ -1,18 +1,37 @@
 <div class="list-group">
-	<div class="col-xs-12 col-xs-offset2"
+	<div class="col-xs-12 pad-top"
 		data-ng-repeat="tracker in trackersCtrl.trackers | filter:searchText">
-		<a ng-click="trackersCtrl.modalUpdate('lg', tracker)" class="list-group-item">
+		<a ng-click="" class="list-group-item">
 			<div class="row">
-				<div class="col-xs-10 col-xs-offset-1">
-					<h4>{{tracker.displayName}}</h4>
-					<small class="list-group-item-text text-muted"> 
-						<span data-ng-bind="tracker.created">
-						</span>
-						<span class="pull-right">
-							<button class="btn btn-default btn-sm" ng-click="trackersCtrl.remove(tracker)">
+				<div class="col-xs-12">
+					<strong><h4>
+						Tracker : {{tracker.displayName}}
+						<span class="pull-right badge badge-warn margin-left">4</span>
+						<span class="pull-right badge badge-info margin-left">10</span>
+					</h4></strong>
+					<small class="text-muted">
+						<span data-ng-bind="tracker.description"></span>
+					</small>
+					<br/>
+					<small class="list-group-item-text text-muted">
+						<strong>Created On : </strong><span data-ng-bind="trackersCtrl.getLocalTime(tracker.created)"></span>
+						<strong class="pad-left">Last Updated On : </strong><span data-ng-bind="trackersCtrl.getLocalTime(tracker.created)"></span>
+						<span class="pull-right pad-left">
+							<button class="btn btn-danger btn-sm" ng-click="trackersCtrl.remove(tracker)">
 								<i class="glyphicon glyphicon-trash"></i>
 							</button>
 						</span>
+						<span class="pull-right pad-left">
+							<button class="btn btn-warning btn-sm" ng-click="trackersCtrl.modalUpdate('lg', tracker)">
+								<i class="glyphicon glyphicon-edit"></i>
+							</button>
+						</span>
+						<span class="pull-right pad-left">
+							<button class="btn btn-primary btn-sm" ng-click="">
+								<i class="glyphicon glyphicon-play"></i>
+							</button>
+						</span>
+
 					</small>
 				</div>
 			</div>

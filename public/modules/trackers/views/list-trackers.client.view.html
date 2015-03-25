@@ -3,22 +3,22 @@
         <h1>Trackers</h1>
     </div>
     <div class="row">
-        <div class="col-xs-12 col-sm-8">
-            <div class="input-group input-group-lg">
+        <div class="col-xs-12 col-sm-9">
+            <div class="input-group input-group">
                 <input type="text" ng-model="searchText" class="form-control" placeholder="Search Trackers...">
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="button">Go!</button>
                 </span>
             </div>
         </div>
-        <div class="col-xs-12 col-sm-4 text-center">
+        <div class="col-xs-12 col-sm-3 text-center pull-right">
             <button type="button" class="btn btn-success text-center" ng-click="trackersCtrl.modalCreate('lg')">
-                <i class="glyphicon glyphicon-user "></i> </br>
-                New Tracker
+                <i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;New Tracker
             </button>
         </div>
     </div>
-    <br>
-    <br>
-    <trackers-list></trackers-list>
+    <div class="row">
+    	<trackers-list></trackers-list>
+    </div>
+    
 </section>

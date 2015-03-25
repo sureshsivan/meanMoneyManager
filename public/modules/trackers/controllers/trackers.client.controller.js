@@ -3,8 +3,8 @@
 // Trackers controller
 
 angular.module('trackers')
-	.controller('TrackersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Trackers', '$modal', '$log',
-		function($scope, $stateParams, $location, Authentication, Trackers, $modal, $log) {
+	.controller('TrackersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Trackers', '$modal', '$log', 'moment',//'angularMoment', 
+		function($scope, $stateParams, $location, Authentication, Trackers, $modal, $log, moment) {
 			this.authentication = Authentication;
 			this.trackers = Trackers.query();
 			//open a modal window to create a single customer record
@@ -29,7 +29,9 @@ angular.module('trackers')
 		                $log.info('Modal dismissed at: ' + new Date());
 	            });
 	        };
-
+	        this.getLocalTime = function(time){
+	        	return moment(time).toString();
+	        };
 
 	        //pasted in from angular-ui bootstrap modal example
 	        //open a modal window to update a single customer record

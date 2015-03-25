@@ -18,7 +18,11 @@ module.exports = {
 				'public/lib/angular-sanitize/angular-sanitize.js', 
 				'public/lib/angular-ui-router/release/angular-ui-router.min.js',
 				'public/lib/angular-ui-utils/ui-utils.min.js',
-				'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js'
+				'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js',
+				'public/lib/moment/min/moment-with-locales.min.js',
+				'public/lib/angular-moment/angular-moment.min.js',
+				'public/lib/highcharts/highcharts.js',
+				'public/lib/highcharts-ng/dist/highcharts-ng.min.js'
 			]
 		},
 		css: 'public/dist/application.min.css',
