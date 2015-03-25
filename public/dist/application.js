@@ -4,7 +4,8 @@
 var ApplicationConfiguration = (function() {
 	// Init module configuration options
 	var applicationModuleName = 'meanmoneymanager';
-	var applicationModuleVendorDependencies = ['ngResource', 'ngCookies',  'ngAnimate',  'ngTouch',  'ngSanitize',  'ui.router', 'ui.bootstrap', 'ui.utils'];
+	var applicationModuleVendorDependencies = ['ngResource', 'ngCookies',  'ngAnimate',  'ngTouch',  'ngSanitize',  
+	                                           'ui.router', 'ui.bootstrap', 'ui.utils', 'angularMoment'];
 
 	// Add a new vertical module
 	var registerModule = function(moduleName, dependencies) {
@@ -335,9 +336,9 @@ angular.module('core').service('Menus', [
 angular.module('trackers').run(['Menus',
 	function(Menus) {
 		// Set top bar menu items
-		Menus.addMenuItem('topbar', 'Trackers', 'trackers', 'dropdown', '/trackers(/create)?');
-		Menus.addSubMenuItem('topbar', 'trackers', 'List Trackers', 'trackers');
-		Menus.addSubMenuItem('topbar', 'trackers', 'New Tracker', 'trackers/create');
+		Menus.addMenuItem('topbar', 'Trackers', 'trackers');
+//		Menus.addSubMenuItem('topbar', 'trackers', 'List Trackers', 'trackers');
+//		Menus.addSubMenuItem('topbar', 'trackers', 'New Tracker', 'trackers/create');
 	}
 ]);
 'use strict';
@@ -370,8 +371,8 @@ angular.module('trackers').config(['$stateProvider',
 // Trackers controller
 
 angular.module('trackers')
-	.controller('TrackersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Trackers', '$modal', '$log',
-		function($scope, $stateParams, $location, Authentication, Trackers, $modal, $log) {
+	.controller('TrackersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Trackers', '$modal', '$log', 'moment',//'angularMoment', 
+		function($scope, $stateParams, $location, Authentication, Trackers, $modal, $log, moment) {
 			this.authentication = Authentication;
 			this.trackers = Trackers.query();
 			//open a modal window to create a single customer record
@@ -396,7 +397,9 @@ angular.module('trackers')
 		                $log.info('Modal dismissed at: ' + new Date());
 	            });
 	        };
-
+	        this.getLocalTime = function(time){
+	        	return moment(time).toString();
+	        };
 
 	        //pasted in from angular-ui bootstrap modal example
 	        //open a modal window to update a single customer record
