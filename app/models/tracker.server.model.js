@@ -26,11 +26,7 @@ var TrackerSchema = new Schema({
 		trim: true
 	},
 	currency: {
-		type: [{
-			type: String,
-			enum: ['INR', 'USD']
-		}],
-		default: ['INR']
+		type: String
 	},
 //	currency: {
 //	},
@@ -46,7 +42,7 @@ var TrackerSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
-	
+
 });
 
 mongoose.model('Tracker', TrackerSchema);
