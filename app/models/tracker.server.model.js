@@ -10,6 +10,9 @@ var mongoose = require('mongoose'),
  * Tracker Schema
  */
 var TrackerSchema = new Schema({
+//	_id: {
+//		type: ObjectId
+//	},
 	displayName: {
 		type: String,
 		default: '',

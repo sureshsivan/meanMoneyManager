@@ -6,12 +6,12 @@ module.exports = function(app) {
 
 	// Trackers Routes
 	app.route('/trackers')
-		.get(trackers.list)
+		.get(users.requiresLogin, trackers.listByUserId)
 		.post(users.requiresLogin, trackers.create);
 
 	app.route('/trackers/:trackerId')
 		.get(trackers.read)
-		.put(users.requiresLogin, trackers.hasAuthorization, trackers.update)
+		.put(users.requiresLogin, trackers.updateById)
 		.delete(users.requiresLogin, trackers.hasAuthorization, trackers.delete);
 
 	// Finish by binding the Tracker middleware
