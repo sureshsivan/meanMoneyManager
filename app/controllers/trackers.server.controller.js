@@ -6,7 +6,8 @@
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	Tracker = mongoose.model('Tracker'),
-	_ = require('lodash');
+	_ = require('lodash'),
+	Schema = mongoose.Schema;
 
 /**
  * Create a Tracker
@@ -90,43 +91,65 @@ exports.list = function(req, res) {
  * TODO :: Find a better way - should learng mongo DB better - Thius is stupid way - blame me
  */
 exports.listByUserId = function(req, res) {
+	
+	mongoose.set('debug', true);
 	var userId = req.user._id;
-	Tracker.find().sort('-created')
-//		 .populate('users', '_id')
+	Tracker.find({'users' : mongoose.Types.ObjectId(req.user._id)})
 		.populate({
-			'path' : 'users'
-//			'select' : '_id'
+			'path' : 'owner',
+			'select' : 'firstName lastName displayName _id'
 		})
-		.populate({
-			'path' : 'owner'
-//			'select' : 'firstName lastName displayName _id'
-		})
+		.populate('users', 'displayName')
+		.sort('-created')
 		.exec(function(err, trackers) {
 		if (err) {
+			console.log('$$$$$');
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-//			res.jsonp(trackers);
-			 var filteredTrackers = [];
-			 _.each(trackers, function(tracker){
-			 	var isMatch = false;
-			 	if(tracker && tracker.users){
-			 		_.each(tracker.users, function(user){
-			 			if(user && user._id && (user._id.toString() === userId.toString())){
-			 				isMatch = true;
-			 				return true;
-			 			}
-			 		});
-			 		if(isMatch){
-			 			filteredTrackers.push(tracker);
-			 			return true;
-			 		}
-			 	}
-			 });
-			 res.jsonp(filteredTrackers);
+			res.jsonp(trackers);
 		}
 	});
+	
+	
+//	var userId = req.user._id;
+//	Tracker.find().sort('-created')
+////		 .populate('users', '_id')
+//		.populate({
+//			'path' : 'users'
+////			'select' : '_id'
+//		})
+//		.populate({
+//			'path' : 'owner'
+////			'select' : 'firstName lastName displayName _id'
+//		})
+//		.exec(function(err, trackers) {
+//		if (err) {
+//			return res.status(400).send({
+//				message: errorHandler.getErrorMessage(err)
+//			});
+//		} else {
+////			res.jsonp(trackers);
+//			 var filteredTrackers = [];
+//			 _.each(trackers, function(tracker){
+//			 	var isMatch = false;
+//			 	if(tracker && tracker.users){
+//			 		_.each(tracker.users, function(user){
+//			 			if(user && user._id && (user._id.toString() === userId.toString())){
+//			 				isMatch = true;
+//			 				return true;
+//			 			}
+//			 		});
+//			 		if(isMatch){
+//			 			filteredTrackers.push(tracker);
+//			 			return true;
+//			 		}
+//			 	}
+//			 });
+//			 res.jsonp(filteredTrackers);
+//		}
+//	});
 };
 
 /**
@@ -136,8 +159,14 @@ exports.updateById = function(req, res) {
 	var tracker = req.tracker ;
 	console.dir(tracker);
 	console.dir(req.body);
+	delete req.body.users;
+	delete tracker.users;
+	console.log('#########');
+	console.dir(tracker);
+	console.dir(req.body);
 	tracker = _.extend(tracker , req.body);
-	Tracker.update(tracker,function(err) {
+	tracker.save(function(err){
+//	Tracker.update(tracker,function(err) {
 		if (err) {
 			console.log(err);
 			return res.status(400).send({

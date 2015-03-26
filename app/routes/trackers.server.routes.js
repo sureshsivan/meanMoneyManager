@@ -11,7 +11,7 @@ module.exports = function(app) {
 
 	app.route('/trackers/:trackerId')
 		.get(trackers.read)
-		.put(users.requiresLogin, trackers.updateById)
+		.put(users.requiresLogin, trackers.hasAuthorization, trackers.updateById)
 		.delete(users.requiresLogin, trackers.hasAuthorization, trackers.delete);
 
 	// Finish by binding the Tracker middleware
