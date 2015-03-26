@@ -10,3 +10,5 @@ yo meanjs:angular-view admin
 yo meanjs:express-controller admin
 yo meanjs:express-route userRole
 yo meanjs:express-route trackerRole
+
+yo meanjs:angular-service appStatics

@@ -30,7 +30,7 @@
                         <div class="form-group">
                             <label class="control-label" for="currency"> Currency</label>
 							<div class="controls">
-                                <select data-ng-model="tracker.currency" id="currency" class="form-control" ng-options="currencyItem.id as currencyItem.label for currencyItem in currencyOptions">
+                                <select data-ng-model="tracker.currency" id="currency" class="form-control" ng-options="currencyItem.id as currencyItem.label for currencyItem in trackersUpdateCtrl.getCurrencies()">
                                     <option value="" disabled>-- Choose Currency --</option>
                                 </select>
                             </div>
