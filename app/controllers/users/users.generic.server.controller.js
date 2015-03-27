@@ -26,10 +26,11 @@ exports.getAllUsers = function(req, res) {
 	});
 };
 exports.searchAllUsers = function(req, res) {
-	
+
 	var query = req.query.q;
 	console.log(req.query.q);
-	console.log(query.length);
+	console.log(req.user._id);
+	// console.log(query.length);
 	var filter = {};
 	if(query && query.length > 0){
 		var queryRegX = new RegExp(query, "i");
@@ -41,7 +42,7 @@ exports.searchAllUsers = function(req, res) {
 	}
 	console.log(filter);
 	User.find(filter)
-		.where('_id').ne(req.user._id)
+		// .where('_id').ne(req.user._id)
 		.select('_id email firstName lastName displayName')
 //		.limit(10)
 		.exec(function(err, users) {

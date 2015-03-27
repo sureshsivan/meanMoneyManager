@@ -105,51 +105,44 @@ angular.module('trackers')
 	])
 
 
-	.controller('TrackersCreateController', ['$scope', 'Trackers', 'Notify', 'AppStatics',
-	    function($scope, Trackers, Notify, AppStatics) {
+	.controller('TrackersCreateController', ['$scope', 'Trackers', 'Notify', 'AppStatics', 'Authentication',
+	    function($scope, Trackers, Notify, AppStatics, Authentication) {
 	    	this.appStatics = AppStatics;
+	    	this.authentication = Authentication;
+	    	this.assignedUsers = [];
+	    	this.assignNewUser = function(user){
+	    		$scope.currentUser = null;
+	    		this.assignedUsers.push(user);
+	    	};
 	    	this.getCurrencies = function(){
 					return this.appStatics.getCurrencies()
 				};
-			$scope.currencyOptions = [
-			      		            {id: 'INR', label: 'Indian Rupee'},
-			      		            {id: 'USD', label: 'US Dollor'},
-			      		            {id: 'AUD', label: 'Australian Dollor'},
-			      		            {id: 'JPY', label: 'Japanese YEN'},
-			      		            {id: 'EUR', label: 'Euro'},
-			      	            ];
-	        this.create = function() {
-	            var tracker = new Trackers({
-	                displayName: this.displayName,
-	                description: this.description,
-	                currency: this.currency,
-	                owner: this.owner,
-	                users: this.users,
-	                created: this.created
-	            });
+				this.getAssignedUsers = function(){
 
-	            // Redirect after save
-	            tracker.$save(function(response) {
-
-	                Notify.sendMsg('NewTracker', {
-	                    'id': response._id
-	                });
-
-	                // // Clear form fields
-	                // $scope.firstName = '';
-	                // $scope.lastName = '';
-	                // $scope.city = '';
-	                // $scope.country = '';
-	                // $scope.industry = '';
-	                // $scope.email = '';
-	                // $scope.phone = '';
-	                // $scope.referred = '';
-	                // $scope.channel = '';
-	            }, function(errorResponse) {
-	                $scope.error = errorResponse.data.message;
-	            });
-	        };
-
+				};
+        this.create = function() {
+            var tracker = new Trackers({
+                displayName: this.displayName,
+                description: this.description,
+                currency: this.currency,
+                owner: this.owner,
+                // users: this.users,
+                created: this.created
+            });
+            tracker.users = [];
+            angular.forEach(this.assignedUsers, function(value, key) {
+						  tracker.users.push(value._id);
+						});
+						console.log(tracker);
+            // Redirect after save
+            tracker.$save(function(response) {
+                Notify.sendMsg('NewTracker', {
+                    'id': response._id
+                });
+            }, function(errorResponse) {
+                $scope.error = errorResponse.data.message;
+            });
+        };
 	    }
 	])
 	.controller('TrackersUpdateController', ['$scope', 'Trackers', 'AppStatics',
@@ -161,7 +154,6 @@ angular.module('trackers')
 	        // Update existing Customer
 	        this.update = function(updatedTracker) {
 	            var tracker = updatedTracker;
-	            console.log(updatedTracker);
 	            tracker.$update(function() {
 
 	            }, function(errorResponse) {
