@@ -12,10 +12,11 @@ angular.module('core').service('AppStatics', [ '$http',
 				};
 				return this.currencies;
 			},
-			queryUsers: function(query){
+			queryUsers: function(query, users){
 				return $http.get('/users/search', {
 				      params: {
-				        q: query
+				        q: query,
+				        nu: users
 				      }
 				    }).then(function(response){
 				    	console.log(response);

@@ -110,6 +110,7 @@ angular.module('trackers')
 	    	this.appStatics = AppStatics;
 	    	this.authentication = Authentication;
 	    	this.assignedUsers = [];
+	    	this.assignedUsers.push(Authentication.user);
 	    	this.assignNewUser = function(user){
 	    		$scope.currentUser = null;
 	    		this.assignedUsers.push(user);
@@ -119,6 +120,13 @@ angular.module('trackers')
 				};
 				this.getAssignedUsers = function(){
 
+				};
+				this.queryUsers = function(query){
+					var curUsersArr = [];
+					  angular.forEach(this.assignedUsers, function(value, key) {
+						  curUsersArr.push(value._id);
+						});
+					return this.appStatics.queryUsers(query, curUsersArr.join())
 				};
         this.create = function() {
             var tracker = new Trackers({

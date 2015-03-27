@@ -28,8 +28,11 @@ exports.getAllUsers = function(req, res) {
 exports.searchAllUsers = function(req, res) {
 
 	var query = req.query.q;
-	console.log(req.query.q);
-	console.log(req.user._id);
+	var users = req.query.nu;
+	var excludeUsers = [];
+	if(users && users.length > 0){
+		excludeUsers = users.split(',');
+	}
 	// console.log(query.length);
 	var filter = {};
 	if(query && query.length > 0){
@@ -41,8 +44,9 @@ exports.searchAllUsers = function(req, res) {
 		filter.$or.push({'email' : {$regex : queryRegX}});
 	}
 	console.log(filter);
+	console.log(excludeUsers);
 	User.find(filter)
-		// .where('_id').ne(req.user._id)
+		.where('_id').nin(excludeUsers)
 		.select('_id email firstName lastName displayName')
 //		.limit(10)
 		.exec(function(err, users) {

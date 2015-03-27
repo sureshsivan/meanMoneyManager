@@ -15,7 +15,7 @@ var mongoose = require('mongoose'),
 exports.create = function(req, res) {
 	var tracker = new Tracker(req.body);
 	tracker.owner = req.user;
-	tracker.users.push(req.user);
+	// tracker.users.push(req.user);
 	tracker.save(function(err) {
 		if (err) {
 			return res.status(400).send({
@@ -91,7 +91,7 @@ exports.list = function(req, res) {
  * TODO :: Find a better way - should learng mongo DB better - Thius is stupid way - blame me
  */
 exports.listByUserId = function(req, res) {
-	
+
 	mongoose.set('debug', true);
 	var userId = req.user._id;
 	Tracker.find({'users' : mongoose.Types.ObjectId(req.user._id)})
@@ -111,8 +111,8 @@ exports.listByUserId = function(req, res) {
 			res.jsonp(trackers);
 		}
 	});
-	
-	
+
+
 //	var userId = req.user._id;
 //	Tracker.find().sort('-created')
 ////		 .populate('users', '_id')

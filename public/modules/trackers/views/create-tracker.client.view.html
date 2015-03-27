@@ -42,7 +42,7 @@
                                 <div class="input-group">
                                     <!-- <pre>Model: {{currentUser}}</pre> -->
                                     <input type="text" ng-model="currentUser" placeholder="Type to see users"
-                                        typeahead="user as user.displayName for user in trackerCreateCtrl.appStatics.queryUsers($viewValue)"
+                                        typeahead="user as user.displayName for user in trackerCreateCtrl.queryUsers($viewValue)"
                                         typeahead-loading="loadingUsers" class="form-control"/>
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" type="button" data-ng-click="trackerCreateCtrl.assignNewUser(currentUser)">Add User</button>
@@ -51,8 +51,8 @@
                                 </div>
                                 <br/>
                                 <ul class="list-group">
-                                    <li class="list-group-item list-group-item-danger">{{trackerCreateCtrl.authentication.user.displayName}} ({{trackerCreateCtrl.authentication.user.email}})</li>
-                                    <li class="list-group-item list-group-item-info" data-ng-repeat="user in trackerCreateCtrl.assignedUsers">{{user.displayName}} ({{user.email}})</li>
+                                    <li class="list-group-item list-group-item-info" data-ng-class="user._id === trackerCreateCtrl.authentication.user._id ? 'list-group-item-danger' : 'list-group-item-info'"
+                                        data-ng-repeat="user in trackerCreateCtrl.assignedUsers">{{user.displayName}} ({{user.email}})</li>
                                 </ul>
                             </div>
                         </div>
