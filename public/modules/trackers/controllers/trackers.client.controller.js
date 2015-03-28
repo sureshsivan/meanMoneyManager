@@ -3,7 +3,7 @@
 // Trackers controller
 
 angular.module('trackers')
-	.controller('TrackersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Trackers', '$modal', '$log', 'moment', 'AppStatics', //'angularMoment',
+	.controller('TrackersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Trackers', '$modal', '$log', 'moment', 'AppStatics',  //'angularMoment',
 		function($scope, $stateParams, $location, Authentication, Trackers, $modal, $log, moment, AppStatics) {
 			this.authentication = Authentication;
 			this.trackers = Trackers.query();
@@ -50,19 +50,6 @@ angular.module('trackers')
 	            var modalInstance = $modal.open({
 	                templateUrl: 'modules/trackers/views/edit-tracker.client.view.html',
 	                controller: function($scope, $modalInstance, tracker) {
-	        			$scope.currencyOptions = [
-	        				      		            {id: 'INR', label: 'Indian Rupee'},
-	        				      		            {id: 'USD', label: 'US Dollor'},
-	        				      		            {id: 'AUD', label: 'Australian Dollor'},
-	        				      		            {id: 'JPY', label: 'Japanese YEN'},
-	        				      		            {id: 'EUR', label: 'Euro'},
-	        				      	            ];
-//	        			for(var idx in $scope.currencyOptions){
-//	                    	var currentOption = $scope.currencyOptions[idx];
-//	                    	if(currentOption.id === tracker.currency.id){
-//	                    		tracker.currency = currentOption;
-//	                    	}
-//	                    };
 	                    $scope.tracker = tracker;
 	                    $scope.ok = function() {
 	                        // if (updateCustomerForm.$valid){
@@ -108,8 +95,8 @@ angular.module('trackers')
 	])
 
 
-	.controller('TrackersCreateController', ['$scope', 'Trackers', 'Notify', 'AppStatics', 'Authentication',
-	    function($scope, Trackers, Notify, AppStatics, Authentication) {
+	.controller('TrackersCreateController', ['$scope', 'Trackers', 'Notify', 'AppStatics', 'Authentication', 'AppMessenger',
+	    function($scope, Trackers, Notify, AppStatics, Authentication, AppMessenger) {
 	    	this.appStatics = AppStatics;
 	    	this.authentication = Authentication;
 	    	this.assignedUsers = [];
@@ -136,6 +123,9 @@ angular.module('trackers')
                 Notify.sendMsg('NewTracker', {
                     'id': response._id
                 });
+                AppMessenger.sendInfoMsg(response);
+                // Notify.sendMsg('TrackerSaved', {
+                // });
             }, function(errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
