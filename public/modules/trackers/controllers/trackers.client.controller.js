@@ -42,6 +42,7 @@ angular.module('trackers')
 					};
 					this.getUsersTxt = function(tracker){
 						var users = '';
+						//TODO - splice owner name from this
 						if(tracker.users && tracker.users.length > 1){
 							for(var i = 0; i < tracker.users.length; i++){
 								if(i !== 0){
