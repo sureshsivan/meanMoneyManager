@@ -40,6 +40,9 @@ angular.module('trackers')
 						return (tracker.owner && tracker.owner._id && (tracker.owner._id.toString() === Authentication.user._id.toString()))	? 'Me - This is my Awesome tracker' :
 													((tracker.owner && tracker.owner.displayName) ? tracker.owner.displayName : 'No Name');
 					};
+					this.getUsers = function(tracker){
+						return 'Suresh and Kirthika'
+					};
 	        //pasted in from angular-ui bootstrap modal example
 	        //open a modal window to update a single customer record
 	        this.modalUpdate = function(size, selectedTracker) {
@@ -111,6 +114,9 @@ angular.module('trackers')
 	    	this.authentication = Authentication;
 	    	this.assignedUsers = [];
 	    	this.assignedUsers.push(Authentication.user);
+	    	this.getCurrencies = function(){
+					return this.appStatics.getCurrencies();
+				};
         this.create = function() {
             var tracker = new Trackers({
                 displayName: this.displayName,
@@ -176,7 +182,6 @@ angular.module('trackers')
 	        transclude: true,
 	        templateUrl: 'modules/trackers/views/add-users-template.html',
 	        link: function(scope, element, attrs) {
-	        		console.log('Directive Link');
 	        },
 	        scope: {
 	        	assignedUsers: '=users'

@@ -17,6 +17,10 @@
 						<strong>Owner : </strong><span data-ng-bind="trackersCtrl.getOwner(tracker)"></span>
 					</small>
 					<br/>
+					<small class="text-muted">
+						<strong>Users : </strong><span data-ng-bind="trackersCtrl.getUsers(tracker)"></span>
+					</small>
+					<br/>
 					<small class="list-group-item-text text-muted">
 						<strong>Created On : </strong><span data-ng-bind="trackersCtrl.getLocalTime(tracker.created)"></span>
 						<strong class="pad-left">Last Updated On : </strong><span data-ng-bind="trackersCtrl.getLocalTime(tracker.created)"></span>
