@@ -14,23 +14,24 @@
 					</small>
 					<br/>
 					<small class="text-muted">
-						<strong>Owner : </strong><span data-ng-bind="trackersCtrl.getOwner(tracker)"></span>
+						<strong>Owner : </strong><span data-ng-bind="trackersCtrl.getOwnerTxt(tracker)"></span>
 					</small>
 					<br/>
 					<small class="text-muted">
-						<strong>Users : </strong><span data-ng-bind="trackersCtrl.getUsers(tracker)"></span>
+						<strong>Users : </strong><span data-ng-bind="trackersCtrl.getUsersTxt(tracker)"></span>
 					</small>
 					<br/>
 					<small class="list-group-item-text text-muted">
 						<strong>Created On : </strong><span data-ng-bind="trackersCtrl.getLocalTime(tracker.created)"></span>
-						<strong class="pad-left">Last Updated On : </strong><span data-ng-bind="trackersCtrl.getLocalTime(tracker.created)"></span>
 						<span class="pull-right pad-left">
-							<button class="btn btn-danger btn-sm" ng-click="trackersCtrl.remove(tracker)">
+							<button class="btn btn-danger btn-sm" ng-click="trackersCtrl.remove(tracker)"
+								data-ng-class="tracker.owner._id == trackersCtrl.authentication.user._id ? '' : 'disabled'">
 								<i class="glyphicon glyphicon-trash"></i>
 							</button>
 						</span>
 						<span class="pull-right pad-left">
-							<button class="btn btn-warning btn-sm" ng-click="trackersCtrl.modalUpdate('lg', tracker)">
+							<button class="btn btn-warning btn-sm" ng-click="trackersCtrl.modalUpdate('lg', tracker)"
+								data-ng-class="tracker.owner._id == trackersCtrl.authentication.user._id ? '' : 'disabled'">
 								<i class="glyphicon glyphicon-edit"></i>
 							</button>
 						</span>

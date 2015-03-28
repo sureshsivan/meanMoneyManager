@@ -7,7 +7,8 @@ var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	Tracker = mongoose.model('Tracker'),
 	_ = require('lodash'),
-	Schema = mongoose.Schema;
+	Schema = mongoose.Schema,
+	StaticStatus = require('../const/core.server.const');
 
 /**
  * Create a Tracker
@@ -22,7 +23,7 @@ exports.create = function(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			res.jsonp(tracker);
+			res.jsonp(StaticStatus.defaultSuccessRes());
 		}
 	});
 };
@@ -97,9 +98,12 @@ exports.listByUserId = function(req, res) {
 	Tracker.find({'users' : mongoose.Types.ObjectId(req.user._id)})
 		.populate({
 			'path' : 'owner',
-			'select' : 'firstName lastName displayName _id'
+			'select' : 'firstName lastName displayName email _id'
 		})
-		.populate('users', 'displayName')
+		.populate({
+			'path' : 'users',
+			'select' : 'firstName lastName displayName email _id'
+		})
 		.sort('-created')
 		.exec(function(err, trackers) {
 		if (err) {
@@ -112,60 +116,21 @@ exports.listByUserId = function(req, res) {
 		}
 	});
 
-
-//	var userId = req.user._id;
-//	Tracker.find().sort('-created')
-////		 .populate('users', '_id')
-//		.populate({
-//			'path' : 'users'
-////			'select' : '_id'
-//		})
-//		.populate({
-//			'path' : 'owner'
-////			'select' : 'firstName lastName displayName _id'
-//		})
-//		.exec(function(err, trackers) {
-//		if (err) {
-//			return res.status(400).send({
-//				message: errorHandler.getErrorMessage(err)
-//			});
-//		} else {
-////			res.jsonp(trackers);
-//			 var filteredTrackers = [];
-//			 _.each(trackers, function(tracker){
-//			 	var isMatch = false;
-//			 	if(tracker && tracker.users){
-//			 		_.each(tracker.users, function(user){
-//			 			if(user && user._id && (user._id.toString() === userId.toString())){
-//			 				isMatch = true;
-//			 				return true;
-//			 			}
-//			 		});
-//			 		if(isMatch){
-//			 			filteredTrackers.push(tracker);
-//			 			return true;
-//			 		}
-//			 	}
-//			 });
-//			 res.jsonp(filteredTrackers);
-//		}
-//	});
 };
 
 /**
  * Update a Tracker by Id
  */
 exports.updateById = function(req, res) {
-	var tracker = req.tracker ;
-	console.dir(tracker);
-	console.dir(req.body);
-	delete req.body.users;
-	delete tracker.users;
-	console.log('#########');
-	console.dir(tracker);
-	console.dir(req.body);
-	tracker = _.extend(tracker , req.body);
-	tracker.save(function(err){
+	var tracker = req.body;
+	// tracker = _.extend(tracker , req.body);
+	var query = {_id: tracker._id};
+	delete tracker._id;
+	delete tracker.owner;
+	// delete req.body.users;
+	// delete tracker.users;
+	// console.log('#########');
+	Tracker.update(query, tracker, function(err){
 //	Tracker.update(tracker,function(err) {
 		if (err) {
 			console.log(err);
@@ -173,8 +138,7 @@ exports.updateById = function(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			console.log(tracker);
-			res.jsonp(tracker);
+			res.jsonp(StaticStatus.defaultSuccessRes());
 		}
 	});
 };

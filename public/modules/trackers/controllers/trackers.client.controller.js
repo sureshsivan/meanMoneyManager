@@ -36,12 +36,27 @@ angular.module('trackers')
 	        this.getLocalTime = function(time){
 	        	return moment(time).toString();
 	        };
-					this.getOwner = function(tracker){
+					this.getOwnerTxt = function(tracker){
 						return (tracker.owner && tracker.owner._id && (tracker.owner._id.toString() === Authentication.user._id.toString()))	? 'Me - This is my Awesome tracker' :
 													((tracker.owner && tracker.owner.displayName) ? tracker.owner.displayName : 'No Name');
 					};
-					this.getUsers = function(tracker){
-						return 'Suresh and Kirthika'
+					this.getUsersTxt = function(tracker){
+						var users = '';
+						if(tracker.users && tracker.users.length > 1){
+							for(var i = 0; i < tracker.users.length; i++){
+								if(i !== 0){
+									users = users + ((i===tracker.users.length-2) ? ' , ' : ' and ') + tracker.users[i].displayName;
+								} else {
+									users = tracker.users[i].displayName;
+								}
+							}
+						} else if(tracker.users){
+							users = tracker.users[0].displayName;
+						} else {
+							// TODO - remove it later
+							users = 'Something wrong';
+						}
+						return users;
 					};
 	        //pasted in from angular-ui bootstrap modal example
 	        //open a modal window to update a single customer record
@@ -117,10 +132,9 @@ angular.module('trackers')
             angular.forEach(this.assignedUsers, function(value, key) {
 						  tracker.users.push(value._id);
 						});
-						console.log(tracker);
             // Redirect after save
             tracker.$save(function(response) {
-                Notify.sendMsg('NewTracker', {
+                Notify.sendMsg('RefreshTrackers', {
                     'id': response._id
                 });
                 AppMessenger.sendInfoMsg(response);
@@ -132,21 +146,28 @@ angular.module('trackers')
         };
 	    }
 	])
-	.controller('TrackersUpdateController', ['$scope', 'Trackers', 'AppStatics',
-	    function($scope, Trackers, AppStatics) {
+	.controller('TrackersUpdateController', ['$scope', 'Trackers', 'AppStatics', 'Authentication', 'Notify',
+	    function($scope, Trackers, AppStatics, Authentication, Notify) {
 	    	this.appStatics = AppStatics;
+	    	this.authentication = Authentication;
 	    	this.getCurrencies = function(){
 					return this.appStatics.getCurrencies();
 				};
-	        // Update existing Customer
-	        this.update = function(updatedTracker) {
-	            var tracker = updatedTracker;
-	            tracker.$update(function() {
-
-	            }, function(errorResponse) {
-	                $scope.error = errorResponse.data.message;
-	            });
-	        };
+        this.update = function(updatedTracker) {
+            var tracker = updatedTracker;
+            var users = [];
+            var owner = tracker.owner._id;
+            angular.forEach(tracker.users, function(value, key) {
+						  users.push(value._id);
+						});
+						tracker.owner = owner;
+						tracker.users = users;
+            tracker.$update(function() {
+              Notify.sendMsg('RefreshTrackers', {});
+            }, function(errorResponse) {
+                $scope.error = errorResponse.data.message;
+            });
+        };
 
 	    }
 	])
@@ -158,9 +179,8 @@ angular.module('trackers')
 	        templateUrl: 'modules/trackers/views/trackers-list-template.html',
 	        link: function(scope, element, attrs) {
 	            //when a new customer is added, update the customer list
-	            Notify.getMsg('NewTracker', function(event, data) {
+	            Notify.getMsg('RefreshTrackers', function(event, data) {
 	                scope.trackersCtrl.trackers = Trackers.query();
-
 	            });
 	        }
 	    };
@@ -177,7 +197,6 @@ angular.module('trackers')
 	        	assignedUsers: '=users'
 	        },
 	        controller: function($scope){
-	        	console.dir($scope);
 	        	$scope.authentication = Authentication;
 						$scope.queryUsers = function(query){
 							var curUsersArr = [];
@@ -189,6 +208,9 @@ angular.module('trackers')
 						$scope.assignNewUser = function(user){
 							$scope.currentUser = null;
 							$scope.assignedUsers.push(user);
+			    	};
+			    	$scope.removeUser = function(index){
+			    		$scope.assignedUsers.splice(index, 1);
 			    	};
 	        }
 	    };

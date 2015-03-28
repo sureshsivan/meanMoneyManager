@@ -5,21 +5,21 @@ angular.module('core').service('AppMessenger', [ '$rootScope',
     var appMessenger = {};
     appMessenger.sendInfoMsg = function(data) {
         data = data || {};
-        $rootScope.$emit('INFO', data);
         console.log('info message sent!');
         console.dir(data);
+        $rootScope.$emit('INFO', data);
     };
     appMessenger.sendWarnMsg = function(data) {
         data = data || {};
-        $rootScope.$emit('WARN', data);
         console.log('warn message sent!');
         console.dir(data);
+        $rootScope.$emit('WARN', data);
     };
     appMessenger.sendErrMsg = function(data) {
         data = data || {};
-        $rootScope.$emit('ERR', data);
         console.log('error message sent!');
         console.dir(data);
+        $rootScope.$emit('ERR', data);
     };
 
     // TODO - assigned vars might required in case of unbinding later

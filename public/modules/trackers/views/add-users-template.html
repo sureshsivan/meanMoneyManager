@@ -16,7 +16,8 @@
             <strong data-ng-show="user._id === authentication.user._id">Owner : </strong>
             {{user.displayName}} ({{user.email}})
             <button class="btn btn-danger btn-xs glyphicon glyphicon-remove pull-right"
-                data-ng-hide="user._id === authentication.user._id">
+                data-ng-hide="user._id === authentication.user._id"
+                data-ng-click="removeUser($index)">
             </button>
         </li>
     </ul>
