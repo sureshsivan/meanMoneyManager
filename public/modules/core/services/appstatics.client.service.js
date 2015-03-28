@@ -9,7 +9,7 @@ angular.module('core').service('AppStatics', [ '$http',
 					    		            {id: 'USD', label: 'US Dollor'},
 					    		            {id: 'JPY', label: 'Japanese YEN'},
 					    		            {id: 'EUR', label: 'Euro'}];
-				};
+				}
 				return this.currencies;
 			},
 			queryUsers: function(query, users){

@@ -39,23 +39,10 @@
                         <div class="form-group">
                             <label class="control-label" for="shareTo"> Shared To</label>
                             <div class="controls">
-                                <div class="input-group">
-                                    <!-- <pre>Model: {{currentUser}}</pre> -->
-                                    <input type="text" ng-model="currentUser" placeholder="Type to see users"
-                                        typeahead="user as user.displayName for user in trackerCreateCtrl.queryUsers($viewValue)"
-                                        typeahead-loading="loadingUsers" class="form-control"/>
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-default" type="button" data-ng-click="trackerCreateCtrl.assignNewUser(currentUser)">Add User</button>
-                                    </span>
-                                    <i ng-show="loadingUsers" class="glyphicon glyphicon-refresh"></i>
-                                </div>
-                                <br/>
-                                <ul class="list-group">
-                                    <li class="list-group-item list-group-item-info" data-ng-class="user._id === trackerCreateCtrl.authentication.user._id ? 'list-group-item-danger' : 'list-group-item-info'"
-                                        data-ng-repeat="user in trackerCreateCtrl.assignedUsers">{{user.displayName}} ({{user.email}})</li>
-                                </ul>
+                                <add-users users="trackerCreateCtrl.assignedUsers"></add-users>
                             </div>
                         </div>
+
                     </div>
                 </div>
 

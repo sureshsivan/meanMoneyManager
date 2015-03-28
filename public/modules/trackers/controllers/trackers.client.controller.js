@@ -111,23 +111,6 @@ angular.module('trackers')
 	    	this.authentication = Authentication;
 	    	this.assignedUsers = [];
 	    	this.assignedUsers.push(Authentication.user);
-	    	this.assignNewUser = function(user){
-	    		$scope.currentUser = null;
-	    		this.assignedUsers.push(user);
-	    	};
-	    	this.getCurrencies = function(){
-					return this.appStatics.getCurrencies()
-				};
-				this.getAssignedUsers = function(){
-
-				};
-				this.queryUsers = function(query){
-					var curUsersArr = [];
-					  angular.forEach(this.assignedUsers, function(value, key) {
-						  curUsersArr.push(value._id);
-						});
-					return this.appStatics.queryUsers(query, curUsersArr.join())
-				};
         this.create = function() {
             var tracker = new Trackers({
                 displayName: this.displayName,
@@ -157,7 +140,7 @@ angular.module('trackers')
 	    function($scope, Trackers, AppStatics) {
 	    	this.appStatics = AppStatics;
 	    	this.getCurrencies = function(){
-					return this.appStatics.getCurrencies()
+					return this.appStatics.getCurrencies();
 				};
 	        // Update existing Customer
 	        this.update = function(updatedTracker) {
@@ -185,4 +168,35 @@ angular.module('trackers')
 	            });
 	        }
 	    };
-	}]);
+	}])
+
+	.directive('addUsers', ['Trackers', 'AppStatics', 'Authentication', function(Trackers, AppStatics, Authentication) {
+	    return {
+	        restrict: 'E',
+	        transclude: true,
+	        templateUrl: 'modules/trackers/views/add-users-template.html',
+	        link: function(scope, element, attrs) {
+	        		console.log('Directive Link');
+	        },
+	        scope: {
+	        	assignedUsers: '=users'
+	        },
+	        controller: function($scope){
+	        	console.dir($scope);
+	        	$scope.authentication = Authentication;
+						$scope.queryUsers = function(query){
+							var curUsersArr = [];
+							  angular.forEach($scope.assignedUsers, function(value, key) {
+								  curUsersArr.push(value._id);
+								});
+							return AppStatics.queryUsers(query, curUsersArr.join());
+						};
+						$scope.assignNewUser = function(user){
+							$scope.currentUser = null;
+							$scope.assignedUsers.push(user);
+			    	};
+	        }
+	    };
+	}])
+
+	;

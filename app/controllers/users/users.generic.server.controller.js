@@ -36,15 +36,13 @@ exports.searchAllUsers = function(req, res) {
 	// console.log(query.length);
 	var filter = {};
 	if(query && query.length > 0){
-		var queryRegX = new RegExp(query, "i");
+		var queryRegX = new RegExp(query, 'i');
 		filter.$or = [];
 		filter.$or.push({'firstName' : {$regex : queryRegX}});
 		filter.$or.push({'lastName' : {$regex : queryRegX}});
 		filter.$or.push({'displayName' : {$regex : queryRegX}});
 		filter.$or.push({'email' : {$regex : queryRegX}});
 	}
-	console.log(filter);
-	console.log(excludeUsers);
 	User.find(filter)
 		.where('_id').nin(excludeUsers)
 		.select('_id email firstName lastName displayName')
