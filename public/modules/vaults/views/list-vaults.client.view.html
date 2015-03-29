@@ -1,0 +1,23 @@
+<section data-ng-controller="VaultsController as vaultController">
+    <div class="page-header">
+        <h1>Vaults</h1>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-9">
+            <div class="input-group input-group">
+                <input type="text" ng-model="searchText" class="form-control" placeholder="Search Vaults...">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button">Go!</button>
+                </span>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-3 text-center pull-right">
+            <button type="button" class="btn btn-success text-center" ng-click="vaultController.modalCreate('lg')">
+                <i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;New Vault
+            </button>
+        </div>
+    </div>
+    <div class="alert alert-warning text-center" data-ng-hide="!vaults.$resolved || vaults.length">
+    	No Vaults yet, why don't you <a href="/#!/vaults/create">create one</a>?
+    </div>
+</section>

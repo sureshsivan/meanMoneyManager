@@ -3,8 +3,8 @@
 // Trackers controller
 
 angular.module('trackers')
-	.controller('TrackersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Trackers', '$modal', '$log', 'moment', 'AppStatics',  //'angularMoment',
-		function($scope, $stateParams, $location, Authentication, Trackers, $modal, $log, moment, AppStatics) {
+	.controller('TrackersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Trackers', '$modal', '$log', 'moment', 'AppStatics', '$state',   //'angularMoment',
+		function($scope, $stateParams, $location, Authentication, Trackers, $modal, $log, moment, AppStatics, $state) {
 			this.authentication = Authentication;
 			this.trackers = Trackers.query();
 			// this.appStatics = AppStatics;
@@ -58,6 +58,9 @@ angular.module('trackers')
 							users = 'Something wrong';
 						}
 						return users;
+					};
+					this.loadVaults = function(trackerId){
+						$state.go('listTrackerVaults', {trackerId: trackerId, summa : 'SDGVASDFGASDFGASFDGBS'});
 					};
 	        //pasted in from angular-ui bootstrap modal example
 	        //open a modal window to update a single customer record

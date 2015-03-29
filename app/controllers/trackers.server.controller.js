@@ -92,8 +92,6 @@ exports.list = function(req, res) {
  * TODO :: Find a better way - should learng mongo DB better - Thius is stupid way - blame me
  */
 exports.listByUserId = function(req, res) {
-
-	mongoose.set('debug', true);
 	var userId = req.user._id;
 	Tracker.find({'users' : mongoose.Types.ObjectId(req.user._id)})
 		.populate({
@@ -107,7 +105,6 @@ exports.listByUserId = function(req, res) {
 		.sort('-created')
 		.exec(function(err, trackers) {
 		if (err) {
-			console.log('$$$$$');
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
