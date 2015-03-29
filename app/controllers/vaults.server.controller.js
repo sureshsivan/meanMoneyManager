@@ -12,6 +12,7 @@ var mongoose = require('mongoose'),
  * Create a Vault
  */
 exports.create = function(req, res) {
+    //console.log(req);
 	var vault = new Vault(req.body);
 	vault.user = req.user;
 
@@ -88,12 +89,17 @@ exports.list = function(req, res) {
  * List of Vaults
  */
 exports.listByTrackerId = function(req, res) {
+    console.log('aedfagagsag');
 	Vault.find()
 	// Vault.find({'tracker' : mongoose.Types.ObjectId(req.tracker._id)})
 	.populate({
 		'path' : 'owner',
 		'select' : 'firstName lastName displayName email _id'
 	})
+    .populate({
+        'path' : 'tracker',
+        'select' : 'displayName _id'
+    })
 	.populate({
 		'path' : 'tracker',
 		'select' : 'displayName currency _id'

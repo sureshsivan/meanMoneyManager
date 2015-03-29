@@ -15,8 +15,9 @@ module.exports = function(app) {
 
 	// Tracker Vaults Routes
 	app.route('/trackervaults')
-		.get(users.requiresLogin, vaults.list)
 		.post(users.requiresLogin, vaults.create);
+    app.route('/trackervaults/:trackerId')
+        .get(users.requiresLogin, vaults.listByTrackerId);
 	app.route('/trackervaults/:trackerId')
 		.get(users.requiresLogin, vaults.read)
 		.put(users.requiresLogin, vaults.hasAuthorization, vaults.update)

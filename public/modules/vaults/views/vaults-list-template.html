@@ -1,0 +1,42 @@
+<div class="list-group">
+	<div class="col-xs-12 pad-top"
+		data-ng-repeat="vault in vaultCtrl.trackerVaults | filter:searchText">
+		<a ng-click="" class="list-group-item">
+			<div class="row">
+				<div class="col-xs-12">
+					<strong><h4>
+						Vault : {{vault.displayName}}
+					</h4></strong>
+					<small class="text-muted">
+						<span data-ng-bind="vault.description"></span>
+					</small>
+					<br/>
+                    <small class="text-muted">
+                        <strong>Created By : </strong><span data-ng-bind="vault.owner.displayName"></span>
+                    </small>
+					<br/>
+					<small class="list-group-item-text text-muted">
+						<strong>Created On : </strong><span data-ng-bind="vault.created"></span>
+						<span class="pull-right pad-left">
+							<button class="btn btn-danger btn-sm" ng-click="vaultCtrl.remove(vault)"
+								data-ng-class="vault.owner._id == vaultCtrl.authentication.user._id ? '' : 'disabled'">
+								<i class="glyphicon glyphicon-trash"></i>
+							</button>
+						</span>
+						<span class="pull-right pad-left">
+							<button class="btn btn-warning btn-sm" ng-click="vaultCtrl.modalUpdate('lg', vault)"
+								data-ng-class="vault.owner._id == vaultCtrl.authentication.user._id ? '' : 'disabled'">
+								<i class="glyphicon glyphicon-edit"></i>
+							</button>
+						</span>
+					</small>
+				</div>
+			</div>
+		</a>
+	</div>
+</div>
+<div class="alert alert-warning text-center"
+	data-ng-hide="!trackerVaults.$resolved || trackerVaults.length">
+	No vaults yet, why don't you <a href="/#!/trackers/create">create
+		one</a>?
+</div>

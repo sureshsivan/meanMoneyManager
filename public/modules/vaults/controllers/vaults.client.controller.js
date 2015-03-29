@@ -3,10 +3,9 @@
 // Vaults controller
 angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Vaults', 'TrackerVaults', '$modal', '$log', 'moment', 'AppStatics',
 	function($scope, $stateParams, $location, Authentication, Vaults, TrackerVaults, $modal, $log, moment, AppStatics) {
-		$scope.authentication = Authentication;
-		console.log($stateParams);
+        this.authentication = Authentication;
 		this.trackerVaults = TrackerVaults.listTrackerVaults($stateParams);
-
+        this.trackerId = $stateParams.trackerId;
 		this.modalCreate = function(size) {
 		    var modalInstance = $modal.open({
 		        templateUrl: 'modules/vaults/views/create-vault.client.view.html',
@@ -120,28 +119,28 @@ angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams
 ])
 
 
-	.controller('VaultsCreateController', ['$scope', 'Vaults', 'TrackerVaults', 'Notify', 'AppStatics', 'Authentication', 'AppMessenger',
-	    function($scope, Vaults, TrackerVaults, Notify, AppStatics, Authentication, AppMessenger) {
+	.controller('VaultsCreateController', ['$scope', '$stateParams', 'Vaults', 'TrackerVaults', 'Notify', 'AppStatics', 'Authentication', 'AppMessenger',
+	    function($scope, $stateParams, Vaults, TrackerVaults, Notify, AppStatics, Authentication, AppMessenger) {
 	    	this.appStatics = AppStatics;
 	    	this.authentication = Authentication;
-        this.create = function(trackerId) {
-            var vault = new TrackerVaults({
-                displayName: this.displayName,
-                description: this.description,
-                tracker: trackerId,
-                owner: this.authentication.user._id,
-                created: this.created
-            });
-            // Redirect after save
-            vault.$save(function(response) {
-                Notify.sendMsg('RefreshVaults', {
-                    'trackerId': response.tracker._id
+            this.create = function() {
+                var vault = new TrackerVaults({
+                    displayName: this.displayName,
+                    description: this.description,
+                    tracker: $stateParams.trackerId,
+                    owner: this.authentication.user._id,
+                    created: this.created
                 });
-                AppMessenger.sendInfoMsg(response);
-            }, function(errorResponse) {
-                $scope.error = errorResponse.data.message;
-            });
-        };
+                // Redirect after save
+                vault.$save(function(response) {
+                    Notify.sendMsg('RefreshVaults', {
+                        'trackerId': response.tracker
+                    });
+                    AppMessenger.sendInfoMsg(response);
+                }, function(errorResponse) {
+                    $scope.error = errorResponse.data.message;
+                });
+            };
 	    }
 	])
 	.controller('VaultsUpdateController', ['$scope', 'Vaults', 'TrackerVaults', 'AppStatics', 'Authentication', 'Notify',
@@ -167,15 +166,17 @@ angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams
 	    }
 	])
 
-	.directive('vaultsList', ['Trackers', 'Notify', function(Trackers, Notify) {
+	.directive('vaultsList', ['Vaults', 'TrackerVaults', 'Notify', function(Vaults, TrackerVaults, Notify) {
 	    return {
 	        restrict: 'E',
 	        transclude: true,
-	        templateUrl: 'modules/trackers/views/trackers-list-template.html',
+	        templateUrl: 'modules/vaults/views/vaults-list-template.html',
 	        link: function(scope, element, attrs) {
 	            //when a new customer is added, update the customer list
-	            Notify.getMsg('RefreshTrackers', function(event, data) {
-	                scope.trackersCtrl.trackers = Trackers.query();
+	            Notify.getMsg('RefreshVaults', function(event, data) {
+                    console.log(11111111);
+                    console.log(data);
+	                scope.vaultCtrl.trackerVaults = TrackerVaults.listTrackerVaults(data);
 	            });
 	        }
 	    };

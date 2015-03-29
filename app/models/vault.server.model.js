@@ -29,7 +29,11 @@ var VaultSchema = new Schema({
 	owner: {
 		type: Schema.ObjectId,
 		ref: 'User'
-	}
+	},
+    created: {
+        type: Date,
+        default: Date.now
+    }
 });
 
 mongoose.model('Vault', VaultSchema);
