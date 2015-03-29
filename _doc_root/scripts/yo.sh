@@ -12,3 +12,6 @@ yo meanjs:express-route userRole
 yo meanjs:express-route trackerRole
 
 yo meanjs:angular-service appStatics
+
+yo meanjs:crud-module vaults
+yo meanjs:crud-module expenses
