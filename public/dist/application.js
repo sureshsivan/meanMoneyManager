@@ -4,7 +4,7 @@
 var ApplicationConfiguration = (function() {
 	// Init module configuration options
 	var applicationModuleName = 'meanmoneymanager';
-	var applicationModuleVendorDependencies = ['ngResource', 'ngCookies',  'ngAnimate',  'ngTouch',  'ngSanitize',  
+	var applicationModuleVendorDependencies = ['ngResource', 'ngCookies',  'ngAnimate',  'ngTouch',  'ngSanitize',
 	                                           'ui.router', 'ui.bootstrap', 'ui.utils', 'angularMoment'];
 
 	// Add a new vertical module
@@ -22,6 +22,7 @@ var ApplicationConfiguration = (function() {
 		registerModule: registerModule
 	};
 })();
+
 'use strict';
 
 //Start by defining the main module and adding the module dependencies
@@ -59,6 +60,10 @@ ApplicationConfiguration.registerModule('trackers');
 
 // Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('users');
+'use strict';
+
+// Use applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('vaults');
 'use strict';
 
 // Admin module config
@@ -164,6 +169,107 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 		}, ];
 	}
 ]);
+'use strict';
+
+angular.module('core')
+
+    .factory('Notify', ['$rootScope', function($rootScope) {
+        var notify = {};
+
+        notify.sendMsg = function(msg, data) {
+            data = data || {};
+            $rootScope.$emit(msg, data);
+        };
+
+        notify.getMsg = function(msg, func, scope) {
+            var unbind = $rootScope.$on(msg, func);
+            if (scope) {
+                scope.$on('destroy', unbind);
+            }
+        };
+
+        return notify;
+    }]);
+
+'use strict';
+
+angular.module('core').service('AppStatics', [ '$http',
+	function($http) {
+		var appStatics = {};
+		appStatics.getCurrencies = function(){
+				if(! this.currencies){
+					this.currencies = [{id: 'INR', label: 'Indian Rupee'},
+					    		            {id: 'USD', label: 'US Dollor'},
+					    		            {id: 'JPY', label: 'Japanese YEN'},
+					    		            {id: 'EUR', label: 'Euro'}];
+				}
+				return this.currencies;
+			};
+		appStatics.queryUsers = function(query, users){
+				return $http.get('/users/search', {
+				      params: {
+				        q: query,
+				        nu: users
+				      }
+				    }).then(function(response){
+				    	console.log(response);
+				      return response.data.map(function(item){
+				        return item;
+				      });
+				    });
+			};
+		return appStatics;
+	}
+]);
+
+'use strict';
+
+angular.module('core').service('AppMessenger', [ '$rootScope',
+  function($rootScope) {
+    var appMessenger = {};
+    appMessenger.sendInfoMsg = function(data) {
+        data = data || {};
+        console.log('info message sent!');
+        console.dir(data);
+        $rootScope.$emit('INFO', data);
+    };
+    appMessenger.sendWarnMsg = function(data) {
+        data = data || {};
+        console.log('warn message sent!');
+        console.dir(data);
+        $rootScope.$emit('WARN', data);
+    };
+    appMessenger.sendErrMsg = function(data) {
+        data = data || {};
+        console.log('error message sent!');
+        console.dir(data);
+        $rootScope.$emit('ERR', data);
+    };
+
+    // TODO - assigned vars might required in case of unbinding later
+    var infoMsg = $rootScope.$on('INFO', function(e, data){
+      console.log('Info Message Received');
+      console.dir(data);
+    });
+    var warnMsg = $rootScope.$on('WARN', function(e, data){
+      console.log('Warn Message Received');
+      console.dir(data);
+    });
+    var errMsg = $rootScope.$on('ERR', function(e, data){
+      console.log('Err Message Received');
+      console.dir(data);
+    });
+    // notify.getMsg = function(msg, func, scope) {
+    //     var unbind = $rootScope.$on(msg, func);
+
+    //     if (scope) {
+    //         scope.$on('destroy', unbind);
+    //     }
+    // };
+    return appMessenger;
+  }
+]);
+
 'use strict';
 
 //Menu service used for managing  menus
@@ -371,10 +477,14 @@ angular.module('trackers').config(['$stateProvider',
 // Trackers controller
 
 angular.module('trackers')
-	.controller('TrackersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Trackers', '$modal', '$log', 'moment',//'angularMoment', 
-		function($scope, $stateParams, $location, Authentication, Trackers, $modal, $log, moment) {
+	.controller('TrackersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Trackers', '$modal', '$log', 'moment', 'AppStatics', '$state',   //'angularMoment',
+		function($scope, $stateParams, $location, Authentication, Trackers, $modal, $log, moment, AppStatics, $state) {
 			this.authentication = Authentication;
 			this.trackers = Trackers.query();
+			// this.appStatics = AppStatics;
+			// this.getCurrencies = function(){
+			// 	return this.appStatics.getCurrencies()
+			// };
 			//open a modal window to create a single customer record
 	        this.modalCreate = function(size) {
 	            var modalInstance = $modal.open({
@@ -392,7 +502,7 @@ angular.module('trackers')
 	                size: size
 	            });
 	            modalInstance.result.then(function(selectedItem) {
-	            	
+
 	            	}, function() {
 		                $log.info('Modal dismissed at: ' + new Date());
 	            });
@@ -400,7 +510,32 @@ angular.module('trackers')
 	        this.getLocalTime = function(time){
 	        	return moment(time).toString();
 	        };
-
+					this.getOwnerTxt = function(tracker){
+						return (tracker.owner && tracker.owner._id && (tracker.owner._id.toString() === Authentication.user._id.toString()))	? 'Me - This is my Awesome tracker' :
+													((tracker.owner && tracker.owner.displayName) ? tracker.owner.displayName : 'No Name');
+					};
+					this.getUsersTxt = function(tracker){
+						var users = '';
+						//TODO - splice owner name from this
+						if(tracker.users && tracker.users.length > 1){
+							for(var i = 0; i < tracker.users.length; i++){
+								if(i !== 0){
+									users = users + ((i===tracker.users.length-2) ? ' , ' : ' and ') + tracker.users[i].displayName;
+								} else {
+									users = tracker.users[i].displayName;
+								}
+							}
+						} else if(tracker.users){
+							users = tracker.users[0].displayName;
+						} else {
+							// TODO - remove it later
+							users = 'Something wrong';
+						}
+						return users;
+					};
+					this.loadVaults = function(trackerId){
+						$state.go('listTrackerVaults', {trackerId: trackerId, summa : 'SDGVASDFGASDFGASFDGBS'});
+					};
 	        //pasted in from angular-ui bootstrap modal example
 	        //open a modal window to update a single customer record
 	        this.modalUpdate = function(size, selectedTracker) {
@@ -408,19 +543,6 @@ angular.module('trackers')
 	            var modalInstance = $modal.open({
 	                templateUrl: 'modules/trackers/views/edit-tracker.client.view.html',
 	                controller: ["$scope", "$modalInstance", "tracker", function($scope, $modalInstance, tracker) {
-	        			$scope.currencyOptions = [
-	        				      		            {id: 'INR', label: 'Indian Rupee'},
-	        				      		            {id: 'USD', label: 'US Dollor'},
-	        				      		            {id: 'AUD', label: 'Australian Dollor'},
-	        				      		            {id: 'JPY', label: 'Japanese YEN'},
-	        				      		            {id: 'EUR', label: 'Euro'},
-	        				      	            ];
-//	        			for(var idx in $scope.currencyOptions){
-//	                    	var currentOption = $scope.currencyOptions[idx];
-//	                    	if(currentOption.id === tracker.currency.id){
-//	                    		tracker.currency = currentOption;
-//	                    	}
-//	                    };
 	                    $scope.tracker = tracker;
 	                    $scope.ok = function() {
 	                        // if (updateCustomerForm.$valid){
@@ -461,128 +583,73 @@ angular.module('trackers')
 	                this.tracker.$remove(function() {});
 	            }
 	        };
-	        
-	        
-//			// Create new Tracker
-//			$scope.create = function() {
-//				// Create new Tracker object
-//				var tracker = new Trackers ({
-//					name: this.name
-//				});
-//	
-//				// Redirect after save
-//				tracker.$save(function(response) {
-//					$location.path('trackers/' + response._id);
-//	
-//					// Clear form fields
-//					$scope.name = '';
-//				}, function(errorResponse) {
-//					$scope.error = errorResponse.data.message;
-//				});
-//			};
-//	
-//			// Remove existing Tracker
-//			$scope.remove = function(tracker) {
-//				if ( tracker ) { 
-//					tracker.$remove();
-//	
-//					for (var i in $scope.trackers) {
-//						if ($scope.trackers [i] === tracker) {
-//							$scope.trackers.splice(i, 1);
-//						}
-//					}
-//				} else {
-//					$scope.tracker.$remove(function() {
-//						$location.path('trackers');
-//					});
-//				}
-//			};
-//	
-//			// Update existing Tracker
-//			$scope.update = function() {
-//				var tracker = $scope.tracker;
-//	
-//				tracker.$update(function() {
-//					$location.path('trackers/' + tracker._id);
-//				}, function(errorResponse) {
-//					$scope.error = errorResponse.data.message;
-//				});
-//			};
-//	
-//			// Find a list of Trackers
-//			$scope.find = function() {
-//				$scope.trackers = Trackers.query();
-//			};
-//	
-//			// Find existing Tracker
-//			$scope.findOne = function() {
-//				$scope.tracker = Trackers.get({ 
-//					trackerId: $stateParams.trackerId
-//				});
-//			};
+
 		}
 	])
-	
-	
-	.controller('TrackersCreateController', ['$scope', 'Trackers', 'Notify',
-	    function($scope, Trackers, Notify) {
-			$scope.currencyOptions = [
-			      		            {id: 'INR', label: 'Indian Rupee'},
-			      		            {id: 'USD', label: 'US Dollor'},
-			      		            {id: 'AUD', label: 'Australian Dollor'},
-			      		            {id: 'JPY', label: 'Japanese YEN'},
-			      		            {id: 'EUR', label: 'Euro'},
-			      	            ];
-	        this.create = function() {
-	            var tracker = new Trackers({
-	                displayName: this.displayName,
-	                description: this.description,
-	                currency: this.currency,
-	                owner: this.owner,
-	                users: this.users,
-	                created: this.created
-	            });
-	
-	            // Redirect after save
-	            tracker.$save(function(response) {
-	
-	                Notify.sendMsg('NewTracker', {
-	                    'id': response._id
-	                });
-	
-	                // // Clear form fields
-	                // $scope.firstName = '';
-	                // $scope.lastName = '';
-	                // $scope.city = '';
-	                // $scope.country = '';
-	                // $scope.industry = '';
-	                // $scope.email = '';
-	                // $scope.phone = '';
-	                // $scope.referred = '';
-	                // $scope.channel = '';
-	            }, function(errorResponse) {
-	                $scope.error = errorResponse.data.message;
-	            });
-	        };
-	
+
+
+	.controller('TrackersCreateController', ['$scope', 'Trackers', 'Notify', 'AppStatics', 'Authentication', 'AppMessenger',
+	    function($scope, Trackers, Notify, AppStatics, Authentication, AppMessenger) {
+	    	this.appStatics = AppStatics;
+	    	this.authentication = Authentication;
+	    	this.assignedUsers = [];
+	    	this.assignedUsers.push(Authentication.user);
+	    	this.getCurrencies = function(){
+					return this.appStatics.getCurrencies();
+				};
+        this.create = function() {
+            var tracker = new Trackers({
+                displayName: this.displayName,
+                description: this.description,
+                currency: this.currency,
+                owner: this.owner,
+                // users: this.users,
+                created: this.created
+            });
+            tracker.users = [];
+            angular.forEach(this.assignedUsers, function(value, key) {
+						  tracker.users.push(value._id);
+						});
+            // Redirect after save
+            tracker.$save(function(response) {
+                Notify.sendMsg('RefreshTrackers', {
+                    'id': response._id
+                });
+                AppMessenger.sendInfoMsg(response);
+                // Notify.sendMsg('TrackerSaved', {
+                // });
+            }, function(errorResponse) {
+                $scope.error = errorResponse.data.message;
+            });
+        };
 	    }
 	])
-	.controller('TrackersUpdateController', ['$scope', 'Trackers',
-	    function($scope, Trackers) {
-	        // Update existing Customer
-	        this.update = function(updatedTracker) {
-	            var tracker = updatedTracker;
-	
-	            tracker.$update(function() {
-	
-	            }, function(errorResponse) {
-	                $scope.error = errorResponse.data.message;
-	            });
-	        };
-	
+	.controller('TrackersUpdateController', ['$scope', 'Trackers', 'AppStatics', 'Authentication', 'Notify',
+	    function($scope, Trackers, AppStatics, Authentication, Notify) {
+	    	this.appStatics = AppStatics;
+	    	this.authentication = Authentication;
+	    	this.getCurrencies = function(){
+					return this.appStatics.getCurrencies();
+				};
+        this.update = function(updatedTracker) {
+            var tracker = updatedTracker;
+            var users = [];
+            var owner = tracker.owner._id;
+            angular.forEach(tracker.users, function(value, key) {
+						  users.push(value._id);
+						});
+						tracker.owner = owner;
+						tracker.users = users;
+            tracker.$update(function() {
+              Notify.sendMsg('RefreshTrackers', {});
+            }, function(errorResponse) {
+                $scope.error = errorResponse.data.message;
+            });
+        };
+
 	    }
 	])
-	
+
 	.directive('trackersList', ['Trackers', 'Notify', function(Trackers, Notify) {
 	    return {
 	        restrict: 'E',
@@ -590,13 +657,45 @@ angular.module('trackers')
 	        templateUrl: 'modules/trackers/views/trackers-list-template.html',
 	        link: function(scope, element, attrs) {
 	            //when a new customer is added, update the customer list
-	            Notify.getMsg('NewTracker', function(event, data) {
+	            Notify.getMsg('RefreshTrackers', function(event, data) {
 	                scope.trackersCtrl.trackers = Trackers.query();
-	
 	            });
 	        }
 	    };
-	}]);
+	}])
+
+	.directive('addUsers', ['Trackers', 'AppStatics', 'Authentication', function(Trackers, AppStatics, Authentication) {
+	    return {
+	        restrict: 'E',
+	        transclude: true,
+	        templateUrl: 'modules/trackers/views/add-users-template.html',
+	        link: function(scope, element, attrs) {
+	        },
+	        scope: {
+	        	assignedUsers: '=users'
+	        },
+	        controller: ["$scope", function($scope){
+	        	$scope.authentication = Authentication;
+						$scope.queryUsers = function(query){
+							var curUsersArr = [];
+							  angular.forEach($scope.assignedUsers, function(value, key) {
+								  curUsersArr.push(value._id);
+								});
+							return AppStatics.queryUsers(query, curUsersArr.join());
+						};
+						$scope.assignNewUser = function(user){
+							$scope.currentUser = null;
+							$scope.assignedUsers.push(user);
+			    	};
+			    	$scope.removeUser = function(index){
+			    		$scope.assignedUsers.splice(index, 1);
+			    	};
+	        }]
+	    };
+	}])
+
+	;
+
 'use strict';
 
 //Trackers service used to communicate Trackers REST endpoints
@@ -610,28 +709,8 @@ angular.module('trackers')
 					method: 'PUT'
 				}
 			});
-		}
-	])
-	
-	.factory('Notify', ['$rootScope', function($rootScope) {
-        var notify = {};
+ 		}]);
 
-        notify.sendMsg = function(msg, data) {
-            data = data || {};
-            $rootScope.$emit(msg, data);
-            console.log('message sent!');
-        };
-
-        notify.getMsg = function(msg, func, scope) {
-            var unbind = $rootScope.$on(msg, func);
-
-            if (scope) {
-                scope.$on('destroy', unbind);
-            }
-        };
- 
-        return notify;
-    }]);
 'use strict';
 
 // Config HTTP Error Handling
@@ -876,6 +955,266 @@ angular.module('users').factory('Authentication', [
 angular.module('users').factory('Users', ['$resource',
 	function($resource) {
 		return $resource('users', {}, {
+			update: {
+				method: 'PUT'
+			}
+		});
+	}
+]);
+'use strict';
+
+// Configuring the Articles module
+angular.module('vaults').run(['Menus',
+	function(Menus) {
+		// Set top bar menu items
+		// Menus.addMenuItem('topbar', 'Vaults', 'vaults', 'dropdown', '/vaults(/create)?');
+		// Menus.addSubMenuItem('topbar', 'vaults', 'List Vaults', 'vaults');
+		// Menus.addSubMenuItem('topbar', 'vaults', 'New Vault', 'vaults/create');
+	}
+]);
+
+'use strict';
+
+//Setting up route
+angular.module('vaults').config(['$stateProvider',
+	function($stateProvider) {
+		// '$stateProvider', '$urlRouterProvider'
+		// Vaults state routing
+		$stateProvider.
+		state('listTrackerVaults', {
+			url: '/trackervaults/:trackerId',
+			templateUrl: 'modules/vaults/views/list-vaults.client.view.html'
+		// }).
+		// state('listVaults', {
+		// 	url: '/vaults',
+		// 	templateUrl: 'modules/vaults/views/list-vaults.client.view.html'
+		// }).
+		// state('createVault', {
+		// 	url: '/vaults/create',
+		// 	templateUrl: 'modules/vaults/views/create-vault.client.view.html'
+		// }).
+		// state('viewVault', {
+		// 	url: '/vaults/:vaultId',
+		// 	templateUrl: 'modules/vaults/views/view-vault.client.view.html'
+		// }).
+		// state('editVault', {
+		// 	url: '/vaults/:vaultId/edit',
+		// 	templateUrl: 'modules/vaults/views/edit-vault.client.view.html'
+		});
+	}
+]);
+
+'use strict';
+
+// Vaults controller
+angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Vaults', 'TrackerVaults', '$modal', '$log', 'moment', 'AppStatics',
+	function($scope, $stateParams, $location, Authentication, Vaults, TrackerVaults, $modal, $log, moment, AppStatics) {
+        this.authentication = Authentication;
+		this.trackerVaults = TrackerVaults.listTrackerVaults($stateParams);
+        this.trackerId = $stateParams.trackerId;
+		this.modalCreate = function(size) {
+		    var modalInstance = $modal.open({
+		        templateUrl: 'modules/vaults/views/create-vault.client.view.html',
+		        controller: ["$scope", "$modalInstance", function($scope, $modalInstance) {
+		            $scope.ok = function() {
+		                // if (createCustomerForm.$valid){
+		                $modalInstance.close();
+		                // }
+		            };
+		            $scope.cancel = function() {
+		                $modalInstance.dismiss('cancel');
+		            };
+		        }],
+		        size: size
+		    });
+		    modalInstance.result.then(function(selectedItem) {
+
+		    	}, function() {
+		          $log.info('Modal dismissed at: ' + new Date());
+		    });
+		};
+		this.modalUpdate = function(size, selectedTracker) {
+
+		    var modalInstance = $modal.open({
+		        templateUrl: 'modules/vaults/views/edit-vault.client.view.html',
+		        controller: ["$scope", "$modalInstance", "tracker", function($scope, $modalInstance, tracker) {
+		            $scope.tracker = tracker;
+		            $scope.ok = function() {
+		                // if (updateCustomerForm.$valid){
+		                $modalInstance.close($scope.tracker);
+		                // }
+		            };
+		            $scope.cancel = function() {
+		                $modalInstance.dismiss('cancel');
+		            };
+		        }],
+		        size: size,
+		        resolve: {
+		            tracker: function() {
+		                return selectedTracker;
+		            }
+		        }
+		    });
+
+		    modalInstance.result.then(function(selectedItem) {
+		        $scope.selected = selectedItem;
+		    }, function() {
+		        $log.info('Modal dismissed at: ' + new Date());
+		    });
+		};
+
+
+		// // Create new Vault
+		// $scope.create = function() {
+		// 	// Create new Vault object
+		// 	var vault = new Vaults ({
+		// 		name: this.name
+		// 	});
+
+		// 	// Redirect after save
+		// 	vault.$save(function(response) {
+		// 		$location.path('vaults/' + response._id);
+
+		// 		// Clear form fields
+		// 		$scope.name = '';
+		// 	}, function(errorResponse) {
+		// 		$scope.error = errorResponse.data.message;
+		// 	});
+		// };
+
+		// Remove existing Vault
+		$scope.remove = function(vault) {
+			if ( vault ) {
+				vault.$remove();
+
+				for (var i in $scope.vaults) {
+					if ($scope.vaults [i] === vault) {
+						$scope.vaults.splice(i, 1);
+					}
+				}
+			} else {
+				$scope.vault.$remove(function() {
+					$location.path('vaults');
+				});
+			}
+		};
+
+		// // Update existing Vault
+		// $scope.update = function() {
+		// 	var vault = $scope.vault;
+
+		// 	vault.$update(function() {
+		// 		$location.path('vaults/' + vault._id);
+		// 	}, function(errorResponse) {
+		// 		$scope.error = errorResponse.data.message;
+		// 	});
+		// };
+
+		// // Find a list of Vaults
+		// $scope.find = function() {
+		// 	$scope.vaults = Vaults.query();
+		// };
+
+		// // Find existing Vault
+		// $scope.findOne = function() {
+		// 	$scope.vault = Vaults.get({
+		// 		vaultId: $stateParams.vaultId
+		// 	});
+		// };
+	}
+])
+
+
+	.controller('VaultsCreateController', ['$scope', '$stateParams', 'Vaults', 'TrackerVaults', 'Notify', 'AppStatics', 'Authentication', 'AppMessenger',
+	    function($scope, $stateParams, Vaults, TrackerVaults, Notify, AppStatics, Authentication, AppMessenger) {
+	    	this.appStatics = AppStatics;
+	    	this.authentication = Authentication;
+            this.create = function() {
+                var vault = new TrackerVaults({
+                    displayName: this.displayName,
+                    description: this.description,
+                    tracker: $stateParams.trackerId,
+                    owner: this.authentication.user._id,
+                    created: this.created
+                });
+                // Redirect after save
+                vault.$save(function(response) {
+                    Notify.sendMsg('RefreshVaults', {
+                        'trackerId': response.tracker
+                    });
+                    AppMessenger.sendInfoMsg(response);
+                }, function(errorResponse) {
+                    $scope.error = errorResponse.data.message;
+                });
+            };
+	    }
+	])
+	.controller('VaultsUpdateController', ['$scope', 'Vaults', 'TrackerVaults', 'AppStatics', 'Authentication', 'Notify',
+	    function($scope, Vaults, TrackerVaults, AppStatics, Authentication, Notify) {
+	    	this.appStatics = AppStatics;
+	    	this.authentication = Authentication;
+      //   this.update = function(updatedVault) {
+      //       var vault = updatedVault;
+      //       var users = [];
+      //       var owner = tracker.owner._id;
+      //       angular.forEach(tracker.users, function(value, key) {
+						//   users.push(value._id);
+						// });
+						// tracker.owner = owner;
+						// tracker.users = users;
+      //       tracker.$update(function() {
+      //         Notify.sendMsg('RefreshTrackers', {});
+      //       }, function(errorResponse) {
+      //           $scope.error = errorResponse.data.message;
+      //       });
+      //   };
+
+	    }
+	])
+
+	.directive('vaultsList', ['Vaults', 'TrackerVaults', 'Notify', function(Vaults, TrackerVaults, Notify) {
+	    return {
+	        restrict: 'E',
+	        transclude: true,
+	        templateUrl: 'modules/vaults/views/vaults-list-template.html',
+	        link: function(scope, element, attrs) {
+	            //when a new customer is added, update the customer list
+	            Notify.getMsg('RefreshVaults', function(event, data) {
+                    console.log(11111111);
+                    console.log(data);
+	                scope.vaultCtrl.trackerVaults = TrackerVaults.listTrackerVaults(data);
+	            });
+	        }
+	    };
+	}])
+
+;
+
+'use strict';
+
+//Vaults service used to communicate Vaults REST endpoints
+angular.module('vaults').factory('TrackerVaults', ['$resource',
+	function($resource) {
+		return $resource('trackervaults/:trackerId', { trackerId: '@trackerId'
+		}, {
+			update: {
+				method: 'PUT'
+			},
+      listTrackerVaults: {
+        method: 'GET',
+        isArray: true
+      }
+		});
+	}
+]);
+
+'use strict';
+
+//Vaults service used to communicate Vaults REST endpoints
+angular.module('vaults').factory('Vaults', ['$resource',
+	function($resource) {
+		return $resource('vaults/:vaultId', { vaultId: '@_id'
+		}, {
 			update: {
 				method: 'PUT'
 			}
