@@ -56,26 +56,6 @@ angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams
 		        $log.info('Modal dismissed at: ' + new Date());
 		    });
 		};
-
-
-		// // Create new Vault
-		// $scope.create = function() {
-		// 	// Create new Vault object
-		// 	var vault = new Vaults ({
-		// 		name: this.name
-		// 	});
-
-		// 	// Redirect after save
-		// 	vault.$save(function(response) {
-		// 		$location.path('vaults/' + response._id);
-
-		// 		// Clear form fields
-		// 		$scope.name = '';
-		// 	}, function(errorResponse) {
-		// 		$scope.error = errorResponse.data.message;
-		// 	});
-		// };
-
 		// Remove existing Vault
 		$scope.remove = function(vault) {
 			if ( vault ) {
