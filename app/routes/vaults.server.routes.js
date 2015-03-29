@@ -3,6 +3,7 @@
 module.exports = function(app) {
 	var users = require('../../app/controllers/users.server.controller');
 	var vaults = require('../../app/controllers/vaults.server.controller');
+    var trackers = require('../../app/controllers/trackers.server.controller');
 
 	// Vaults Routes
 	app.route('/vaults')
@@ -25,4 +26,10 @@ module.exports = function(app) {
 
 	// Finish by binding the Vault middleware
 	app.param('vaultId', vaults.vaultByID);
+    //app.param('trackerId', trackers.trackerByID);
 };
+
+
+
+
+
