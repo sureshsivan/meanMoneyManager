@@ -2,6 +2,9 @@
 >> hook up - resource bundle service
 >> hook up error and status messages with resource bundle service
 
+>> hook up - tooltips
+>> hook up - filters on Vaults
+
 >> clean up db side codes
     >> like checking for existance before deleting
     >> hook up authorization for every REST endpoint
