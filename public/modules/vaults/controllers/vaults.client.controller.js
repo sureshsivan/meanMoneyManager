@@ -4,8 +4,10 @@
 angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Vaults', 'TrackerVaults', '$modal', '$log', 'moment', 'AppStatics',
 	function($scope, $stateParams, $location, Authentication, Vaults, TrackerVaults, $modal, $log, moment, AppStatics) {
         this.authentication = Authentication;
+        console.log($stateParams);
 		this.trackerVaults = TrackerVaults.listTrackerVaults($stateParams);
         this.trackerId = $stateParams.trackerId;
+        this.vaultId = $stateParams.vaultId;
 		this.modalCreate = function(size) {
 		    var modalInstance = $modal.open({
 		        templateUrl: 'modules/vaults/views/create-vault.client.view.html',
@@ -58,7 +60,8 @@ angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams
 		    });
 		};
 		// Remove existing Vault
-		$scope.remove = function(vault) {
+		this.remove = function(vault) {
+			console.log(vault);
 			if ( vault ) {
 				vault.$remove();
 
@@ -132,7 +135,7 @@ angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams
 			     var vault = updatedVault;
 			     console.log(vault);
 //			     delete vault.owner;
-//			     delete vault.tracker;
+			     delete vault.tracker;
 //			     var users = [];
 //			     var owner = tracker.owner._id;
 //			     angular.forEach(tracker.users, function(value, key) {
@@ -140,7 +143,10 @@ angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams
 //							 });
 //							 tracker.owner = owner;
 //							 tracker.users = users;
-			     vault.$update($stateParams, function() {
+			     vault.$update({
+			    	 trackerId: $stateParams.trackerId,
+			    	 vaultId: 'vaultId'
+			     }, function() {
 			       Notify.sendMsg('RefreshTrackers', {});
 			     }, function(errorResponse) {
 			         $scope.error = errorResponse.data.message;
