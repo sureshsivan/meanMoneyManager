@@ -69,28 +69,6 @@ angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams
 			}
 		};
 
-		// // Update existing Vault
-		// $scope.update = function() {
-		// 	var vault = $scope.vault;
-
-		// 	vault.$update(function() {
-		// 		$location.path('vaults/' + vault._id);
-		// 	}, function(errorResponse) {
-		// 		$scope.error = errorResponse.data.message;
-		// 	});
-		// };
-
-		// // Find a list of Vaults
-		// $scope.find = function() {
-		// 	$scope.vaults = Vaults.query();
-		// };
-
-		// // Find existing Vault
-		// $scope.findOne = function() {
-		// 	$scope.vault = Vaults.get({
-		// 		vaultId: $stateParams.vaultId
-		// 	});
-		// };
 	}
 ])
 
@@ -125,16 +103,9 @@ angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams
 	    	this.authentication = Authentication;
 			 this.update = function(updatedVault) {
 			     var vault = updatedVault;
-			     console.log(vault);
-//			     delete vault.owner;
+
 			     delete vault.tracker;
-//			     var users = [];
-//			     var owner = tracker.owner._id;
-//			     angular.forEach(tracker.users, function(value, key) {
-//							   users.push(value._id);
-//							 });
-//							 tracker.owner = owner;
-//							 tracker.users = users;
+
 			     vault.$update({
 			    	 trackerId: $stateParams.trackerId,
                      vaultId: vault._id

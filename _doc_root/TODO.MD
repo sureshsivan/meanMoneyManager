@@ -16,3 +16,5 @@
 >> cleanup all console logs from code
 
 >> give a fancy view for user login/profile/settings pages
+
+>> cleanup all TODOs
