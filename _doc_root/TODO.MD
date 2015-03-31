@@ -12,3 +12,7 @@
 
 >> Write down comments on every part of code
 >> Generate docs on coding comment
+
+>> cleanup all console logs from code
+
+>> give a fancy view for user login/profile/settings pages
