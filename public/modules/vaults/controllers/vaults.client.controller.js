@@ -1,10 +1,9 @@
 'use strict';
 
 // Vaults controller
-angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Vaults', 'TrackerVaults', '$modal', '$log', 'moment', 'AppStatics',
-	function($scope, $stateParams, $location, Authentication, Vaults, TrackerVaults, $modal, $log, moment, AppStatics) {
+angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Vaults', 'TrackerVaults', '$modal', '$log', 'moment', 'AppStatics', 'Notify',
+	function($scope, $stateParams, $location, Authentication, Vaults, TrackerVaults, $modal, $log, moment, AppStatics, Notify) {
         this.authentication = Authentication;
-        console.log($stateParams);
 		this.trackerVaults = TrackerVaults.listTrackerVaults($stateParams);
         this.trackerId = $stateParams.trackerId;
         this.vaultId = $stateParams.vaultId;
@@ -63,17 +62,10 @@ angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams
 		this.remove = function(vault) {
 			console.log(vault);
 			if ( vault ) {
-				vault.$remove();
-
-				for (var i in $scope.vaults) {
-					if ($scope.vaults [i] === vault) {
-						$scope.vaults.splice(i, 1);
-					}
-				}
-			} else {
-				$scope.vault.$remove(function() {
-					$location.path('vaults');
-				});
+				vault.$remove({vaultId : vault._id}, function(res){
+                    console.log(res);
+                    Notify.sendMsg('RefreshVaults', $stateParams);
+                });
 			}
 		};
 
@@ -145,9 +137,9 @@ angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams
 //							 tracker.users = users;
 			     vault.$update({
 			    	 trackerId: $stateParams.trackerId,
-			    	 vaultId: 'vaultId'
+                     vaultId: vault._id
 			     }, function() {
-			       Notify.sendMsg('RefreshTrackers', {});
+			       Notify.sendMsg('RefreshVaults', {});
 			     }, function(errorResponse) {
 			         $scope.error = errorResponse.data.message;
 			     });
@@ -164,9 +156,7 @@ angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams
 	        link: function(scope, element, attrs) {
 	            //when a new customer is added, update the customer list
 	            Notify.getMsg('RefreshVaults', function(event, data) {
-                    console.log(11111111);
-                    console.log(data);
-	                scope.vaultCtrl.trackerVaults = TrackerVaults.listTrackerVaults(data);
+                    scope.vaultCtrl.trackerVaults = eTrackerVaults.listTrackerVaults(data)
 	            });
 	        }
 	    };

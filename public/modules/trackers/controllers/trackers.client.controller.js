@@ -60,11 +60,7 @@ angular.module('trackers')
 						return users;
 					};
 					this.loadVaults = function(trackerId, vaultId){
-						console.log(trackerId);
-						console.log(vaultId);
-						var dd = {trackerId: trackerId, vaultId: vaultId, 'summa' : 'afsdvbafsdvasdfv'};
-						console.log(dd);
-						$state.go('listTrackerVaults', dd);
+						$state.go('listTrackerVaults', {trackerId: trackerId});
 					};
 	        //pasted in from angular-ui bootstrap modal example
 	        //open a modal window to update a single customer record

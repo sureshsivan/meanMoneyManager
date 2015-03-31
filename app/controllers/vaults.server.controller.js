@@ -40,7 +40,7 @@ exports.read = function(req, res) {
 exports.update = function(req, res) {
 	console.log('EEEEEEEEE');
 	var vault = req.vault ;
-
+    console.log(vault);
 	vault = _.extend(vault , req.body);
 
 	vault.save(function(err) {
@@ -146,10 +146,20 @@ exports.vaultByTrackerVaultID = function(req, res, next, id) {
  * Vault authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
-	console.log(req.vault.owner.id);
-	console.log(req.user.id);
-	if (req.vault.owner.id !== req.user.id) {
-		return res.status(403).send('User is not authorized');
-	}
-	next();
+    if(! (req.query.vaultId)){
+        return res.status(403).send('User is not authorized - no request body found');
+    }
+    var vaultId = req.query.vaultId;
+    Vault.findById(vaultId)
+        .populate('owner', 'displayName')
+        .exec(function(err, vault) {
+            if (err) return next(err);
+            if (! vault) return next(new Error('Failed to load Vault ' + vaultId));
+            //TODO - why !== is not working here
+            if (vault.owner._id.toString() !== req.user.id.toString()) {
+                return res.status(403).send('User is not authorized');
+            }
+            req.vault = vault;
+            next();
+        });
 };
