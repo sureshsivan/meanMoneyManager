@@ -26,7 +26,7 @@ module.exports = function(app) {
 
 	// Finish by binding the Vault middleware
 	app.param('vaultId', vaults.vaultByID);
-    //app.param('trackerId', trackers.trackerByID);
+    app.param('trackerId', vaults.vaultByTrackerVaultID);
 };
 
 

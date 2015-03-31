@@ -1,23 +1,39 @@
-<section data-ng-controller="VaultsController" data-ng-init="findOne()">
-    <div class="page-header">
-        <h1>Edit Vault</h1>
+<section data-ng-controller="VaultsUpdateController as vaultsUpdateCtrl">
+    <div class="modal-header">
+        <h3 class="modal-title">Update: {{vault.displayName}}</h3>
     </div>
-    <div class="col-md-12">
-        <form class="form-horizontal" data-ng-submit="update()" novalidate>
+    <div class="modal-body">
+        <form name=editVaultForm>
             <fieldset>
-                <div class="form-group">
-                    <label class="control-label" for="name">Name</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="vault.name" id="name" class="form-control" placeholder="Name" required>
+                <div class="row">
+                    <div class="form-group">
+                        <div data-ng-show="error" class="text-center text-danger">
+                            <div class="alert alert-danger" role="alert">
+                                <strong data-ng-bind="error"></strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <label class="control-label" for="displayName"> Display Name</label>
+                            <div class="controls">
+                                <input type="text" data-ng-model="vault.displayName" id="displayName" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="description"> Description</label>
+                            <div class="controls">
+                                <input type="text" data-ng-model="vault.description" id="description" class="form-control" required>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <input type="submit" value="Update" class="btn btn-default">
-                </div>
-				<div data-ng-show="error" class="text-danger">
-					<strong data-ng-bind="error"></strong>
-				</div>
             </fieldset>
         </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-success btn-sm" ng-click="vaultsUpdateCtrl.update(vault); ok()">Update & Close</button>
+        <!-- ng-disabled="editVaultForm.$invalid -->
+        <button class="btn btn-warning btn-sm" ng-click="cancel()">Cancel</button>
     </div>
 </section>
