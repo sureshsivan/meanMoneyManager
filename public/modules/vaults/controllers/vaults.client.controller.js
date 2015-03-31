@@ -127,7 +127,7 @@ angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams
 	        link: function(scope, element, attrs) {
 	            //when a new customer is added, update the customer list
 	            Notify.getMsg('RefreshVaults', function(event, data) {
-                    scope.vaultCtrl.trackerVaults = eTrackerVaults.listTrackerVaults(data)
+                    scope.vaultCtrl.trackerVaults = TrackerVaults.listTrackerVaults(data);
 	            });
 	        }
 	    };

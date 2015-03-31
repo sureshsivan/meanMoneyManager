@@ -60,7 +60,7 @@ exports.update = function(req, res) {
  */
 exports.delete = function(req, res) {
 	var tracker = req.tracker ;
-
+    console.log('DELETING TRACKERS');
 	tracker.remove(function(err) {
 		if (err) {
 			return res.status(400).send({

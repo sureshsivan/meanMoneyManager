@@ -73,6 +73,27 @@ exports.delete = function(req, res) {
 };
 
 /**
+ * Delete an Vault
+ */
+exports.deleteByTrackerId = function(req, res, next) {
+    var tracker = req.tracker;
+    var trackerId = tracker._id;
+    //var vault = req.vault ;
+    console.log('DELETING VAULTS');
+
+    Vault.remove({tracker: mongoose.Types.ObjectId(trackerId)}, function(err) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            next();
+        }
+    });
+};
+
+
+/**
  * List of Vaults
  */
 exports.list = function(req, res) {

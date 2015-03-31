@@ -3,6 +3,7 @@
 module.exports = function(app) {
 	var users = require('../../app/controllers/users.server.controller');
 	var trackers = require('../../app/controllers/trackers.server.controller');
+    var vaults = require('../../app/controllers/vaults.server.controller');
 
 	// Trackers Routes
 	app.route('/trackers')
@@ -12,7 +13,7 @@ module.exports = function(app) {
 	app.route('/trackers/:trackerId')
 		.get(trackers.read)
 		.put(users.requiresLogin, trackers.hasAuthorization, trackers.updateById)
-		.delete(users.requiresLogin, trackers.hasAuthorization, trackers.delete);
+		.delete(users.requiresLogin, trackers.hasAuthorization, vaults.deleteByTrackerId, trackers.delete);
 
 	// Finish by binding the Tracker middleware
 	app.param('trackerId', trackers.trackerByID);
