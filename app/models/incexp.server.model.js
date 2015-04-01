@@ -10,17 +10,56 @@ var mongoose = require('mongoose'),
  * Incexp Schema
  */
 var IncexpSchema = new Schema({
-	name: {
+	displayName: {
 		type: String,
 		default: '',
 		required: 'Please fill Incexp name',
 		trim: true
 	},
+	description: {
+		type: String,
+		default: '',
+		required: 'Please fill Incexp name',
+		trim: true
+	},
+	tracker: {
+		type: Schema.ObjectId,
+		ref: 'Tracker'
+	},
+	tags: [{
+		type: String
+	}],
+	amount: {
+		type: Number,
+		required: 'Amount is mandatory'
+	},
+	vault: {
+		type: Schema.ObjectId,
+		ref: 'Vault'		
+	},
+	isPending: {
+		type: Boolean
+	},
+	pendingType: {
+		type: String 
+	},
+	endingWith: {
+		type: Schema.ObjectId,
+		ref: 'User'
+	},
 	created: {
 		type: Date,
 		default: Date.now
 	},
-	user: {
+	updated: {
+		type: Date,
+		default: Date.now
+	},
+	createdBy: {
+		type: Schema.ObjectId,
+		ref: 'User'
+	},
+	updatedBy: {
 		type: Schema.ObjectId,
 		ref: 'User'
 	}
