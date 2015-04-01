@@ -75,6 +75,11 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
 	    function($scope, $stateParams, Incexps, TrackerIncexps, Notify, AppStatics, Authentication, AppMessenger) {
 	    	this.appStatics = AppStatics;
 	    	this.authentication = Authentication;
+
+            this.getCurrencies = function(){
+                return this.appStatics.getCurrencies();
+            };
+
             this.create = function() {
                 var incexp = new TrackerIncexps({
                     displayName: this.displayName,
