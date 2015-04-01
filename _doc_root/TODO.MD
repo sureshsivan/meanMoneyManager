@@ -24,3 +24,6 @@
 
 >> try to use sass for stylesheets
 >> include font-awesome icon fonts
+
+>> email templating
+>> send reports through mail
