@@ -70,10 +70,54 @@ exports.delete = function(req, res) {
 };
 
 /**
+ * Delete an Vault
+ */
+exports.deleteByTrackerId = function(req, res, next) {
+    var tracker = req.tracker;
+    var trackerId = tracker._id;
+    //var vault = req.vault ;
+
+    Incexp.remove({tracker: mongoose.Types.ObjectId(trackerId)}, function(err) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            next();
+        }
+    });
+};
+
+/**
  * List of Incexps
  */
 exports.list = function(req, res) { 
 	Incexp.find().sort('-created').populate('user', 'displayName').exec(function(err, incexps) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(incexps);
+		}
+	});
+};
+
+/**
+ * List of Vaults
+ */
+exports.listByTrackerId = function(req, res) {
+	Incexp.find({tracker: mongoose.Types.ObjectId(req.query.trackerId)})
+	// Vault.find({'tracker' : mongoose.Types.ObjectId(req.tracker._id)})
+	.populate({
+		'path' : 'owner',
+		'select' : 'firstName lastName displayName email _id'
+	})
+    .populate({
+        'path' : 'tracker',
+        'select' : 'displayName _id'
+    })
+	.sort('-created').exec(function(err, incexps) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
@@ -96,12 +140,44 @@ exports.incexpByID = function(req, res, next, id) {
 	});
 };
 
+
+/**
+ * Vault middleware (Inclusive of tracker)
+ */
+exports.incexpByTrackerIncexpID = function(req, res, next, id) {
+	if(req.body && req.body._id){
+		Incexp.findById(req.body._id)
+		.populate('owner', 'displayName')
+		.exec(function(err, incexp) {
+			if (err) return next(err);
+			if (! vault) return next(new Error('Failed to load Vault ' + id));
+			req.incexp = incexp ;
+			next();
+		});	
+	} else {
+		next();	
+	}
+};
+
+
 /**
  * Incexp authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
-	if (req.incexp.user.id !== req.user.id) {
-		return res.status(403).send('User is not authorized');
-	}
-	next();
+    if(! (req.query.incexpId)){
+        return res.status(403).send('User is not authorized - no request body found');
+    }
+    var incexpId = req.query.incexpId;
+    Incexp.findById(incexpId)
+        .populate('owner', 'displayName')
+        .exec(function(err, incexp) {
+            if (err) return next(err);
+            if (! incexp) return next(new Error('Failed to load Vault ' + incexpId));
+            //TODO - why !== is not working here
+            if (incexp.owner._id.toString() !== req.user.id.toString()) {
+                return res.status(403).send('User is not authorized');
+            }
+            req.incexp = incexp;
+            next();
+        });
 };

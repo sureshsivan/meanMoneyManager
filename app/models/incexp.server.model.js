@@ -43,7 +43,7 @@ var IncexpSchema = new Schema({
 	pendingType: {
 		type: String 
 	},
-	endingWith: {
+	pendingWith: {
 		type: Schema.ObjectId,
 		ref: 'User'
 	},
@@ -55,7 +55,7 @@ var IncexpSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
-	createdBy: {
+	owner: {
 		type: Schema.ObjectId,
 		ref: 'User'
 	},

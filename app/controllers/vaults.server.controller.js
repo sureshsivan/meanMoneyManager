@@ -38,7 +38,6 @@ exports.read = function(req, res) {
  * Update a Vault
  */
 exports.update = function(req, res) {
-	console.log('EEEEEEEEE');
 	var vault = req.vault ;
     console.log(vault);
 	vault = _.extend(vault , req.body);
@@ -79,7 +78,6 @@ exports.deleteByTrackerId = function(req, res, next) {
     var tracker = req.tracker;
     var trackerId = tracker._id;
     //var vault = req.vault ;
-    console.log('DELETING VAULTS');
 
     Vault.remove({tracker: mongoose.Types.ObjectId(trackerId)}, function(err) {
         if (err) {
