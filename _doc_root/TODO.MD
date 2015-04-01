@@ -21,3 +21,6 @@
 >> give a fancy view for user login/profile/settings pages
 
 >> cleanup all TODOs
+
+>> try to use sass for stylesheets
+>> include font-awesome icon fonts
