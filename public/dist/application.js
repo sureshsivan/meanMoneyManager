@@ -55,6 +55,10 @@ ApplicationConfiguration.registerModule('core');
 'use strict';
 
 // Use applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('incexps');
+'use strict';
+
+// Use applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('trackers');
 'use strict';
 
@@ -439,6 +443,209 @@ angular.module('core').service('Menus', [
 'use strict';
 
 // Configuring the Articles module
+angular.module('incexps').run(['Menus',
+	function(Menus) {
+		// Set top bar menu items
+//		Menus.addMenuItem('topbar', 'Incexps', 'incexps', 'dropdown', '/incexps(/create)?');
+//		Menus.addSubMenuItem('topbar', 'incexps', 'List Incexps', 'incexps');
+//		Menus.addSubMenuItem('topbar', 'incexps', 'New Incexp', 'incexps/create');
+	}
+]);
+'use strict';
+
+//Setting up route
+angular.module('incexps').config(['$stateProvider',
+	function($stateProvider) {
+		// Incexps state routing
+		$stateProvider.
+		state('listTrackerIncexps', {
+			url: '/trackerincexps',
+			templateUrl: 'modules/incexps/views/list-incexps.client.view.html'
+//		}).
+//		state('createIncexp', {
+//			url: '/incexps/create',
+//			templateUrl: 'modules/incexps/views/create-incexp.client.view.html'
+//		}).
+//		state('viewIncexp', {
+//			url: '/incexps/:incexpId',
+//			templateUrl: 'modules/incexps/views/view-incexp.client.view.html'
+//		}).
+//		state('editIncexp', {
+//			url: '/incexps/:incexpId/edit',
+//			templateUrl: 'modules/incexps/views/edit-incexp.client.view.html'
+		});
+	}
+]);
+'use strict';
+
+// Incexps controller
+angular.module('incexps').controller('IncexpsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Incexps', 'TrackerIncexps', '$modal', '$log', 'moment', 'AppStatics', 'Notify',
+	function($scope, $stateParams, $location, Authentication, Incexps, TrackerIncexps, $modal, $log, moment, AppStatics, Notify) {
+        this.authentication = Authentication;
+		this.trackerIncexps = TrackerIncexps.listTrackerIncexps($stateParams);
+        this.trackerId = $stateParams.trackerId;
+        this.incexpId = $stateParams.incexpId;
+		this.modalCreate = function(size) {
+		    var modalInstance = $modal.open({
+		        templateUrl: 'modules/incexps/views/create-incexp.client.view.html',
+		        controller: ["$scope", "$modalInstance", function($scope, $modalInstance) {
+		            $scope.ok = function() {
+		                // if (createCustomerForm.$valid){
+		                $modalInstance.close();
+		                // }
+		            };
+		            $scope.cancel = function() {
+		                $modalInstance.dismiss('cancel');
+		            };
+		        }],
+		        size: size
+		    });
+		    modalInstance.result.then(function(selectedItem) {
+
+		    	}, function() {
+		          $log.info('Modal dismissed at: ' + new Date());
+		    });
+		};
+		this.modalUpdate = function(size, selectedIncexp) {
+		    var modalInstance = $modal.open({
+		        templateUrl: 'modules/incexps/views/edit-incexp.client.view.html',
+		        controller: ["$scope", "$modalInstance", "incexp", function($scope, $modalInstance, incexp) {
+		            $scope.incexp = incexp;
+		            $scope.ok = function() {
+		                // if (updateCustomerForm.$valid){
+		                $modalInstance.close($scope.incexp);
+		                // }
+		            };
+		            $scope.cancel = function() {
+		                $modalInstance.dismiss('cancel');
+		            };
+		        }],
+		        size: size,
+		        resolve: {
+		            incexp: function() {
+		                return selectedIncexp;
+		            }
+		        }
+		    });
+
+		    modalInstance.result.then(function(selectedItem) {
+		        $scope.selected = selectedItem;
+		    }, function() {
+		        $log.info('Modal dismissed at: ' + new Date());
+		    });
+		};
+		// Remove existing Incexp
+		this.remove = function(incexp) {
+			console.log(incexp);
+			if ( incexp ) {
+				incexp.$remove({incexpId : incexp._id}, function(res){
+                    console.log(res);
+                    Notify.sendMsg('RefreshIncexps', $stateParams);
+                });
+			}
+		};
+
+	}
+])
+
+
+	.controller('IncexpsCreateController', ['$scope', '$stateParams', 'Incexps', 'TrackerIncexps', 'Notify', 'AppStatics', 'Authentication', 'AppMessenger',
+	    function($scope, $stateParams, Incexps, TrackerIncexps, Notify, AppStatics, Authentication, AppMessenger) {
+	    	this.appStatics = AppStatics;
+	    	this.authentication = Authentication;
+            this.create = function() {
+                var incexp = new TrackerIncexps({
+                    displayName: this.displayName,
+                    description: this.description,
+                    tracker: $stateParams.trackerId,
+                    owner: this.authentication.user._id,
+                    created: this.created
+                });
+                // Redirect after save
+                incexp.$save(function(response) {
+                    Notify.sendMsg('RefreshIncexps', {
+                        'trackerId': response.tracker
+                    });
+                    AppMessenger.sendInfoMsg(response);
+                }, function(errorResponse) {
+                    $scope.error = errorResponse.data.message;
+                });
+            };
+	    }
+	])
+	.controller('IncexpsUpdateController', ['$scope', '$stateParams', 'Incexps', 'TrackerIncexps', 'AppStatics', 'Authentication', 'Notify',
+	    function($scope, $stateParams, Incexps, TrackerIncexps, AppStatics, Authentication, Notify) {
+	    	this.appStatics = AppStatics;
+	    	this.authentication = Authentication;
+			 this.update = function(updatedIncexp) {
+			     var incexp = updatedIncexp;
+
+			     delete incexp.tracker;
+
+			     incexp.$update({
+			    	 trackerId: $stateParams.trackerId,
+                     incexpId: incexp._id
+			     }, function() {
+			       Notify.sendMsg('RefreshIncexps', {});
+			     }, function(errorResponse) {
+			         $scope.error = errorResponse.data.message;
+			     });
+			 };
+
+	    }
+	])
+
+	.directive('incexpsList', ['Incexps', 'TrackerIncexps', 'Notify', function(Incexps, TrackerIncexps, Notify) {
+	    return {
+	        restrict: 'E',
+	        transclude: true,
+	        templateUrl: 'modules/incexps/views/incexps-list-template.html',
+	        link: function(scope, element, attrs) {
+	            //when a new customer is added, update the customer list
+	            Notify.getMsg('RefreshIncexps', function(event, data) {
+                    scope.incexpCtrl.trackerIncexps = TrackerIncexps.listTrackerIncexps(data);
+	            });
+	        }
+	    };
+	}])
+
+;
+
+'use strict';
+
+//Incexps service used to communicate Incexps REST endpoints
+angular.module('incexps').factory('Incexps', ['$resource',
+	function($resource) {
+		return $resource('incexps/:incexpId', { incexpId: '@_id'
+		}, {
+			update: {
+				method: 'PUT'
+			}
+		});
+	}
+]);
+'use strict';
+
+//Vaults service used to communicate Vaults REST endpoints
+angular.module('incexps').factory('TrackerIncexps', ['$resource',
+	function($resource) {
+		return $resource('trackerincexps', null, {
+			update: {
+				method: 'PUT',
+                params: {incexpId : 'incexpId'}
+			},
+              listTrackerIncexps: {
+                method: 'GET',
+                  params: {trackerId : 'trackerId'},
+                isArray: true
+          }
+		});
+	}
+]);
+
+'use strict';
+
+// Configuring the Articles module
 angular.module('trackers').run(['Menus',
 	function(Menus) {
 		// Set top bar menu items
@@ -534,8 +741,12 @@ angular.module('trackers')
 						return users;
 					};
 					this.loadVaults = function(trackerId){
-						$state.go('listTrackerVaults', {trackerId: trackerId, summa : 'SDGVASDFGASDFGASFDGBS'});
+						$state.go('listTrackerVaults', {trackerId: trackerId});
 					};
+					this.loadIncexps = function(trackerId){
+						$state.go('listTrackerIncexps', {trackerId: trackerId});
+					};
+					
 	        //pasted in from angular-ui bootstrap modal example
 	        //open a modal window to update a single customer record
 	        this.modalUpdate = function(size, selectedTracker) {
@@ -1007,11 +1218,12 @@ angular.module('vaults').config(['$stateProvider',
 'use strict';
 
 // Vaults controller
-angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Vaults', 'TrackerVaults', '$modal', '$log', 'moment', 'AppStatics',
-	function($scope, $stateParams, $location, Authentication, Vaults, TrackerVaults, $modal, $log, moment, AppStatics) {
+angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Vaults', 'TrackerVaults', '$modal', '$log', 'moment', 'AppStatics', 'Notify',
+	function($scope, $stateParams, $location, Authentication, Vaults, TrackerVaults, $modal, $log, moment, AppStatics, Notify) {
         this.authentication = Authentication;
 		this.trackerVaults = TrackerVaults.listTrackerVaults($stateParams);
         this.trackerId = $stateParams.trackerId;
+        this.vaultId = $stateParams.vaultId;
 		this.modalCreate = function(size) {
 		    var modalInstance = $modal.open({
 		        templateUrl: 'modules/vaults/views/create-vault.client.view.html',
@@ -1033,15 +1245,14 @@ angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams
 		          $log.info('Modal dismissed at: ' + new Date());
 		    });
 		};
-		this.modalUpdate = function(size, selectedTracker) {
-
+		this.modalUpdate = function(size, selectedVault) {
 		    var modalInstance = $modal.open({
 		        templateUrl: 'modules/vaults/views/edit-vault.client.view.html',
-		        controller: ["$scope", "$modalInstance", "tracker", function($scope, $modalInstance, tracker) {
-		            $scope.tracker = tracker;
+		        controller: ["$scope", "$modalInstance", "vault", function($scope, $modalInstance, vault) {
+		            $scope.vault = vault;
 		            $scope.ok = function() {
 		                // if (updateCustomerForm.$valid){
-		                $modalInstance.close($scope.tracker);
+		                $modalInstance.close($scope.vault);
 		                // }
 		            };
 		            $scope.cancel = function() {
@@ -1050,8 +1261,8 @@ angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams
 		        }],
 		        size: size,
 		        resolve: {
-		            tracker: function() {
-		                return selectedTracker;
+		            vault: function() {
+		                return selectedVault;
 		            }
 		        }
 		    });
@@ -1062,65 +1273,17 @@ angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams
 		        $log.info('Modal dismissed at: ' + new Date());
 		    });
 		};
-
-
-		// // Create new Vault
-		// $scope.create = function() {
-		// 	// Create new Vault object
-		// 	var vault = new Vaults ({
-		// 		name: this.name
-		// 	});
-
-		// 	// Redirect after save
-		// 	vault.$save(function(response) {
-		// 		$location.path('vaults/' + response._id);
-
-		// 		// Clear form fields
-		// 		$scope.name = '';
-		// 	}, function(errorResponse) {
-		// 		$scope.error = errorResponse.data.message;
-		// 	});
-		// };
-
 		// Remove existing Vault
-		$scope.remove = function(vault) {
+		this.remove = function(vault) {
+			console.log(vault);
 			if ( vault ) {
-				vault.$remove();
-
-				for (var i in $scope.vaults) {
-					if ($scope.vaults [i] === vault) {
-						$scope.vaults.splice(i, 1);
-					}
-				}
-			} else {
-				$scope.vault.$remove(function() {
-					$location.path('vaults');
-				});
+				vault.$remove({vaultId : vault._id}, function(res){
+                    console.log(res);
+                    Notify.sendMsg('RefreshVaults', $stateParams);
+                });
 			}
 		};
 
-		// // Update existing Vault
-		// $scope.update = function() {
-		// 	var vault = $scope.vault;
-
-		// 	vault.$update(function() {
-		// 		$location.path('vaults/' + vault._id);
-		// 	}, function(errorResponse) {
-		// 		$scope.error = errorResponse.data.message;
-		// 	});
-		// };
-
-		// // Find a list of Vaults
-		// $scope.find = function() {
-		// 	$scope.vaults = Vaults.query();
-		// };
-
-		// // Find existing Vault
-		// $scope.findOne = function() {
-		// 	$scope.vault = Vaults.get({
-		// 		vaultId: $stateParams.vaultId
-		// 	});
-		// };
 	}
 ])
 
@@ -1149,25 +1312,24 @@ angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams
             };
 	    }
 	])
-	.controller('VaultsUpdateController', ['$scope', 'Vaults', 'TrackerVaults', 'AppStatics', 'Authentication', 'Notify',
-	    function($scope, Vaults, TrackerVaults, AppStatics, Authentication, Notify) {
+	.controller('VaultsUpdateController', ['$scope', '$stateParams', 'Vaults', 'TrackerVaults', 'AppStatics', 'Authentication', 'Notify',
+	    function($scope, $stateParams, Vaults, TrackerVaults, AppStatics, Authentication, Notify) {
 	    	this.appStatics = AppStatics;
 	    	this.authentication = Authentication;
-      //   this.update = function(updatedVault) {
-      //       var vault = updatedVault;
-      //       var users = [];
-      //       var owner = tracker.owner._id;
-      //       angular.forEach(tracker.users, function(value, key) {
-						//   users.push(value._id);
-						// });
-						// tracker.owner = owner;
-						// tracker.users = users;
-      //       tracker.$update(function() {
-      //         Notify.sendMsg('RefreshTrackers', {});
-      //       }, function(errorResponse) {
-      //           $scope.error = errorResponse.data.message;
-      //       });
-      //   };
+			 this.update = function(updatedVault) {
+			     var vault = updatedVault;
+
+			     delete vault.tracker;
+
+			     vault.$update({
+			    	 trackerId: $stateParams.trackerId,
+                     vaultId: vault._id
+			     }, function() {
+			       Notify.sendMsg('RefreshVaults', {});
+			     }, function(errorResponse) {
+			         $scope.error = errorResponse.data.message;
+			     });
+			 };
 
 	    }
 	])
@@ -1180,9 +1342,7 @@ angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams
 	        link: function(scope, element, attrs) {
 	            //when a new customer is added, update the customer list
 	            Notify.getMsg('RefreshVaults', function(event, data) {
-                    console.log(11111111);
-                    console.log(data);
-	                scope.vaultCtrl.trackerVaults = TrackerVaults.listTrackerVaults(data);
+                    scope.vaultCtrl.trackerVaults = TrackerVaults.listTrackerVaults(data);
 	            });
 	        }
 	    };
@@ -1195,15 +1355,16 @@ angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams
 //Vaults service used to communicate Vaults REST endpoints
 angular.module('vaults').factory('TrackerVaults', ['$resource',
 	function($resource) {
-		return $resource('trackervaults/:trackerId', { trackerId: '@trackerId'
-		}, {
+		return $resource('trackervaults', null, {
 			update: {
-				method: 'PUT'
+				method: 'PUT',
+                params: {vaultId : 'vaultId'}
 			},
-      listTrackerVaults: {
-        method: 'GET',
-        isArray: true
-      }
+              listTrackerVaults: {
+                method: 'GET',
+                  params: {trackerId : 'trackerId'},
+                isArray: true
+          }
 		});
 	}
 ]);

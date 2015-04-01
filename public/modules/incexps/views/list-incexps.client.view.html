@@ -1,19 +1,23 @@
-<section data-ng-controller="IncexpsController" data-ng-init="find()">
+<section data-ng-controller="IncexpsController as incexpCtrl">
     <div class="page-header">
-        <h1>Incexps</h1>
+        <h1>Incexps{{ (incexpCtrl.trackerIncexps && incexpCtrl.trackerIncexps.length > 0) ? ' of ' + incexpCtrl.trackerIncexps[0].tracker.displayName : ''}}</h1>
     </div>
-    <div class="list-group">
-        <a data-ng-repeat="incexp in incexps" data-ng-href="#!/incexps/{{incexp._id}}" class="list-group-item">
-			<small class="list-group-item-text">
-				Posted on
-				<span data-ng-bind="incexp.created | date:'medium'"></span>
-				by
-				<span data-ng-bind="incexp.user.displayName"></span>
-			</small>
-			<h4 class="list-group-item-heading" data-ng-bind="incexp.name"></h4>
-        </a>
+    <div class="row">
+        <div class="col-xs-12 col-sm-9">
+            <div class="input-group input-group">
+                <input type="text" ng-model="searchText" class="form-control" placeholder="Search Incexps...">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button">Go!</button>
+                </span>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-3 text-center pull-right">
+            <button type="button" class="btn btn-success text-center" ng-click="incexpCtrl.modalCreate('lg')">
+                <i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;New IncExp
+            </button>
+        </div>
     </div>
-    <div class="alert alert-warning text-center" data-ng-hide="!incexps.$resolved || incexps.length">
-    	No Incexps yet, why don't you <a href="/#!/incexps/create">create one</a>?
+    <div class="row">
+        <incexps-list></incexps-list>
     </div>
 </section>

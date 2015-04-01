@@ -1,0 +1,42 @@
+<div class="list-group">
+	<div class="col-xs-12 pad-top"
+		data-ng-repeat="incexp in incexpCtrl.trackerIncExps | filter:searchText">
+		<a ng-click="" class="list-group-item">
+			<div class="row">
+				<div class="col-xs-12">
+					<strong><h4>
+						IncExp : {{incexp.displayName}}
+					</h4></strong>
+					<small class="text-muted">
+						<span data-ng-bind="incexp.description"></span>
+					</small>
+					<br/>
+                    <small class="text-muted">
+                        <strong>Created By : </strong><span data-ng-bind="incexp.owner.displayName"></span>
+                    </small>
+					<br/>
+					<small class="list-group-item-text text-muted">
+						<strong>Created On : </strong><span data-ng-bind="incexp.created"></span>
+						<span class="pull-right pad-left">
+							<button class="btn btn-danger btn-sm" ng-click="incexpCtrl.remove(incexp)"
+								data-ng-class="incexp.owner._id == incexpCtrl.authentication.user._id ? '' : 'disabled'">
+								<i class="glyphicon glyphicon-trash"></i>
+							</button>
+						</span>
+						<span class="pull-right pad-left">
+							<button class="btn btn-warning btn-sm" ng-click="incexpCtrl.modalUpdate('lg', incexp)"
+								data-ng-class="incexp.owner._id == incexpCtrl.authentication.user._id ? '' : 'disabled'">
+								<i class="glyphicon glyphicon-edit"></i>
+							</button>
+						</span>
+					</small>
+				</div>
+			</div>
+		</a>
+	</div>
+</div>
+<div class="alert alert-warning text-center"
+	data-ng-hide="!trackerIncExps.$resolved || trackerIncExps.length">
+	No incexps yet, why don't you <a href="/#!/trackers/create">create
+		one</a>?
+</div>

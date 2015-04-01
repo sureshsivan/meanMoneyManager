@@ -29,8 +29,6 @@ angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams
 		    });
 		};
 		this.modalUpdate = function(size, selectedVault) {
-			console.dir('DVASDVA');
-			console.dir(selectedVault);
 		    var modalInstance = $modal.open({
 		        templateUrl: 'modules/vaults/views/edit-vault.client.view.html',
 		        controller: function($scope, $modalInstance, vault) {
