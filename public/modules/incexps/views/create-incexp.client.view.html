@@ -57,9 +57,10 @@
                                     <select data-ng-model="incexpCreateCtrl.pendingType" id="pendingType" class="form-control" ng-options="currencyItem.id as currencyItem.label for currencyItem in incexpCreateCtrl.getCurrencies()">
                                         <option value="" disabled>-- Choose Approval Type --</option>
                                     </select>
-                                    <select data-ng-model="incexpCreateCtrl.pendingWith" id="pendingWith" class="form-control" ng-options="currencyItem.id as currencyItem.label for currencyItem in incexpCreateCtrl.getCurrencies()">
+                                    <select data-ng-model="incexpCreateCtrl.pendingWith1" id="pendingWith" class="form-control" ng-options="currencyItem.id as currencyItem.label for currencyItem in incexpCreateCtrl.getCurrencies()">
                                         <option value="" disabled>-- Choose Approver --</option>
                                     </select>
+                                    <select-users user="incexpCreateCtrl.pendingWith"></select-users>
                                 </div>
 
                             </div>

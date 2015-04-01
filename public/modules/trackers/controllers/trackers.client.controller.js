@@ -198,7 +198,7 @@ angular.module('trackers')
 	    return {
 	        restrict: 'E',
 	        transclude: true,
-	        templateUrl: 'modules/trackers/views/add-users-template.html',
+	        templateUrl: 'modules/core/views/add-users-template.html',
 	        link: function(scope, element, attrs) {
 	        },
 	        scope: {

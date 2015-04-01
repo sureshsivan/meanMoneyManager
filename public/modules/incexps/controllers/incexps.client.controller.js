@@ -85,6 +85,12 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     displayName: this.displayName,
                     description: this.description,
                     tracker: $stateParams.trackerId,
+                    tags: this.tags,
+                    amount: this.amount,
+                    vault: this.vault,
+                    isPending: this.isPending,
+                    pendingType: this.pendingType,
+                    pendingWith: this.pendingWith,
                     owner: this.authentication.user._id,
                     created: this.created
                 });
@@ -135,5 +141,26 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
 	        }
 	    };
 	}])
+
+    .directive('selectUsers', ['Incexps', 'TrackerIncexps', 'AppStatics', 'Authentication', function(Incexps, TrackerIncexps, AppStatics, Authentication) {
+        return {
+            restrict: 'E',
+            transclude: true,
+            templateUrl: 'modules/core/views/list-users-combo-template.html',
+            link: function(scope, element, attrs) {
+            },
+            scope: {
+                currentUser: '=user'
+            },
+            controller: function($scope){
+                $scope.authentication = Authentication;
+                var curUsersArr = [];
+                curUsersArr.push(Authentication.user.id);
+                $scope.queryUsers = function(query){
+                    return AppStatics.queryUsers(query, curUsersArr.join());
+                };
+            }
+        };
+    }])
 
 ;

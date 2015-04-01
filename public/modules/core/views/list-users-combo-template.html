@@ -1,0 +1,4 @@
+<input type="text" ng-model="currentUser" placeholder="Type to select User"
+       typeahead="user as user.displayName for user in queryUsers($viewValue)"
+       typeahead-loading="loadingUsers" class="form-control"/>
+<i ng-show="loadingUsers" class="glyphicon glyphicon-refresh"></i>
