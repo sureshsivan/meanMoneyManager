@@ -15,10 +15,10 @@
             data-ng-repeat="user in assignedUsers">
             <strong data-ng-show="user._id === authentication.user._id">Owner : </strong>
             {{user.displayName}} ({{user.email}})
-            <i class="fa fa-home fa-border pull-right"
+            <i class="fa fa-home fa-btn-xs pull-right"
                     data-ng-hide="user._id !== authentication.user._id">
             </i>
-            <i class="fa fa-close pull-right"
+            <i class="fa fa-close fa-btn-xs pull-right"
                 data-ng-hide="user._id === authentication.user._id"
                 data-ng-click="removeUser($index)">
             </i>

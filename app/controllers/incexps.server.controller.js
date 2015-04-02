@@ -150,7 +150,7 @@ exports.incexpByTrackerIncexpID = function(req, res, next, id) {
 		.populate('owner', 'displayName')
 		.exec(function(err, incexp) {
 			if (err) return next(err);
-			if (! vault) return next(new Error('Failed to load Vault ' + id));
+			if (! incexp) return next(new Error('Failed to load Vault ' + id));
 			req.incexp = incexp ;
 			next();
 		});	

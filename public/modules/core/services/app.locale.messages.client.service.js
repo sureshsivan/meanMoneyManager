@@ -11,7 +11,7 @@ angular.module('core').service('AppLocaleMessages', [ '$http',
 		};
 		appLocaleMessages.getMsg = function(key){
 			//	TODO - check for better logic
-			if(Object.getOwnPropertyNames(appLocaleMessages.localeMessages).length == 0){
+			if(Object.getOwnPropertyNames(appLocaleMessages.localeMessages).length === 0){
 				return $http.get('/users/search', {
 				      params: {
 				    	  locale: 'en'
@@ -19,16 +19,16 @@ angular.module('core').service('AppLocaleMessages', [ '$http',
 				    }).then(function(response){
 				    	// build props
 				    	return appLocaleMessages[key];
-				    }, function(response) {
-	                    // something went wrong
-				    	console.log(response);
-	                    return $q.reject(response.data);
+				    //}, function(response) {
+	                 //   // something went wrong
+				    //	console.log(response);
+	                 //   return $q.reject(response.data);
 	            	});
 			} else {
 				return appLocaleMessages[key];	
 			}
 			
-		}
-		return appStatics;
+		};
+		return appLocaleMessages;
 	}
 ]);

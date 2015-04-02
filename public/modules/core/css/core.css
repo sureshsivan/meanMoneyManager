@@ -20,3 +20,12 @@ body {
 .ng-valid.ng-dirty {
 	border-color: #78FA89;
 }
+.fa-btn-xs{
+    font-weight: normal;
+    /*color: #c8d1e4;*/
+}
+.fa-btn-xs:hover{
+    cursor: pointer !important;
+    font-weight: bolder;
+    /*color: #fff;*/
+}
