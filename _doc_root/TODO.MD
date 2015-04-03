@@ -29,3 +29,5 @@
 >> send reports through mail
 
 >> Implement help system - with mask and focus
+
+>> Add awesome SVGs from D3JS
