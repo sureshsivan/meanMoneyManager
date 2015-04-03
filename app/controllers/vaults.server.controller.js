@@ -135,12 +135,13 @@ exports.listByTrackerId = function(req, res) {
  * List of Vaults - excluding vaults
  */
 exports.listByTrackerIdExcludeVaults = function(req, res) {
+    console.log(req.query       );
 	var vaults = req.query.exv;
 	var excludeVaults = [];
 	if(vaults && vaults.length > 0){
 		excludeVaults = vaults.split(',');
 	}
-	Vault.find({tracker: mongoose.Types.ObjectId(req.query.trackerId)})
+	Vault.find({tracker: mongoose.Types.ObjectId(req.query.tId)})
 	// Vault.find({'tracker' : mongoose.Types.ObjectId(req.tracker._id)})
 	.where('_id').nin(excludeVaults)
 	.select('_id displayName')

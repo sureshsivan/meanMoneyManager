@@ -4,7 +4,7 @@ angular.module('vaults').service('VaultStatics', [ '$http',
 	function($http) {
 		var vaultStatics = {};
 		vaultStatics.queryVaults = function(trackerId, excludeVaults){
-			return $http.get('/vaults/queryByTracker', {
+			return $http.get('/queryvaults/queryByTracker', {
 			      params: {
 			    	tId: trackerId,
 			        exv: excludeVaults

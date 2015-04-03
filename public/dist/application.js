@@ -175,6 +175,41 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 ]);
 'use strict';
 
+angular.module('core').service('AppLocaleMessages', [ '$http',
+	function($http) {
+		var appLocaleMessages = {};
+		
+		appLocaleMessages.localeMessages = {
+				'app.err.msg.XX' : 'App Error Message',
+				'app.warn.msg.XX' : 'App Warn Message',
+				'app.info.msg.XX' : 'App Info Message'
+		};
+		appLocaleMessages.getMsg = function(key){
+			//	TODO - check for better logic
+			if(Object.getOwnPropertyNames(appLocaleMessages.localeMessages).length === 0){
+				return $http.get('/users/search', {
+				      params: {
+				    	  locale: 'en'
+				      }
+				    }).then(function(response){
+				    	// build props
+				    	return appLocaleMessages[key];
+				    }, function(response) {
+	                    // something went wrong
+//				    	console.log(response);
+//	                    return $q.reject(response.data);
+	            	});
+			} else {
+				return appLocaleMessages[key];	
+			}
+			
+		};
+		return appLocaleMessages;
+	}
+]);
+
+'use strict';
+
 angular.module('core')
 
     .factory('Notify', ['$rootScope', function($rootScope) {
@@ -208,19 +243,6 @@ angular.module('core').service('AppStatics', [ '$http',
 					    		            {id: 'EUR', label: 'Euro'}];
 				}
 				return this.currencies;
-			};
-		appStatics.queryUsers = function(query, users){
-				return $http.get('/users/search', {
-				      params: {
-				        q: query,
-				        nu: users
-				      }
-				    }).then(function(response){
-				    	console.log(response);
-				      return response.data.map(function(item){
-				        return item;
-				      });
-				    });
 			};
 		return appStatics;
 	}
@@ -459,7 +481,7 @@ angular.module('incexps').config(['$stateProvider',
 		// Incexps state routing
 		$stateProvider.
 		state('listTrackerIncexps', {
-			url: '/trackerincexps',
+			url: '/trackerincexps/:trackerId',
 			templateUrl: 'modules/incexps/views/list-incexps.client.view.html'
 //		}).
 //		state('createIncexp', {
@@ -479,12 +501,14 @@ angular.module('incexps').config(['$stateProvider',
 'use strict';
 
 // Incexps controller
-angular.module('incexps').controller('IncexpsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Incexps', 'TrackerIncexps', '$modal', '$log', 'moment', 'AppStatics', 'Notify',
-	function($scope, $stateParams, $location, Authentication, Incexps, TrackerIncexps, $modal, $log, moment, AppStatics, Notify) {
+angular.module('incexps').controller('IncexpsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Incexps', 'TrackerIncexps', '$modal', '$log', 'moment', 'AppStatics', 'Notify', 'VaultStatics',
+	function($scope, $stateParams, $location, Authentication, Incexps, TrackerIncexps, $modal, $log, moment, AppStatics, Notify, VaultStatics) {
         this.authentication = Authentication;
 		this.trackerIncexps = TrackerIncexps.listTrackerIncexps($stateParams);
+		this.vaultStatics = VaultStatics;
         this.trackerId = $stateParams.trackerId;
         this.incexpId = $stateParams.incexpId;
+
 		this.modalCreate = function(size) {
 		    var modalInstance = $modal.open({
 		        templateUrl: 'modules/incexps/views/create-incexp.client.view.html',
@@ -549,15 +573,28 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
 ])
 
 
-	.controller('IncexpsCreateController', ['$scope', '$stateParams', 'Incexps', 'TrackerIncexps', 'Notify', 'AppStatics', 'Authentication', 'AppMessenger',
-	    function($scope, $stateParams, Incexps, TrackerIncexps, Notify, AppStatics, Authentication, AppMessenger) {
+	.controller('IncexpsCreateController', ['$scope', '$stateParams', 'Incexps', 'TrackerIncexps', 'Notify', 'AppStatics', 'Authentication', 'AppMessenger', 'VaultStatics',
+	    function($scope, $stateParams, Incexps, TrackerIncexps, Notify, AppStatics, Authentication, AppMessenger, VaultStatics) {
 	    	this.appStatics = AppStatics;
 	    	this.authentication = Authentication;
+			this.vaultStatics = VaultStatics;
+            this.getCurrencies = function(){
+                return this.appStatics.getCurrencies();
+            };
+            this.queryVaults = function(){
+            	return this.vaultStatics.queryVaults('1', '2');
+            };
             this.create = function() {
                 var incexp = new TrackerIncexps({
                     displayName: this.displayName,
                     description: this.description,
                     tracker: $stateParams.trackerId,
+                    tags: this.tags,
+                    amount: this.amount,
+                    vault: this.vault,
+                    isPending: this.isPending,
+                    pendingType: this.pendingType,
+                    pendingWith: this.pendingWith,
                     owner: this.authentication.user._id,
                     created: this.created
                 });
@@ -608,6 +645,29 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
 	        }
 	    };
 	}])
+
+    .directive('selectUsers', ['Incexps', 'TrackerIncexps', 'AppStatics', 'Authentication', 'UserStatics', 
+                               function(Incexps, TrackerIncexps, AppStatics, Authentication, UserStatics) {
+        return {
+            restrict: 'E',
+            transclude: true,
+//            templateUrl: 'modules/core/views/list-users-combo-template.html',
+            templateUrl: UserStatics.getListUsersComboTmpl(),
+            link: function(scope, element, attrs) {
+            },
+            scope: {
+                currentUser: '=user'
+            },
+            controller: ["$scope", function($scope){
+                $scope.authentication = Authentication;
+                var curUsersArr = [];
+                curUsersArr.push(Authentication.user.id);
+                $scope.queryUsers = function(query){
+                    return UserStatics.queryUsers(query, curUsersArr.join());
+                };
+            }]
+        };
+    }])
 
 ;
 
@@ -684,8 +744,8 @@ angular.module('trackers').config(['$stateProvider',
 // Trackers controller
 
 angular.module('trackers')
-	.controller('TrackersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Trackers', '$modal', '$log', 'moment', 'AppStatics', '$state',   //'angularMoment',
-		function($scope, $stateParams, $location, Authentication, Trackers, $modal, $log, moment, AppStatics, $state) {
+	.controller('TrackersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Trackers', '$modal', '$log', 'moment', 'AppStatics', '$state',  'UserStatics', //'angularMoment',
+		function($scope, $stateParams, $location, Authentication, Trackers, $modal, $log, moment, AppStatics, $state, UserStatics) {
 			this.authentication = Authentication;
 			this.trackers = Trackers.query();
 			// this.appStatics = AppStatics;
@@ -799,9 +859,10 @@ angular.module('trackers')
 	])
 
 
-	.controller('TrackersCreateController', ['$scope', 'Trackers', 'Notify', 'AppStatics', 'Authentication', 'AppMessenger',
-	    function($scope, Trackers, Notify, AppStatics, Authentication, AppMessenger) {
+	.controller('TrackersCreateController', ['$scope', 'Trackers', 'Notify', 'AppStatics', 'Authentication', 'AppMessenger', 'UserStatics',
+	    function($scope, Trackers, Notify, AppStatics, Authentication, AppMessenger, UserStatics) {
 	    	this.appStatics = AppStatics;
+	    	this.userStatics = UserStatics;
 	    	this.authentication = Authentication;
 	    	this.assignedUsers = [];
 	    	this.assignedUsers.push(Authentication.user);
@@ -835,9 +896,10 @@ angular.module('trackers')
         };
 	    }
 	])
-	.controller('TrackersUpdateController', ['$scope', 'Trackers', 'AppStatics', 'Authentication', 'Notify',
-	    function($scope, Trackers, AppStatics, Authentication, Notify) {
+	.controller('TrackersUpdateController', ['$scope', 'Trackers', 'AppStatics', 'Authentication', 'Notify', 'UserStatics',
+	    function($scope, Trackers, AppStatics, Authentication, Notify, UserStatics) {
 	    	this.appStatics = AppStatics;
+	    	this.userStatics = UserStatics;
 	    	this.authentication = Authentication;
 	    	this.getCurrencies = function(){
 					return this.appStatics.getCurrencies();
@@ -875,11 +937,12 @@ angular.module('trackers')
 	    };
 	}])
 
-	.directive('addUsers', ['Trackers', 'AppStatics', 'Authentication', function(Trackers, AppStatics, Authentication) {
+	.directive('addUsers', ['Trackers', 'AppStatics', 'Authentication', 'UserStatics', function(Trackers, AppStatics, Authentication, UserStatics) {
 	    return {
 	        restrict: 'E',
 	        transclude: true,
-	        templateUrl: 'modules/trackers/views/add-users-template.html',
+//	        templateUrl: 'modules/core/views/add-users-template.html',
+	        templateUrl: UserStatics.getAddUsersTmpl(),
 	        link: function(scope, element, attrs) {
 	        },
 	        scope: {
@@ -892,7 +955,7 @@ angular.module('trackers')
 							  angular.forEach($scope.assignedUsers, function(value, key) {
 								  curUsersArr.push(value._id);
 								});
-							return AppStatics.queryUsers(query, curUsersArr.join());
+							return UserStatics.queryUsers(query, curUsersArr.join());
 						};
 						$scope.assignNewUser = function(user){
 							$scope.currentUser = null;
@@ -1148,6 +1211,34 @@ angular.module('users').controller('SettingsController', ['$scope', '$http', '$l
 ]);
 'use strict';
 
+angular.module('core').service('UserStatics', [ '$http',
+	function($http) {
+		var userStatics = {};
+		userStatics.getAddUsersTmpl = function(){
+			return 'modules/users/views/add-users-template.html';
+		};
+		userStatics.getListUsersComboTmpl = function(){
+			return 'modules/users/views/list-users-combo-template.html';
+		};
+		userStatics.queryUsers = function(query, users){
+			return $http.get('/users/search', {
+			      params: {
+			        q: query,
+			        nu: users
+			      }
+			    }).then(function(response){
+			    	console.log(response);
+			      return response.data.map(function(item){
+			        return item;
+			      });
+			    });
+		};
+		return userStatics;
+	}
+]);
+
+'use strict';
+
 // Authentication service for user variables
 angular.module('users').factory('Authentication', [
 	function() {
@@ -1349,6 +1440,27 @@ angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams
 	}])
 
 ;
+
+'use strict';
+
+angular.module('vaults').service('VaultStatics', [ '$http',
+	function($http) {
+		var vaultStatics = {};
+		vaultStatics.queryVaults = function(trackerId, excludeVaults){
+			return $http.get('/vaults/queryByTracker', {
+			      params: {
+			    	tId: trackerId,
+			        exv: excludeVaults
+			      }
+			    }).then(function(response){
+			      return response.data.map(function(item){
+			        return item;
+			      });
+			    });
+		};
+		return vaultStatics;
+	}
+]);
 
 'use strict';
 

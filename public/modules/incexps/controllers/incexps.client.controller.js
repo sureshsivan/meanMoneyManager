@@ -82,8 +82,9 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 return this.appStatics.getCurrencies();
             };
             this.queryVaults = function(){
-            	return this.vaultStatics.queryVaults('1', '2');
+            	return this.vaultStatics.queryVaults('5517d93ccea5de89042f8ea5');
             };
+            //this.queryVaults();
             this.create = function() {
                 var incexp = new TrackerIncexps({
                     displayName: this.displayName,
@@ -91,7 +92,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     tracker: $stateParams.trackerId,
                     tags: this.tags,
                     amount: this.amount,
-                    vault: this.vault,
+                    //vault: this.vault,
                     isPending: this.isPending,
                     pendingType: this.pendingType,
                     pendingWith: this.pendingWith,
