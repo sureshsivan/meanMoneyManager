@@ -132,6 +132,30 @@ exports.listByTrackerId = function(req, res) {
 };
 
 /**
+ * List of Vaults - excluding vaults
+ */
+exports.listByTrackerIdExcludeVaults = function(req, res) {
+	var vaults = req.query.exv;
+	var excludeVaults = [];
+	if(vaults && vaults.length > 0){
+		excludeVaults = vaults.split(',');
+	}
+	Vault.find({tracker: mongoose.Types.ObjectId(req.query.trackerId)})
+	// Vault.find({'tracker' : mongoose.Types.ObjectId(req.tracker._id)})
+	.where('_id').nin(excludeVaults)
+	.select('_id displayName')
+	.sort('-created').exec(function(err, vaults) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(vaults);
+		}
+	});
+};
+
+/**
  * Vault middleware
  */
 exports.vaultByID = function(req, res, next, id) {

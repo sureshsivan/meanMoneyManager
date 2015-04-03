@@ -20,6 +20,9 @@ module.exports = function(app) {
 		.post(users.requiresLogin, vaults.create)
         .put(users.requiresLogin, vaults.hasAuthorization, vaults.update)
         .delete(users.requiresLogin, vaults.hasAuthorization, vaults.delete);
+	
+	
+	app.route('/vaults/queryByTracker').get(users.requiresLogin,/*trackers.isRealTracker,*/ vaults.listByTrackerIdExcludeVaults);
 	//app.route('/trackervaults/:vaultId')
 	//	.get(users.requiresLogin, vaults.read)
 	//	.put(users.requiresLogin, vaults.hasAuthorization, vaults.update)

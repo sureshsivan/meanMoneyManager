@@ -12,19 +12,6 @@ angular.module('core').service('AppStatics', [ '$http',
 				}
 				return this.currencies;
 			};
-		appStatics.queryUsers = function(query, users){
-				return $http.get('/users/search', {
-				      params: {
-				        q: query,
-				        nu: users
-				      }
-				    }).then(function(response){
-				    	console.log(response);
-				      return response.data.map(function(item){
-				        return item;
-				      });
-				    });
-			};
 		return appStatics;
 	}
 ]);

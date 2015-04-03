@@ -3,8 +3,8 @@
 // Trackers controller
 
 angular.module('trackers')
-	.controller('TrackersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Trackers', '$modal', '$log', 'moment', 'AppStatics', '$state',   //'angularMoment',
-		function($scope, $stateParams, $location, Authentication, Trackers, $modal, $log, moment, AppStatics, $state) {
+	.controller('TrackersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Trackers', '$modal', '$log', 'moment', 'AppStatics', '$state',  'UserStatics', //'angularMoment',
+		function($scope, $stateParams, $location, Authentication, Trackers, $modal, $log, moment, AppStatics, $state, UserStatics) {
 			this.authentication = Authentication;
 			this.trackers = Trackers.query();
 			// this.appStatics = AppStatics;
@@ -118,9 +118,10 @@ angular.module('trackers')
 	])
 
 
-	.controller('TrackersCreateController', ['$scope', 'Trackers', 'Notify', 'AppStatics', 'Authentication', 'AppMessenger',
-	    function($scope, Trackers, Notify, AppStatics, Authentication, AppMessenger) {
+	.controller('TrackersCreateController', ['$scope', 'Trackers', 'Notify', 'AppStatics', 'Authentication', 'AppMessenger', 'UserStatics',
+	    function($scope, Trackers, Notify, AppStatics, Authentication, AppMessenger, UserStatics) {
 	    	this.appStatics = AppStatics;
+	    	this.userStatics = UserStatics;
 	    	this.authentication = Authentication;
 	    	this.assignedUsers = [];
 	    	this.assignedUsers.push(Authentication.user);
@@ -154,9 +155,10 @@ angular.module('trackers')
         };
 	    }
 	])
-	.controller('TrackersUpdateController', ['$scope', 'Trackers', 'AppStatics', 'Authentication', 'Notify',
-	    function($scope, Trackers, AppStatics, Authentication, Notify) {
+	.controller('TrackersUpdateController', ['$scope', 'Trackers', 'AppStatics', 'Authentication', 'Notify', 'UserStatics',
+	    function($scope, Trackers, AppStatics, Authentication, Notify, UserStatics) {
 	    	this.appStatics = AppStatics;
+	    	this.userStatics = UserStatics;
 	    	this.authentication = Authentication;
 	    	this.getCurrencies = function(){
 					return this.appStatics.getCurrencies();
@@ -194,11 +196,12 @@ angular.module('trackers')
 	    };
 	}])
 
-	.directive('addUsers', ['Trackers', 'AppStatics', 'Authentication', function(Trackers, AppStatics, Authentication) {
+	.directive('addUsers', ['Trackers', 'AppStatics', 'Authentication', 'UserStatics', function(Trackers, AppStatics, Authentication, UserStatics) {
 	    return {
 	        restrict: 'E',
 	        transclude: true,
-	        templateUrl: 'modules/core/views/add-users-template.html',
+//	        templateUrl: 'modules/core/views/add-users-template.html',
+	        templateUrl: UserStatics.getAddUsersTmpl(),
 	        link: function(scope, element, attrs) {
 	        },
 	        scope: {
@@ -211,7 +214,7 @@ angular.module('trackers')
 							  angular.forEach($scope.assignedUsers, function(value, key) {
 								  curUsersArr.push(value._id);
 								});
-							return AppStatics.queryUsers(query, curUsersArr.join());
+							return UserStatics.queryUsers(query, curUsersArr.join());
 						};
 						$scope.assignNewUser = function(user){
 							$scope.currentUser = null;

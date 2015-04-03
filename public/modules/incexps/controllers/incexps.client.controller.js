@@ -1,12 +1,14 @@
 'use strict';
 
 // Incexps controller
-angular.module('incexps').controller('IncexpsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Incexps', 'TrackerIncexps', '$modal', '$log', 'moment', 'AppStatics', 'Notify',
-	function($scope, $stateParams, $location, Authentication, Incexps, TrackerIncexps, $modal, $log, moment, AppStatics, Notify) {
+angular.module('incexps').controller('IncexpsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Incexps', 'TrackerIncexps', '$modal', '$log', 'moment', 'AppStatics', 'Notify', 'VaultStatics',
+	function($scope, $stateParams, $location, Authentication, Incexps, TrackerIncexps, $modal, $log, moment, AppStatics, Notify, VaultStatics) {
         this.authentication = Authentication;
 		this.trackerIncexps = TrackerIncexps.listTrackerIncexps($stateParams);
+		this.vaultStatics = VaultStatics;
         this.trackerId = $stateParams.trackerId;
         this.incexpId = $stateParams.incexpId;
+
 		this.modalCreate = function(size) {
 		    var modalInstance = $modal.open({
 		        templateUrl: 'modules/incexps/views/create-incexp.client.view.html',
@@ -71,15 +73,17 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
 ])
 
 
-	.controller('IncexpsCreateController', ['$scope', '$stateParams', 'Incexps', 'TrackerIncexps', 'Notify', 'AppStatics', 'Authentication', 'AppMessenger',
-	    function($scope, $stateParams, Incexps, TrackerIncexps, Notify, AppStatics, Authentication, AppMessenger) {
+	.controller('IncexpsCreateController', ['$scope', '$stateParams', 'Incexps', 'TrackerIncexps', 'Notify', 'AppStatics', 'Authentication', 'AppMessenger', 'VaultStatics',
+	    function($scope, $stateParams, Incexps, TrackerIncexps, Notify, AppStatics, Authentication, AppMessenger, VaultStatics) {
 	    	this.appStatics = AppStatics;
 	    	this.authentication = Authentication;
-
+			this.vaultStatics = VaultStatics;
             this.getCurrencies = function(){
                 return this.appStatics.getCurrencies();
             };
-
+            this.queryVaults = function(){
+            	return this.vaultStatics.queryVaults('1', '2');
+            };
             this.create = function() {
                 var incexp = new TrackerIncexps({
                     displayName: this.displayName,
@@ -142,11 +146,13 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
 	    };
 	}])
 
-    .directive('selectUsers', ['Incexps', 'TrackerIncexps', 'AppStatics', 'Authentication', function(Incexps, TrackerIncexps, AppStatics, Authentication) {
+    .directive('selectUsers', ['Incexps', 'TrackerIncexps', 'AppStatics', 'Authentication', 'UserStatics', 
+                               function(Incexps, TrackerIncexps, AppStatics, Authentication, UserStatics) {
         return {
             restrict: 'E',
             transclude: true,
-            templateUrl: 'modules/core/views/list-users-combo-template.html',
+//            templateUrl: 'modules/core/views/list-users-combo-template.html',
+            templateUrl: UserStatics.getListUsersComboTmpl(),
             link: function(scope, element, attrs) {
             },
             scope: {
@@ -157,7 +163,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 var curUsersArr = [];
                 curUsersArr.push(Authentication.user.id);
                 $scope.queryUsers = function(query){
-                    return AppStatics.queryUsers(query, curUsersArr.join());
+                    return UserStatics.queryUsers(query, curUsersArr.join());
                 };
             }
         };

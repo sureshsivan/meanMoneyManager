@@ -38,7 +38,7 @@
                             <label class="control-label" for="description"> Vault</label>
                             <div class="controls">
                                 <select data-ng-model="incexpCreateCtrl.vault" id="vault" class="form-control"
-                                        ng-options="currencyItem.id as currencyItem.label for currencyItem in incexpCreateCtrl.getCurrencies()">
+                                        ng-options="vault._id as vault.displayName for vault in incexpCreateCtrl.queryVaults()">
                                     <option value="" disabled>-- Choose Vault --</option>
                                 </select>
                             </div>
