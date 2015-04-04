@@ -1,10 +1,11 @@
 'use strict';
 
-angular.module('vaults').service('VaultStatics', [ '$http',
-	function($http) {
+angular.module('vaults').service('VaultStatics', [ '$http', '$q',
+	function($http, $q) {
 		var vaultStatics = {};
         vaultStatics.queriedVaults = [];
-		vaultStatics.queryVaults = function( trackerId, excludeVaults){
+        //TODO - remove
+		vaultStatics.queryVaultsX = function( trackerId, excludeVaults){
 			return $http.get('/queryvaults/queryByTracker', {
 			      params: {
 			    	tId: trackerId,
@@ -22,6 +23,7 @@ angular.module('vaults').service('VaultStatics', [ '$http',
                   return vaultStatics.queriedVaults;
 			    });
 		};
+        //TODO - remove
         vaultStatics.queryVaults1 = function(vaultsArr, trackerId, excludeVaults){
             return $http.get('/queryvaults/queryByTracker', {
                 params: {
@@ -36,12 +38,14 @@ angular.module('vaults').service('VaultStatics', [ '$http',
                 return vaultsArr;
             });
         };
+        //TODO - remove
         vaultStatics.queryVaults2 = function(){
             if(! this.vaults){
                 this.vaults = [{_id : '111', displayName : 'Oneeee'}, {_id : '222', displayName : 'Twoooo'}];
             }
             return this.vaults;
         };
+        //TODO - remove
         vaultStatics.queryVaults3 = function(vaultsArr, trackerId, excludeVaults){
             $http.get('/queryvaults/queryByTracker', {
                 params: {
@@ -58,7 +62,16 @@ angular.module('vaults').service('VaultStatics', [ '$http',
                 return _this.vaultsResult;
             });
         };
-
+        //TODO - refactor it with promises
+        vaultStatics.queryVaults = function(trackerId, excludeVaults){
+            //http://stackoverflow.com/questions/19405548/default-angularjs-ng-option-when-data-is-returned-from-a-service
+            return $http.get('/queryvaults/queryByTracker', {
+                params: {
+                    tId: trackerId,
+                    exv: excludeVaults
+                }
+            })
+        };
 
 
 		return vaultStatics;

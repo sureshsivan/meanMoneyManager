@@ -75,20 +75,21 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
 
 	.controller('IncexpsCreateController', ['$scope', '$stateParams', 'Incexps', 'TrackerIncexps', 'Notify', 'AppStatics', 'Authentication', 'AppMessenger', 'VaultStatics',
 	    function($scope, $stateParams, Incexps, TrackerIncexps, Notify, AppStatics, Authentication, AppMessenger, VaultStatics) {
+            var _this = this;
             this.appStatics = AppStatics;
             this.authentication = Authentication;
             this.vaultStatics = VaultStatics;
             this.getCurrencies = function(){
                 return this.appStatics.getCurrencies();
             };
-
-            this.queryVaults = function(){
-                //return this.xx;
-                //this.xx = [];
-                return this.vaultStatics.queryVaults2();
-                //return this.vaultStatics.queryVaults3();
-            };
-            //this.queryVaults();
+            this.vaultStatics.queryVaults("5517d93ccea5de89042f8ea5").then(function(response){
+                _this.vaultsResult = [];
+                console.dir(response);
+                response.data.map(function(item){
+                    console.dir(item);
+                    _this.vaultsResult.push(item);
+                });
+            });
             this.create = function() {
                 var incexp = new TrackerIncexps({
                     displayName: this.displayName,
