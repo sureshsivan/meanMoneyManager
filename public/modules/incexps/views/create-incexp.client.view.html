@@ -1,6 +1,6 @@
 <section data-ng-controller="IncexpsCreateController as incexpCreateCtrl">
     <div class="modal-header">
-        <h3 class="modal-title">New Tracker</h3>
+        <h3 class="modal-title">New Vault</h3>
     </div>
 
 
@@ -16,55 +16,60 @@
                         </div>
                     </div>
                     <div class="col-sm-9">
+                        <!--<div class="form-group-sm">-->
+                            <!--<label class="control-label" for="displayName"> Display Name</label>-->
+                            <!--<div class="controls">-->
+                                <!--<input type="text" data-ng-model="incexpCreateCtrl.displayName" id="displayName" class="form-control" required="true">-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="form-group-sm">-->
+                            <!--<label class="control-label" for="description"> Description</label>-->
+                            <!--<div class="controls">-->
+                                <!--<input type="text" data-ng-model="incexpCreateCtrl.description" id="description" class="form-control" required>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="form-group-sm">-->
+                            <!--<label class="control-label" for="amount"> Amount</label>-->
+                            <!--<div class="controls">-->
+                                <!--<input type="number" data-ng-model="incexpCreateCtrl.amount" id="amount" class="form-control" required>-->
+                            <!--</div>-->
+                        <!--</div>-->
                         <div class="form-group-sm">
-                            <label class="control-label" for="displayName"> Display Name</label>
+                            <label class="control-label" for="vault"> Vault</label>
                             <div class="controls">
-                                <input type="text" data-ng-model="incexpCreateCtrl.displayName" id="displayName" class="form-control" required="true">
-                            </div>
-                        </div>
-                        <div class="form-group-sm">
-                            <label class="control-label" for="description"> Description</label>
-                            <div class="controls">
-                                <input type="text" data-ng-model="incexpCreateCtrl.description" id="description" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="form-group-sm">
-                            <label class="control-label" for="amount"> Amount</label>
-                            <div class="controls">
-                                <input type="number" data-ng-model="incexpCreateCtrl.amount" id="amount" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="form-group-sm">
-                            <label class="control-label" for="description"> Vault</label>
-                            <div class="controls">
-                                <select data-ng-model="incexpCreateCtrl.vault1" id="vault3" class="form-control"
-                                        ng-options="eachVault._id as eachVault.displatName for eachVault in incexpCreateCtrl.queryVaults()">
-                                    <option value="" disabled>-- Choose Vault --</option>
+                                <select data-ng-model="vault" id="vault" class="form-control"
+                                        data-ng-options="eachVault._id as eachVault.displayName for eachVault in incexpCreateCtrl.queryVaults()">
+                                    <!--<option value="" disabled>-- Choose Vault --</option>-->
                                 </select>
+                                <!--<select data-ng-model="incexpCreateCtrl.pendingType" id="pendingType" class="form-control"-->
+                                        <!--ng-options="currencyItem.id as currencyItem.label for currencyItem in incexpCreateCtrl.getCurrencies()">-->
+                                    <!--<option value="" disabled>-- Choose Approval Type --</option>-->
+                                <!--</select>-->
                             </div>
                         </div>
-                        <div class="form-group-sm">
-                            <label class="control-label" for="tags"> Tags</label>
-                            <div class="controls">
-                                <input type="text" data-ng-model="incexpCreateCtrl.tags" id="tags" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="form-group-sm">
-                            <label class="control-label" for="isPending"> Require Approval ? </label>
-                            <div class="controls">
-                                <div class="input-group">
-                                    <input type="checkbox" data-ng-model="incexpCreateCtrl.isPending" id="isPending" class="form-control" required>
-                                    <select data-ng-model="incexpCreateCtrl.pendingType" id="pendingType" class="form-control" ng-options="currencyItem.id as currencyItem.label for currencyItem in incexpCreateCtrl.getCurrencies()">
-                                        <option value="" disabled>-- Choose Approval Type --</option>
-                                    </select>
-                                    <select data-ng-model="incexpCreateCtrl.pendingWith1" id="pendingWith" class="form-control" ng-options="currencyItem.id as currencyItem.label for currencyItem in incexpCreateCtrl.getCurrencies()">
-                                        <option value="" disabled>-- Choose Approver --</option>
-                                    </select>
-                                    <select-users user="incexpCreateCtrl.pendingWith"></select-users>
-                                </div>
-
-                            </div>
-                        </div>
+                        <!--<div class="form-group-sm">-->
+                            <!--<label class="control-label" for="tags"> Tags</label>-->
+                            <!--<div class="controls">-->
+                                <!--<input type="text" data-ng-model="incexpCreateCtrl.tags" id="tags" class="form-control" required>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="form-group-sm">-->
+                            <!--<label class="control-label" for="isPending"> Require Approval ? </label>-->
+                            <!--<div class="controls">-->
+                                <!--<div class="input-group">-->
+                                    <!--<input type="checkbox" data-ng-model="incexpCreateCtrl.isPending" id="isPending" class="form-control" required>-->
+                                    <!--<select data-ng-model="incexpCreateCtrl.pendingType" id="pendingType" class="form-control"-->
+                                            <!--ng-options="currencyItem.id as currencyItem.label for currencyItem in incexpCreateCtrl.getCurrencies()">-->
+                                        <!--<option value="" disabled>-- Choose Approval Type --</option>-->
+                                    <!--</select>-->
+                                    <!--<select data-ng-model="incexpCreateCtrl.pendingWith1" id="pendingWith" class="form-control"-->
+                                            <!--ng-options="currencyItem.id as currencyItem.label for currencyItem in incexpCreateCtrl.getCurrencies()">-->
+                                        <!--<option value="" disabled>-- Choose Approver --</option>-->
+                                    <!--</select>-->
+                                    <!--<select-users user="incexpCreateCtrl.pendingWith"></select-users>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
                     </div>
                 </div>
             </fieldset>
