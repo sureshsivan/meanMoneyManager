@@ -62,6 +62,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
 		};
 
         this.getInfoIconClasses = function(incExp, idx){
+            //TT
             var classes = [];
             if((idx+1)%2 == 0){
                 classes.push('fa-user');
