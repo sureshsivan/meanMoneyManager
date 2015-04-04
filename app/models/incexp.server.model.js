@@ -22,6 +22,10 @@ var IncexpSchema = new Schema({
 		required: 'Please fill Incexp name',
 		trim: true
 	},
+    type: {
+        type: String,
+        required: 'Please fill Incexp name Income or Expense'
+    },
 	tracker: {
 		type: Schema.ObjectId,
 		ref: 'Tracker'

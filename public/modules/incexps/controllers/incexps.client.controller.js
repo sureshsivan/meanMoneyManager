@@ -61,7 +61,21 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
 		    });
 		};
 
-        //this.get
+        this.getInfoIconClasses = function(incExp, idx){
+            var classes = [];
+            if((idx+1)%2 == 0){
+                classes.push('fa-user');
+            //} else {
+            //    classes.push('fa-user');
+            };
+            if((idx+1)%3 == 0){
+                classes.push('fa-bell');
+            //} else {
+            //    classes.push('fa-thumbs-up')
+            };
+            console.log(classes);
+            return classes;
+        };
 
         //$location.
 		// Remove existing Incexp
@@ -90,7 +104,12 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 return this.appStatics.getCurrencies();
             };
             this.getApprovalTypes = function(){
+                //this.pendingType = this.incexpStatics.getApprovalTypesForCreation()[0];
                 return this.incexpStatics.getApprovalTypesForCreation();
+            };
+            this.getIncexpType = function(){
+                //this.type = this.incexpStatics.getIncexpType()[0];
+                return this.incexpStatics.getIncexpType();
             };
             this.onChangeReqApproval = function(val){
                 if(! val){
@@ -110,6 +129,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 var incexp = new TrackerIncexps({
                     displayName: this.displayName,
                     description: this.description,
+                    type: this.type,
                     tracker: $stateParams.trackerId,
                     tags: this.tags,
                     amount: this.amount,

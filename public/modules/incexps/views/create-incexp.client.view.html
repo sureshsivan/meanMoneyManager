@@ -29,6 +29,15 @@
                             </div>
                         </div>
                         <div class="form-group-sm">
+                            <label class="control-label" for="type"> Type</label>
+                            <div class="controls">
+                                <select data-ng-model="incexpCreateCtrl.type" id="type" class="form-control"
+                                        ng-options="incexpType.id as incexpType.label for incexpType in incexpCreateCtrl.getIncexpType()">
+                                    <option value="" disabled>-- Choose Approval Type --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group-sm">
                             <label class="control-label" for="amount"> Amount</label>
                             <div class="controls">
                                 <input type="number" data-ng-model="incexpCreateCtrl.amount" id="amount" class="form-control" required>
@@ -52,16 +61,19 @@
                         <div class="form-group-sm">
                             <label class="control-label" for="isPending"> Require Approval ? </label>
                             <div class="controls">
-                                <div class="input-group">
-                                    <input type="checkbox" data-ng-change="incexpCreateCtrl.onChangeReqApproval(incexpCreateCtrl.isPending)" data-ng-model="incexpCreateCtrl.isPending" id="isPending" class="form-control" required>
+                                <!--TODO - apply proper styling-->
+                                <div class="input-group1">
+                                    <input type="checkbox" data-ng-change="incexpCreateCtrl.onChangeReqApproval(incexpCreateCtrl.isPending)"
+                                           data-ng-model="incexpCreateCtrl.isPending" id="isPending" class="form-control" required>
+                                    </input>
                                     <!--<input type="checkbox" data-ng-model="incexpCreateCtrl.isPending" id="isPending" class="form-control" required>-->
                                     <select data-ng-model="incexpCreateCtrl.pendingType" id="pendingType" class="form-control"
                                             ng-options="approvalType.id as approvalType.label for approvalType in incexpCreateCtrl.getApprovalTypes()" data-ng-show="incexpCreateCtrl.isPending">
-                                        <option value="" disabled>-- Choose Approval Type --</option>
+                                        <!--<option value="" disabled>-- Choose Approval Type --</option>-->
                                     </select>
                                     <textarea class="form-control" data-ng-show="incexpCreateCtrl.isPending" data-ng-model="incexpCreateCtrl.pendingMsg" id="pendingMsg" class="form-control"></textarea>
                                     <select-users user="incexpCreateCtrl.pendingWith" data-ng-show="incexpCreateCtrl.isPending"></select-users>
-                                    <i>Selected User : {{(incexpCreateCtrl.pendingWith.displayName == null ? 'Pls start bt typing above' : incexpCreateCtrl.pendingWith.displayName)}}</i>
+                                    <!--<i>Selected User : {{(incexpCreateCtrl.pendingWith.displayName == null ? 'Pls start bt typing above' : incexpCreateCtrl.pendingWith.displayName)}}</i>-->
                                 </div>
                             </div>
                         </div>
