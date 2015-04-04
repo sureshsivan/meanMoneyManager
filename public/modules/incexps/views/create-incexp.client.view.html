@@ -53,13 +53,15 @@
                             <label class="control-label" for="isPending"> Require Approval ? </label>
                             <div class="controls">
                                 <div class="input-group">
-                                    <input type="checkbox" data-ng-model="incexpCreateCtrl.isPending" id="isPending" class="form-control" required>
+                                    <input type="checkbox" data-ng-change="incexpCreateCtrl.onChangeReqApproval(incexpCreateCtrl.isPending)" data-ng-model="incexpCreateCtrl.isPending" id="isPending" class="form-control" required>
+                                    <!--<input type="checkbox" data-ng-model="incexpCreateCtrl.isPending" id="isPending" class="form-control" required>-->
                                     <select data-ng-model="incexpCreateCtrl.pendingType" id="pendingType" class="form-control"
-                                            ng-options="currencyItem.id as currencyItem.label for currencyItem in incexpCreateCtrl.getCurrencies()">
+                                            ng-options="approvalType.id as approvalType.label for approvalType in incexpCreateCtrl.getApprovalTypes()" data-ng-show="incexpCreateCtrl.isPending">
                                         <option value="" disabled>-- Choose Approval Type --</option>
                                     </select>
-                                    <select-users user="incexpCreateCtrl.pendingWith"></select-users>
-                                    <i>{{(incexpCreateCtrl.pendingWith.displayName == null ? 'Yet to Select User' : incexpCreateCtrl.pendingWith.displayName)}}</i>
+                                    <textarea class="form-control" data-ng-show="incexpCreateCtrl.isPending" data-ng-model="incexpCreateCtrl.pendingMsg" id="pendingMsg" class="form-control"></textarea>
+                                    <select-users user="incexpCreateCtrl.pendingWith" data-ng-show="incexpCreateCtrl.isPending"></select-users>
+                                    <i>Selected User : {{(incexpCreateCtrl.pendingWith.displayName == null ? 'Pls start bt typing above' : incexpCreateCtrl.pendingWith.displayName)}}</i>
                                 </div>
                             </div>
                         </div>

@@ -30,3 +30,5 @@
 
 >> Implement help system - with mask and focus
 (More changes to come)
+
+>> Model dont go away on clicking browser back button

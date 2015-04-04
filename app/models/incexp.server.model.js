@@ -43,6 +43,9 @@ var IncexpSchema = new Schema({
 	pendingType: {
 		type: String 
 	},
+    pendingMsg: {
+        type: String
+    },
 	pendingWith: {
 		type: Schema.ObjectId,
 		ref: 'User'

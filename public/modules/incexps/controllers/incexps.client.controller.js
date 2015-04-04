@@ -5,6 +5,8 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
 	function($scope, $stateParams, $location, Authentication, Incexps, TrackerIncexps, $modal, $log, moment, AppStatics, Notify, VaultStatics) {
         this.authentication = Authentication;
 		this.trackerIncexps = TrackerIncexps.listTrackerIncexps($stateParams);
+        console.log('@@@@@@@@@@@@@@@@@@@@');
+        console.log(this.trackerIncexps);
 		this.vaultStatics = VaultStatics;
         this.trackerId = $stateParams.trackerId;
         this.incexpId = $stateParams.incexpId;
@@ -58,6 +60,10 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
 		        $log.info('Modal dismissed at: ' + new Date());
 		    });
 		};
+
+        //this.get
+
+        //$location.
 		// Remove existing Incexp
 		this.remove = function(incexp) {
 			console.log(incexp);
@@ -73,16 +79,26 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
 ])
 
 
-	.controller('IncexpsCreateController', ['$scope', '$stateParams', 'Incexps', 'TrackerIncexps', 'Notify', 'AppStatics', 'Authentication', 'AppMessenger', 'VaultStatics',
-	    function($scope, $stateParams, Incexps, TrackerIncexps, Notify, AppStatics, Authentication, AppMessenger, VaultStatics) {
+	.controller('IncexpsCreateController', ['$scope', '$stateParams', 'Incexps', 'TrackerIncexps', 'Notify', 'AppStatics', 'Authentication', 'AppMessenger', 'VaultStatics', 'IncexpStatics',
+	    function($scope, $stateParams, Incexps, TrackerIncexps, Notify, AppStatics, Authentication, AppMessenger, VaultStatics, IncexpStatics) {
             var _this = this;
             this.appStatics = AppStatics;
+            this.incexpStatics = IncexpStatics;
             this.authentication = Authentication;
             this.vaultStatics = VaultStatics;
             this.getCurrencies = function(){
                 return this.appStatics.getCurrencies();
             };
-            this.vaultStatics.queryVaults("5517d93ccea5de89042f8ea5").then(function(response){
+            this.getApprovalTypes = function(){
+                return this.incexpStatics.getApprovalTypesForCreation();
+            };
+            this.onChangeReqApproval = function(val){
+                if(! val){
+                    this.pendingType = null;
+                    this.pendingWith = null;
+                }
+            };
+            this.vaultStatics.queryVaults($stateParams.trackerId).then(function(response){
                 _this.vaultsResult = [];
                 console.dir(response);
                 response.data.map(function(item){
@@ -97,10 +113,11 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     tracker: $stateParams.trackerId,
                     tags: this.tags,
                     amount: this.amount,
-                    //vault: this.vault,
+                    vault: this.vault,
                     isPending: this.isPending,
                     pendingType: this.pendingType,
-                    pendingWith: this.pendingWith,
+                    pendingWith: this.pendingWith._id,
+                    pendingMsg: this.pendingMsg,
                     owner: this.authentication.user._id,
                     created: this.created
                 });
@@ -163,6 +180,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
             },
             scope: {
                 currentUser: '=user'
+                //disabled: '=disabled'
             },
             controller: function($scope){
                 $scope.authentication = Authentication;

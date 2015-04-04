@@ -70,7 +70,7 @@ angular.module('vaults').service('VaultStatics', [ '$http', '$q',
                     tId: trackerId,
                     exv: excludeVaults
                 }
-            })
+            });
         };
 
 
