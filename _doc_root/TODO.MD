@@ -32,3 +32,6 @@
 (More changes to come)
 
 >> Model dont go away on clicking browser back button
+
+>> $http interceptor - to lof request/response info with http interceptor
+>> Implement angular loader bar
