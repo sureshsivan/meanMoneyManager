@@ -1,82 +1,148 @@
 'use strict';
 
 // Incexps controller
-angular.module('incexps').controller('IncexpsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Incexps', 'TrackerIncexps', '$modal', '$log', 'moment', 'AppStatics', 'Notify', 'VaultStatics',
-	function($scope, $stateParams, $location, Authentication, Incexps, TrackerIncexps, $modal, $log, moment, AppStatics, Notify, VaultStatics) {
+angular.module('incexps').controller('IncexpsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Incexps',
+        'TrackerIncexps', '$modal', '$log', 'moment', 'AppStatics', 'Notify', 'VaultStatics', '$state',
+	function($scope, $stateParams, $location, Authentication, Incexps,
+             TrackerIncexps, $modal, $log, moment, AppStatics, Notify, VaultStatics, $state) {
         this.authentication = Authentication;
-		this.trackerIncexps = TrackerIncexps.listTrackerIncexps($stateParams);
-        console.log('@@@@@@@@@@@@@@@@@@@@');
-        console.log(this.trackerIncexps);
 		this.vaultStatics = VaultStatics;
-        this.trackerId = $stateParams.trackerId;
-        this.incexpId = $stateParams.incexpId;
+        var _this = this;
+        this.getCurrencies = function(){
+            return this.appStatics.getCurrencies();
+        };
+        this.getApprovalTypes = function(){
+            //this.pendingType = this.incexpStatics.getApprovalTypesForCreation()[0];
+            return this.incexpStatics.getApprovalTypesForCreation();
+        };
+        this.getIncexpType = function(){
+            //this.type = this.incexpStatics.getIncexpType()[0];
+            return this.incexpStatics.getIncexpType();
+        };
+        this.onChangeReqApproval = function(val){
+            if(! val){
+                this.pendingType = null;
+                this.pendingWith = null;
+            }
+        };
+        this.vaultStatics.queryVaults($stateParams.trackerId).then(function(response){
+            _this.vaultsResult = [];
+            console.dir(response);
+            response.data.map(function(item){
+                console.dir(item);
+                _this.vaultsResult.push(item);
+            });
+        });
 
-		this.modalCreate = function(size) {
-		    var modalInstance = $modal.open({
-		        templateUrl: 'modules/incexps/views/create-incexp.client.view.html',
-		        controller: function($scope, $modalInstance) {
-		            $scope.ok = function() {
-		                // if (createCustomerForm.$valid){
-		                $modalInstance.close();
-		                // }
-		            };
-		            $scope.cancel = function() {
-		                $modalInstance.dismiss('cancel');
-		            };
-		        },
-		        size: size
-		    });
-		    modalInstance.result.then(function(selectedItem) {
+        this.findAll = function() {
+            this.trackerIncExps = TrackerIncexps.listTrackerVaults($stateParams);
+        };
+        this.findOne = function() {
+            $scope.incexp = Incexps.get({
+                incexpId: $stateParams.incexpId
+            });
+        };
 
-		    	}, function() {
-		          $log.info('Modal dismissed at: ' + new Date());
-		    });
-		};
-		this.modalUpdate = function(size, selectedIncexp) {
-		    var modalInstance = $modal.open({
-		        templateUrl: 'modules/incexps/views/edit-incexp.client.view.html',
-		        controller: function($scope, $modalInstance, incexp) {
-		            $scope.incexp = incexp;
-		            $scope.ok = function() {
-		                // if (updateCustomerForm.$valid){
-		                $modalInstance.close($scope.incexp);
-		                // }
-		            };
-		            $scope.cancel = function() {
-		                $modalInstance.dismiss('cancel');
-		            };
-		        },
-		        size: size,
-		        resolve: {
-		            incexp: function() {
-		                return selectedIncexp;
-		            }
-		        }
-		    });
 
-		    modalInstance.result.then(function(selectedItem) {
-		        $scope.selected = selectedItem;
-		    }, function() {
-		        $log.info('Modal dismissed at: ' + new Date());
-		    });
-		};
+        this.createIncExp = function(){
+            $state.go('createIncexp', $stateParams);
+        };
 
         this.getInfoIconClasses = function(incExp, idx){
             //TT
             var classes = [];
             if((idx+1)%2 === 0){
                 classes.push('fa-user');
-            //} else {
-            //    classes.push('fa-user');
+                //} else {
+                //    classes.push('fa-user');
             }
             if((idx+1)%3 === 0){
                 classes.push('fa-bell');
-            //} else {
-            //    classes.push('fa-thumbs-up')
+                //} else {
+                //    classes.push('fa-thumbs-up')
             }
             console.log(classes);
             return classes;
         };
+
+        this.create = function() {
+            var incexp = new TrackerIncexps({
+                displayName: this.displayName,
+                description: this.description,
+                type: this.type,
+                tracker: $stateParams.trackerId,
+                tags: this.tags,
+                amount: this.amount,
+                vault: this.vault,
+                isPending: this.isPending,
+                pendingType: this.pendingType,
+                pendingWith: this.pendingWith._id,
+                pendingMsg: this.pendingMsg,
+                owner: this.authentication.user._id,
+                created: this.created
+            });
+            // Redirect after save
+            incexp.$save(function(response) {
+                Notify.sendMsg('RefreshIncexps', {
+                    'trackerId': response.tracker
+                });
+                AppMessenger.sendInfoMsg(response);
+            }, function(errorResponse) {
+                $scope.error = errorResponse.data.message;
+            });
+        };
+
+		//this.modalCreate = function(size) {
+		//    var modalInstance = $modal.open({
+		//        templateUrl: 'modules/incexps/views/create-incexp.client.view.html',
+		//        controller: function($scope, $modalInstance) {
+		//            $scope.ok = function() {
+		//                // if (createCustomerForm.$valid){
+		//                $modalInstance.close();
+		//                // }
+		//            };
+		//            $scope.cancel = function() {
+		//                $modalInstance.dismiss('cancel');
+		//            };
+		//        },
+		//        size: size
+		//    });
+		//    modalInstance.result.then(function(selectedItem) {
+        //
+		//    	}, function() {
+		//          $log.info('Modal dismissed at: ' + new Date());
+		//    });
+		//};
+		//this.modalUpdate = function(size, selectedIncexp) {
+		//    var modalInstance = $modal.open({
+		//        templateUrl: 'modules/incexps/views/edit-incexp.client.view.html',
+		//        controller: function($scope, $modalInstance, incexp) {
+		//            $scope.incexp = incexp;
+		//            $scope.ok = function() {
+		//                // if (updateCustomerForm.$valid){
+		//                $modalInstance.close($scope.incexp);
+		//                // }
+		//            };
+		//            $scope.cancel = function() {
+		//                $modalInstance.dismiss('cancel');
+		//            };
+		//        },
+		//        size: size,
+		//        resolve: {
+		//            incexp: function() {
+		//                return selectedIncexp;
+		//            }
+		//        }
+		//    });
+        //
+		//    modalInstance.result.then(function(selectedItem) {
+		//        $scope.selected = selectedItem;
+		//    }, function() {
+		//        $log.info('Modal dismissed at: ' + new Date());
+		//    });
+		//};
+
+
 
         //$location.
 		// Remove existing Incexp
@@ -175,43 +241,5 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
 
 	    }
 	])
-
-	.directive('incexpsList', ['Incexps', 'TrackerIncexps', 'Notify', function(Incexps, TrackerIncexps, Notify) {
-	    return {
-	        restrict: 'E',
-	        transclude: true,
-	        templateUrl: 'modules/incexps/views/incexps-list-template.html',
-	        link: function(scope, element, attrs) {
-	            //when a new customer is added, update the customer list
-	            Notify.getMsg('RefreshIncexps', function(event, data) {
-                    scope.incexpCtrl.trackerIncexps = TrackerIncexps.listTrackerIncexps(data);
-	            });
-	        }
-	    };
-	}])
-
-    .directive('selectUsers', ['Incexps', 'TrackerIncexps', 'AppStatics', 'Authentication', 'UserStatics', 
-                               function(Incexps, TrackerIncexps, AppStatics, Authentication, UserStatics) {
-        return {
-            restrict: 'E',
-            transclude: true,
-//            templateUrl: 'modules/core/views/list-users-combo-template.html',
-            templateUrl: UserStatics.getListUsersComboTmpl(),
-            link: function(scope, element, attrs) {
-            },
-            scope: {
-                currentUser: '=user'
-                //disabled: '=disabled'
-            },
-            controller: function($scope){
-                $scope.authentication = Authentication;
-                var curUsersArr = [];
-                curUsersArr.push(Authentication.user.id);
-                $scope.queryUsers = function(query){
-                    return UserStatics.queryUsers(query, curUsersArr.join());
-                };
-            }
-        };
-    }])
 
 ;

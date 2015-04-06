@@ -8,11 +8,11 @@ angular.module('incexps').config(['$stateProvider',
 		state('listTrackerIncexps', {
 			url: '/trackerincexps/:trackerId',
 			templateUrl: 'modules/incexps/views/list-incexps.client.view.html'
-//		}).
-//		state('createIncexp', {
-//			url: '/incexps/create',
-//			templateUrl: 'modules/incexps/views/create-incexp.client.view.html'
-//		}).
+		}).
+		state('createIncexp', {
+			url: '/trackerincexps/:trackerId/create',
+			templateUrl: 'modules/incexps/views/create-incexp.client.view.html'
+		//}).
 //		state('viewIncexp', {
 //			url: '/incexps/:incexpId',
 //			templateUrl: 'modules/incexps/views/view-incexp.client.view.html'
