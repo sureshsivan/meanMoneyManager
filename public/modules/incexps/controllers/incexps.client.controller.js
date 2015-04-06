@@ -33,7 +33,11 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 _this.vaultsResult.push(item);
             });
         });
-
+        this.openDatePicker = function($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            $scope.datePickerOpened = true;
+        };
         this.findAll = function() {
             this.trackerIncexps = TrackerIncexps.listTrackerIncexps($stateParams);
         };

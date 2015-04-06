@@ -38,6 +38,19 @@
                             </div>
                         </div>
                         <div class="form-group-sm">
+                            <label class="control-label" for="evDate"> Date</label>
+                            <div class="controls">
+                                <p class="input-group">
+                                    <input type="text" id="evDate" class="form-control" datepicker-popup="{{'dd-MMMM-yyyy'}}" ng-model="incexpsCtrl.evDate"
+                                           is-open="datePickerOpened" min-date="2011-06-22" max-date="'2015-06-22'"
+                                           close-text="Close" />
+                                      <span class="input-group-btn">
+                                        <button type="button" class="btn btn-sm" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                      </span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group-sm">
                             <label class="control-label" for="amount"> Amount</label>
                             <div class="controls">
                                 <input type="number" data-ng-model="incexpsCtrl.amount" id="amount" class="form-control" required>
@@ -62,19 +75,26 @@
                             <label class="control-label" for="isPending"> Require Approval ? </label>
                             <div class="controls">
                                 <!--TODO - apply proper styling-->
-                                <div class="input-group1">
-                                    <input type="checkbox" data-ng-change="incexpsCtrl.onChangeReqApproval(incexpsCtrl.isPending)"
-                                           data-ng-model="incexpsCtrl.isPending" id="isPending" class="form-control" required>
-                                    </input>
-                                    <!--<input type="checkbox" data-ng-model="incexpCreateCtrl.isPending" id="isPending" class="form-control" required>-->
+                                <p class="input-group">
+                                  <span class="input-group-addon">
+                                    <input class="form-control-md" type="checkbox" data-ng-change="incexpsCtrl.onChangeReqApproval(incexpsCtrl.isPending)"
+                                           data-ng-model="incexpsCtrl.isPending" id="isPending" >
+                                      </input>
+                                  </span>
+                                  <span class="input-group-btn">
                                     <select data-ng-model="incexpsCtrl.pendingType" id="pendingType" class="form-control"
                                             ng-options="approvalType.id as approvalType.label for approvalType in incexpsCtrl.getApprovalTypes()" data-ng-show="incexpsCtrl.isPending">
                                         <!--<option value="" disabled>-- Choose Approval Type --</option>-->
                                     </select>
-                                    <textarea class="form-control" data-ng-show="incexpsCtrl.isPending" data-ng-model="incexpsCtrl.pendingMsg" id="pendingMsg" class="form-control"></textarea>
+                                  </span>
+                                  <span class="input-group-btn">
                                     <select-users user="incexpsCtrl.pendingWith" data-ng-show="incexpsCtrl.isPending"></select-users>
+                                  </span>
+                                </p>
+                                    <!--<input type="checkbox" data-ng-model="incexpCreateCtrl.isPending" id="isPending" class="form-control" required>-->
+
+                                    <textarea class="form-control" data-ng-show="incexpsCtrl.isPending" data-ng-model="incexpsCtrl.pendingMsg" id="pendingMsg" class="form-control"></textarea>
                                     <!--<i>Selected User : {{(incexpCreateCtrl.pendingWith.displayName == null ? 'Pls start bt typing above' : incexpCreateCtrl.pendingWith.displayName)}}</i>-->
-                                </div>
                             </div>
                         </div>
                     </div>

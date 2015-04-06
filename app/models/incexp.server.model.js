@@ -30,6 +30,11 @@ var IncexpSchema = new Schema({
 		type: Schema.ObjectId,
 		ref: 'Tracker'
 	},
+    evDate: {
+        type: Date,
+        //required: 'Please fill Date of Income or Expense',
+        default: Date.now
+    },
 	tags: [{
 		type: String
 	}],
