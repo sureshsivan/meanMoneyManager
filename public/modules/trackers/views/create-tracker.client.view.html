@@ -1,59 +1,65 @@
-<section data-ng-controller="TrackersCreateController as trackerCreateCtrl">
-    <div class="modal-header">
-        <h3 class="modal-title">New Tracker</h3>
+<section data-ng-controller="TrackersController as trackersCtrl">
+    <div class="page-header">
+        <h3>New Tracker</h3>
     </div>
 
 
-    <div class="modal-body">
-        <form name="createTrackerForm">
-            <fieldset>
-                <div class="row">
-                    <div class="form-group-xs">
-                        <div data-ng-show="error" class="text-center text-danger">
-                            <div class="alert alert-danger" role="alert">
-                                <strong data-ng-bind="error"></strong>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-9">
-                        <div class="form-group form-group-sm">
-                            <label class="control-label" for="displayName"> Display Name</label>
-                            <div class="controls">
-                                <input type="text" data-ng-model="trackerCreateCtrl.displayName" id="displayName" class="form-control" required="true">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="description"> Description</label>
-                            <div class="controls">
-                                <input type="text" data-ng-model="trackerCreateCtrl.description" id="description" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="currency"> Currency</label>
-							<div class="controls">
-                                 <select data-ng-model="trackerCreateCtrl.currency" id="currency" class="form-control" ng-options="currencyItem.id as currencyItem.label for currencyItem in trackerCreateCtrl.getCurrencies()">
-                                    <option value="" disabled>-- Choose Currency --</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="shareTo"> Shared To</label>
-                            <div class="controls">
-                                <add-users users="trackerCreateCtrl.assignedUsers"></add-users>
-                            </div>
-                        </div>
 
+    <form name="createTrackerForm" data-ng-submit="trackersCtrl.saveTracker()" novalidate style="border: 0px solid blue">
+        <fieldset>
+            <div class="row">
+                <div class="form-group-xs">
+                    <div data-ng-show="error" class="text-center text-danger">
+                        <div class="alert alert-danger" role="alert">
+                            <strong data-ng-bind="error"></strong>
+                        </div>
                     </div>
                 </div>
+                <div class="col-sm-12">
+                    <div class="form-group form-group-sm">
+                        <label class="control-label" for="displayName"> Display Name</label>
+                        <div class="controls">
+                            <input type="text" data-ng-model="trackersCtrl.displayName" id="displayName" class="form-control" required="true">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="description"> Description</label>
+                        <div class="controls">
+                            <input type="text" data-ng-model="trackersCtrl.description" id="description" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="currency"> Currency</label>
+                        <div class="controls">
+                             <select data-ng-model="trackersCtrl.currency" id="currency" class="form-control" ng-options="currencyItem.id as currencyItem.label for currencyItem in trackersCtrl.getCurrencies()">
+                                <option value="" disabled>-- Choose Currency --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"> Shared To</label>
+                        <div class="controls">
+                            <add-users users="trackersCtrl.assignedUsers"></add-users>
+                        </div>
+                    </div>
 
-            </fieldset>
-        </form>
-    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <!--<input type="submit" class="btn btn-default pull-right">-->
+                <button class="btn btn-success btn-sm pull-right"
+                        ng-disabled="createTrackerForm.$invalid">Create New Tracker</button>
+            </div>
+            <div data-ng-show="error" class="text-danger">
+                <strong data-ng-bind="error"></strong>
+            </div>
+        </fieldset>
+    </form>
 
 
-    <div class="modal-footer">
-        <button class="btn btn-success btn-sm" ng-click="trackerCreateCtrl.create(); ok()" ng-disabled="createTrackerForm.$invalid">Save & Close</button>
-         <!-- ng-disabled="createCustomerForm.$invalid -->
-        <button class="btn btn-warning btn-sm" ng-click="cancel()">Cancel</button>
-    </div>
+    <!--<div class="modal-footer">-->
+        <!--<button class="btn btn-success btn-sm" ng-click="trackersCtrl.create(); ok()" ng-disabled="createTrackerForm.$invalid">Save & Close</button>-->
+         <!--&lt;!&ndash; ng-disabled="createCustomerForm.$invalid &ndash;&gt;-->
+        <!--&lt;!&ndash;<button class="btn btn-warning btn-sm" ng-click="cancel()">Cancel</button>&ndash;&gt;-->
+    <!--</div>-->
 </section>

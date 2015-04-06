@@ -144,7 +144,16 @@ exports.updateById = function(req, res) {
  * Tracker middleware
  */
 exports.trackerByID = function(req, res, next, id) {
-	Tracker.findById(id).populate('owner', 'displayName').exec(function(err, tracker) {
+	Tracker.findById(id)
+        .populate({
+            'path' : 'owner',
+            'select' : 'firstName lastName displayName email _id'
+        })
+        .populate({
+            'path' : 'users',
+            'select' : 'firstName lastName displayName email _id'
+        })
+        .exec(function(err, tracker) {
 		if (err) return next(err);
 		if (! tracker) return next(new Error('Failed to load Tracker ' + id));
 		req.tracker = tracker ;

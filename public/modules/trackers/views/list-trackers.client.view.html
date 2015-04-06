@@ -12,13 +12,18 @@
             </div>
         </div>
         <div class="col-xs-12 col-sm-3 text-center pull-right">
-            <button type="button" class="btn btn-success text-center" ng-click="trackersCtrl.modalCreate('lg')">
+            <button type="button" class="btn btn-success text-center" ng-click="trackersCtrl.createNew()">
                 <i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;New Tracker
             </button>
         </div>
     </div>
     <div class="row">
     	<trackers-list></trackers-list>
+    </div>
+    <div class="row">
+        <div class="alert alert-warning text-center" data-ng-hide="!temps.$resolved || temps.length">
+            No Temps yet, why don't you <a href="/#!/trackers/create">create one</a>?
+        </div>
     </div>
 
 </section>
