@@ -64,16 +64,16 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         this.getInfoIconClasses = function(incExp, idx){
             //TT
             var classes = [];
-            if((idx+1)%2 == 0){
+            if((idx+1)%2 === 0){
                 classes.push('fa-user');
             //} else {
             //    classes.push('fa-user');
-            };
-            if((idx+1)%3 == 0){
+            }
+            if((idx+1)%3 === 0){
                 classes.push('fa-bell');
             //} else {
             //    classes.push('fa-thumbs-up')
-            };
+            }
             console.log(classes);
             return classes;
         };

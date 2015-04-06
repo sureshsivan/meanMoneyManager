@@ -16,7 +16,8 @@ module.exports = {
 				'public/lib/bootstrap/dist/css/bootstrap.css',
 //				'public/lib/bootswatch-dist/css/bootstrap.css',
 				'public/lib/bootstrap/dist/css/bootstrap-theme.css',
-				'public/lib/fontawesome/css/font-awesome.css'
+				'public/lib/fontawesome/css/font-awesome.css',
+                'public/lib/angular-loading-bar/build/loading-bar.css'
 			],
 			js: [
 				'public/lib/angular/angular.js',
@@ -29,7 +30,8 @@ module.exports = {
 				'public/lib/angular-ui-utils/ui-utils.js',
 				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
 				'public/lib/moment/moment.js',
-				'public/lib/angular-moment/angular-moment.js'
+				'public/lib/angular-moment/angular-moment.js',
+                'public/lib/angular-loading-bar/build/loading-bar.js'
 //				'public/lib/highcharts/highcharts.src.js',
 //				'public/lib/highcharts-ng/dist/highcharts-ng.js'
 				
