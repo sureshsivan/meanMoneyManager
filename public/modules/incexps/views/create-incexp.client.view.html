@@ -46,7 +46,7 @@
                         <div class="form-group-sm">
                             <label class="control-label" for="vault"> Vault</label>
                             <div class="controls">
-                                <select data-ng-model="vault" id="vault" class="form-control"
+                                <select data-ng-model="incexpsCtrl.vault" id="vault" class="form-control"
                                         data-ng-options="eachVault._id as eachVault.displayName for eachVault in incexpsCtrl.vaultsResult">
                                     <option value="" disabled>-- Choose Vault --</option>
                                 </select>
@@ -85,7 +85,8 @@
 
 
     <div class="modal-footer">
-        <button class="btn btn-success btn-sm" ng-click="incexpsCtrl.saveIncexp()" ng-disabled="createIncexpForm.$invalid">Save & Close</button>
+        <!--<button class="btn btn-success btn-sm" ng-click="incexpsCtrl.saveIncexp()" ng-disabled="createIncexpForm.$invalid">Save & Close</button>-->
+        <button class="btn btn-success btn-sm" ng-click="incexpsCtrl.saveIncexp()" >Save & Close</button>
          <!-- ng-disabled="createCustomerForm.$invalid -->
         <button class="btn btn-warning btn-sm" ng-click="cancel()">Cancel</button>
     </div>

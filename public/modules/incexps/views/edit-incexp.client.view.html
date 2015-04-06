@@ -1,36 +1,83 @@
-<section data-ng-controller="IncExpsUpdateController as incexpsUpdateCtrl">
-    <div class="modal-header">
-        <h3 class="modal-title">Update: {{incexp.displayName}}</h3>
+<section data-ng-controller="IncexpsController as incexpsCtrl" data-ng-init="incexpsCtrl.findOne()">
+    <div class="page-header">
+        <h3>Update: {{incexp.displayName}}</h3>
     </div>
-    <div class="modal-body">
-        <form name=editIncExpForm>
-            <fieldset>
-                <div class="row">
-                    <div class="form-group">
-                        <div data-ng-show="error" class="text-center text-danger">
-                            <div class="alert alert-danger" role="alert">
-                                <strong data-ng-bind="error"></strong>
-                            </div>
+    <form name=editIncExpForm>
+        <fieldset>
+            <div class="row">
+                <div class="form-group-xs">
+                    <div data-ng-show="error" class="text-center text-danger">
+                        <div class="alert alert-danger" role="alert">
+                            <strong data-ng-bind="error"></strong>
                         </div>
                     </div>
-                    <div class="col-sm-9">
-                        <div class="form-group">
-                            <label class="control-label" for="displayName"> Display Name</label>
-                            <div class="controls">
-                                <input type="text" data-ng-model="incexp.displayName" id="displayName" class="form-control" required>
-                            </div>
+                </div>
+                <div class="col-sm-9">
+                    <div class="form-group-sm">
+                        <label class="control-label" for="displayName"> Display Name</label>
+                        <div class="controls">
+                            <input type="text" data-ng-model="incexp.displayName" id="displayName" class="form-control" required="true">
                         </div>
-                        <div class="form-group">
-                            <label class="control-label" for="description"> Description</label>
-                            <div class="controls">
-                                <input type="text" data-ng-model="incexp.description" id="description" class="form-control" required>
+                    </div>
+                    <div class="form-group-sm">
+                        <label class="control-label" for="description"> Description</label>
+                        <div class="controls">
+                            <input type="text" data-ng-model="incexp.description" id="description" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-group-sm">
+                        <label class="control-label" for="type"> Type</label>
+                        <div class="controls">
+                            <select data-ng-model="incexp.type" id="type" class="form-control"
+                                    ng-options="incexpType.id as incexpType.label for incexpType in incexpsCtrl.getIncexpType()">
+                                <option value="" disabled>-- Choose Approval Type --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group-sm">
+                        <label class="control-label" for="amount"> Amount</label>
+                        <div class="controls">
+                            <input type="number" data-ng-model="incexp.amount" id="amount" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-group-sm">
+                        <label class="control-label" for="vault"> Vault</label>
+                        <div class="controls">
+                            <select data-ng-model="incexp.vault" id="vault" class="form-control"
+                                    data-ng-options="eachVault._id as eachVault.displayName for eachVault in incexpsCtrl.vaultsResult">
+                                <option value="" disabled>-- Choose Vault --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group-sm">
+                        <label class="control-label" for="tags"> Tags</label>
+                        <div class="controls">
+                            <input type="text" data-ng-model="incexp.tags" id="tags" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-group-sm">
+                        <label class="control-label" for="isPending"> Require Approval ? </label>
+                        <div class="controls">
+                            <!--TODO - apply proper styling-->
+                            <div class="input-group1">
+                                <input type="checkbox" data-ng-change="incexpsCtrl.onChangeReqApproval(incexp.isPending)"
+                                       data-ng-model="incexp.isPending" id="isPending" class="form-control" required>
+                                </input>
+                                <!--<input type="checkbox" data-ng-model="incexpCreateCtrl.isPending" id="isPending" class="form-control" required>-->
+                                <select data-ng-model="incexp.pendingType" id="pendingType" class="form-control"
+                                        ng-options="approvalType.id as approvalType.label for approvalType in incexpsCtrl.getApprovalTypes()" data-ng-show="incexp.isPending">
+                                    <!--<option value="" disabled>-- Choose Approval Type --</option>-->
+                                </select>
+                                <textarea class="form-control" data-ng-show="incexp.isPending" data-ng-model="incexp.pendingMsg" id="pendingMsg" class="form-control"></textarea>
+                                <select-users user="incexp.pendingWith" data-ng-show="incexp.isPending"></select-users>
+                                <!--<i>Selected User : {{(incexpCreateCtrl.pendingWith.displayName == null ? 'Pls start bt typing above' : incexpCreateCtrl.pendingWith.displayName)}}</i>-->
                             </div>
                         </div>
                     </div>
                 </div>
-            </fieldset>
-        </form>
-    </div>
+            </div>
+        </fieldset>
+    </form>
     <div class="modal-footer">
         <button class="btn btn-success btn-sm" ng-click="incexpsUpdateCtrl.update(incexp); ok()">Update & Close</button>
         <!-- ng-disabled="editIncExpForm.$invalid -->

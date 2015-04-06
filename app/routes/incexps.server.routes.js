@@ -21,7 +21,15 @@ module.exports = function(app) {
 		.post(users.requiresLogin, incexps.create)
         .put(users.requiresLogin, incexps.hasAuthorization, incexps.update)
         .delete(users.requiresLogin, incexps.hasAuthorization, incexps.delete);
-	
+
+    // Tracker Vaults Routes
+    app.route('/trackerincexps/:trackerId/:incexpId')
+        .get(users.requiresLogin, incexps.read)
+        .post(users.requiresLogin, incexps.create)
+        .put(users.requiresLogin, incexps.hasAuthorization, incexps.update)
+        .delete(users.requiresLogin, incexps.hasAuthorization, incexps.delete);
+
 	// Finish by binding the Incexp middleware
-//	app.param('incexpId', incexps.incexpByID);
+	app.param('incexpId', incexps.incexpByID);
+    //app.param('trackerId', trackers.incexpByID);
 };

@@ -48,7 +48,12 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
             this.incexp = {};
             $state.go('createIncexp', $stateParams);
         };
-
+        this.editIncexp = function(updatedIncexp){
+            $state.go('editIncexp', {
+                trackerId: $stateParams.trackerId,
+                incexpId: updatedIncexp._id
+            });
+        };
         this.getInfoIconClasses = function(incExp, idx){
             //TT
             var classes = [];
@@ -76,13 +81,16 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 tags: this.tags,
                 amount: this.amount,
                 vault: this.vault,
-                isPending: this.isPending,
-                pendingType: this.pendingType,
-                pendingWith: this.pendingWith._id,
-                pendingMsg: this.pendingMsg,
+
                 owner: this.authentication.user._id,
                 created: this.created
             });
+            if(this.isPending){
+                incexp.isPending = this.isPending;
+                incexp.pendingType = this.pendingType;
+                incexp.pendingWith = this.pendingWith._id;
+                incexp.pendingMsg = this.pendingMsg;
+            }
             // Redirect after save
             incexp.$save(function(response) {
                 $state.go('listTrackerIncexps', $stateParams);

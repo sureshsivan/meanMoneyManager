@@ -16,10 +16,10 @@ angular.module('incexps').config(['$stateProvider',
 //		state('viewIncexp', {
 //			url: '/incexps/:incexpId',
 //			templateUrl: 'modules/incexps/views/view-incexp.client.view.html'
-//		}).
-//		state('editIncexp', {
-//			url: '/incexps/:incexpId/edit',
-//			templateUrl: 'modules/incexps/views/edit-incexp.client.view.html'
+		}).
+		state('editIncexp', {
+			url: '/trackerincexps/:trackerId/:incexpId/edit',
+			templateUrl: 'modules/incexps/views/edit-incexp.client.view.html'
 		});
 	}
 ]);
