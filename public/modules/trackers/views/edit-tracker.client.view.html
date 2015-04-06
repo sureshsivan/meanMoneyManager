@@ -1,4 +1,4 @@
-<section data-ng-controller="TrackersController as trackersCtrl"  data-ng-init="findOne()">
+<section data-ng-controller="TrackersController as trackersCtrl"  data-ng-init="trackersCtrl.findOne()">
     <div class="page-header">
         <h3 class="modal-title">Update: {{tracker.displayName}}</h3>
     </div>
@@ -45,7 +45,7 @@
         </fieldset>
     </form>
     <div class="modal-footer">
-        <button class="btn btn-success btn-sm" ng-click="trackersCtrl.updateTracker(tracker); ok()">Update & Close</button>
+        <button class="btn btn-success btn-sm" ng-click="trackersCtrl.updateTracker(tracker)">Update & Close</button>
         <!-- ng-disabled="updateTrackerForm.$invalid -->
         <button class="btn btn-warning btn-sm" ng-click="cancel()">Cancel</button>
     </div>

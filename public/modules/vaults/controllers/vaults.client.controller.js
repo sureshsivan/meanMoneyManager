@@ -1,81 +1,29 @@
 'use strict';
 
 // Vaults controller
-angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Vaults', 'TrackerVaults', '$modal', '$log', 'moment', 'AppStatics', 'Notify',
-	function($scope, $stateParams, $location, Authentication, Vaults, TrackerVaults, $modal, $log, moment, AppStatics, Notify) {
-        this.authentication = Authentication;
-		this.trackerVaults = TrackerVaults.listTrackerVaults($stateParams);
-        this.trackerId = $stateParams.trackerId;
-        this.vaultId = $stateParams.vaultId;
-		this.modalCreate = function(size) {
-		    var modalInstance = $modal.open({
-		        templateUrl: 'modules/vaults/views/create-vault.client.view.html',
-		        controller: function($scope, $modalInstance) {
-		            $scope.ok = function() {
-		                // if (createCustomerForm.$valid){
-		                $modalInstance.close();
-		                // }
-		            };
-		            $scope.cancel = function() {
-		                $modalInstance.dismiss('cancel');
-		            };
-		        },
-		        size: size
-		    });
-		    modalInstance.result.then(function(selectedItem) {
+angular.module('vaults')
 
-		    	}, function() {
-		          $log.info('Modal dismissed at: ' + new Date());
-		    });
-		};
-		this.modalUpdate = function(size, selectedVault) {
-		    var modalInstance = $modal.open({
-		        templateUrl: 'modules/vaults/views/edit-vault.client.view.html',
-		        controller: function($scope, $modalInstance, vault) {
-		            $scope.vault = vault;
-		            $scope.ok = function() {
-		                // if (updateCustomerForm.$valid){
-		                $modalInstance.close($scope.vault);
-		                // }
-		            };
-		            $scope.cancel = function() {
-		                $modalInstance.dismiss('cancel');
-		            };
-		        },
-		        size: size,
-		        resolve: {
-		            vault: function() {
-		                return selectedVault;
-		            }
-		        }
-		    });
 
-		    modalInstance.result.then(function(selectedItem) {
-		        $scope.selected = selectedItem;
-		    }, function() {
-		        $log.info('Modal dismissed at: ' + new Date());
-		    });
-		};
-		// Remove existing Vault
-		this.remove = function(vault) {
-			console.log(vault);
-			if ( vault ) {
-				vault.$remove({vaultId : vault._id}, function(res){
-                    console.log(res);
-                    Notify.sendMsg('RefreshVaults', $stateParams);
+
+    .controller('VaultsController', ['$scope', '$stateParams', '$location', 'Authentication', '$state',
+                'Vaults', 'TrackerVaults', '$modal', '$log', 'moment', 'AppStatics', 'Notify', 'AppMessenger',
+        function($scope, $stateParams, $location, Authentication, $state,
+                    Vaults, TrackerVaults, $modal, $log, moment, AppStatics, Notify, AppMessenger) {
+            this.authentication = Authentication;
+            this.appStatics = AppStatics;
+            this.findAll = function() {
+                this.trackerVaults = TrackerVaults.listTrackerVaults($stateParams);
+            };
+            this.findOne = function() {
+                $scope.vault = Vaults.get({
+                    vaultId: $stateParams.vaultId
                 });
-			}
-		};
-
-	}
-])
-
-
-	.controller('VaultsCreateController', ['$scope', '$stateParams', 'Vaults', 'TrackerVaults', 'Notify', 'AppStatics', 'Authentication', 'AppMessenger',
-	    function($scope, $stateParams, Vaults, TrackerVaults, Notify, AppStatics, Authentication, AppMessenger) {
-	    	this.appStatics = AppStatics;
-	    	this.authentication = Authentication;
-            this.create = function() {
+            };
+            this.createVault = function() {
+                this.vault = {};
+                $state.go('createVault', $stateParams);
+            };
+            this.saveVault = function() {
                 var vault = new TrackerVaults({
                     displayName: this.displayName,
                     description: this.description,
@@ -85,50 +33,40 @@ angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams
                 });
                 // Redirect after save
                 vault.$save(function(response) {
-                    Notify.sendMsg('RefreshVaults', {
-                        'trackerId': response.tracker
-                    });
-                    AppMessenger.sendInfoMsg(response);
+                    $state.go('listTrackerVaults', $stateParams);
+                    AppMessenger.sendInfoMsg('Successfully Created New Vault');
                 }, function(errorResponse) {
                     $scope.error = errorResponse.data.message;
                 });
             };
-	    }
-	])
-	.controller('VaultsUpdateController', ['$scope', '$stateParams', 'Vaults', 'TrackerVaults', 'AppStatics', 'Authentication', 'Notify',
-	    function($scope, $stateParams, Vaults, TrackerVaults, AppStatics, Authentication, Notify) {
-	    	this.appStatics = AppStatics;
-	    	this.authentication = Authentication;
-			 this.update = function(updatedVault) {
-			     var vault = updatedVault;
+            this.editVault = function(vault) {
+                $state.go('editVault', {vaultId: vault._id});
+            };
+            this.updateVault = function(updatedVault){
+                var vault = updatedVault;
+                var trackerId = vault.tracker._id;
+                delete vault.tracker;
+                vault.$update({
+                    vaultId: vault._id
+                }, function() {
+                    $state.go('listTrackerVaults', {trackerId: trackerId});
+                    AppMessenger.sendInfoMsg('Successfully Updated the Vault');
+                }, function(errorResponse) {
+                    $scope.error = errorResponse.data.message;
+                });
+            };
 
-			     delete vault.tracker;
+            this.remove = function(vault) {
+                console.log(vault);
+                if ( vault ) {
+                    vault.$remove({vaultId : vault._id}, function(res){
+                        console.log(res);
+                        Notify.sendMsg('RefreshVaults', $stateParams);
+                    });
+                }
+            };
 
-			     vault.$update({
-			    	 trackerId: $stateParams.trackerId,
-                     vaultId: vault._id
-			     }, function() {
-			       Notify.sendMsg('RefreshVaults', {});
-			     }, function(errorResponse) {
-			         $scope.error = errorResponse.data.message;
-			     });
-			 };
-
-	    }
-	])
-
-	.directive('vaultsList', ['Vaults', 'TrackerVaults', 'Notify', function(Vaults, TrackerVaults, Notify) {
-	    return {
-	        restrict: 'E',
-	        transclude: true,
-	        templateUrl: 'modules/vaults/views/vaults-list-template.html',
-	        link: function(scope, element, attrs) {
-	            //when a new customer is added, update the customer list
-	            Notify.getMsg('RefreshVaults', function(event, data) {
-                    scope.vaultCtrl.trackerVaults = TrackerVaults.listTrackerVaults(data);
-	            });
-	        }
-	    };
-	}])
+        }
+    ])
 
 ;

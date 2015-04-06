@@ -160,7 +160,16 @@ exports.listByTrackerIdExcludeVaults = function(req, res) {
  * Vault middleware
  */
 exports.vaultByID = function(req, res, next, id) {
-	Vault.findById(id).populate('user', 'displayName').exec(function(err, vault) {
+	Vault.findById(id)
+        .populate({
+            'path' : 'owner',
+            'select' : 'firstName lastName displayName email _id'
+        })
+        .populate({
+            'path' : 'tracker',
+            'select' : 'displayName _id'
+        })
+        .exec(function(err, vault) {
 		if (err) return next(err);
 		if (! vault) return next(new Error('Failed to load Vault ' + id));
 		req.vault = vault ;
@@ -189,7 +198,7 @@ exports.vaultByTrackerVaultID = function(req, res, next, id) {
 /**
  * Vault authorization middleware
  */
-exports.hasAuthorization = function(req, res, next) {
+exports.hasAuthorizationWithTracker = function(req, res, next) {
     if(! (req.query.vaultId)){
         return res.status(403).send('User is not authorized - no request body found');
     }
@@ -206,4 +215,11 @@ exports.hasAuthorization = function(req, res, next) {
             req.vault = vault;
             next();
         });
+};
+
+exports.hasAuthorization = function(req, res, next) {
+    if (req.vault.owner.id !== req.user.id) {
+        return res.status(403).send('User is not authorized');
+    }
+    next();
 };

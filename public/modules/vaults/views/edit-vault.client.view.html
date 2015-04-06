@@ -1,5 +1,5 @@
-<section data-ng-controller="VaultsUpdateController as vaultsUpdateCtrl">
-    <div class="modal-header">
+<section data-ng-controller="VaultsController as vaultsCtrl" data-ng-init="vaultsCtrl.findOne()">
+    <div class="page-header">
         <h3 class="modal-title">Update: {{vault.displayName}}</h3>
     </div>
     <div class="modal-body">
@@ -32,7 +32,7 @@
         </form>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-success btn-sm" ng-click="vaultsUpdateCtrl.update(vault); ok()">Update & Close</button>
+        <button class="btn btn-success btn-sm" ng-click="vaultsCtrl.updateVault(vault)">Update & Close</button>
         <!-- ng-disabled="editVaultForm.$invalid -->
         <button class="btn btn-warning btn-sm" ng-click="cancel()">Cancel</button>
     </div>

@@ -1,4 +1,4 @@
-<section data-ng-controller="VaultsController as vaultCtrl">
+<section data-ng-controller="VaultsController as vaultCtrl" data-ng-init="vaultCtrl.findAll()">
     <div class="page-header">
         <h1>Vaults{{ (vaultCtrl.trackerVaults && vaultCtrl.trackerVaults.length > 0) ? ' of ' + vaultCtrl.trackerVaults[0].tracker.displayName : ''}}</h1>
     </div>
@@ -12,12 +12,17 @@
             </div>
         </div>
         <div class="col-xs-12 col-sm-3 text-center pull-right">
-            <button type="button" class="btn btn-success text-center" ng-click="vaultCtrl.modalCreate('lg')">
+            <button type="button" class="btn btn-success text-center" ng-click="vaultCtrl.createVault()">
                 <i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;New Vault
             </button>
         </div>
     </div>
     <div class="row">
         <vaults-list></vaults-list>
+    </div>
+    <div class="row">
+        <div class="alert alert-warning text-center" data-ng-hide="!temps.$resolved || temps.length">
+            No Temps yet, why don't you <a href="/#!/trackervaults/create">create one</a>?
+        </div>
     </div>
 </section>

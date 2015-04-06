@@ -1,43 +1,48 @@
-<section data-ng-controller="VaultsCreateController as vaultCreateCtrl">
-    <div class="modal-header">
-        <h3 class="modal-title">New Tracker</h3>
+<section data-ng-controller="VaultsController as vaultsCtrl">
+    <div class="page-header">
+        <h3">New Tracker</h3>
     </div>
 
 
-    <div class="modal-body">
-        <form name="createVaultForm">
-            <fieldset>
-                <div class="row">
-                    <div class="form-group-xs">
-                        <div data-ng-show="error" class="text-center text-danger">
-                            <div class="alert alert-danger" role="alert">
-                                <strong data-ng-bind="error"></strong>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-9">
-                        <div class="form-group form-group-sm">
-                            <label class="control-label" for="displayName"> Display Name</label>
-                            <div class="controls">
-                                <input type="text" data-ng-model="vaultCreateCtrl.displayName" id="displayName" class="form-control" required="true">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="description"> Description</label>
-                            <div class="controls">
-                                <input type="text" data-ng-model="vaultCreateCtrl.description" id="description" class="form-control" required>
-                            </div>
+    <form name="createVaultForm" data-ng-submit="vaultsCtrl.saveVault()" novalidate>
+        <fieldset>
+            <div class="row">
+                <div class="form-group-xs">
+                    <div data-ng-show="error" class="text-center text-danger">
+                        <div class="alert alert-danger" role="alert">
+                            <strong data-ng-bind="error"></strong>
                         </div>
                     </div>
                 </div>
-            </fieldset>
-        </form>
-    </div>
+                <div class="col-sm-12">
+                    <div class="form-group form-group-sm">
+                        <label class="control-label" for="displayName"> Display Name</label>
+                        <div class="controls">
+                            <input type="text" data-ng-model="vaultsCtrl.displayName" id="displayName" class="form-control" required="true">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="description"> Description</label>
+                        <div class="controls">
+                            <input type="text" data-ng-model="vaultsCtrl.description" id="description" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <!--<input type="submit" class="btn btn-default pull-right">-->
+                <button class="btn btn-success btn-sm pull-right"
+                        ng-disabled="createVaultForm.$invalid">Save New Vault</button>
+            </div>
+            <div data-ng-show="error" class="text-danger">
+                <strong data-ng-bind="error"></strong>
+            </div>
+        </fieldset>
+    </form>
 
 
-    <div class="modal-footer">
-        <button class="btn btn-success btn-sm" ng-click="vaultCreateCtrl.create(); ok()" ng-disabled="createVaultForm.$invalid">Save & Close</button>
-         <!-- ng-disabled="createCustomerForm.$invalid -->
-        <button class="btn btn-warning btn-sm" ng-click="cancel()">Cancel</button>
-    </div>
+
+    <!--<div class="modal-footer">-->
+        <!--<button class="btn btn-success btn-sm" ng-disabled="createVaultForm.$invalid">Save New Vault</button>-->
+    <!--</div>-->
 </section>

@@ -19,7 +19,8 @@ module.exports = function(app) {
 		.get(users.requiresLogin, vaults.listByTrackerId)
 		.post(users.requiresLogin, vaults.create)
         .put(users.requiresLogin, vaults.hasAuthorization, vaults.update)
-        .delete(users.requiresLogin, vaults.hasAuthorization, vaults.delete);
+        .delete(users.requiresLogin, vaults.hasAuthorizationWithTracker, vaults.delete);
+
 
     // TODO add trackers.isRealTracker
 	app.route('/queryvaults/queryByTracker').get(users.requiresLogin, vaults.listByTrackerIdExcludeVaults);
@@ -29,7 +30,7 @@ module.exports = function(app) {
 	//	.delete(users.requiresLogin, vaults.hasAuthorization, vaults.delete);
 
 	// Finish by binding the Vault middleware
-	//app.param('vaultId', vaults.vaultByID);
+	app.param('vaultId', vaults.vaultByID);
 //    app.param('trackerId', vaults.vaultByTrackerVaultID);
 };
 
