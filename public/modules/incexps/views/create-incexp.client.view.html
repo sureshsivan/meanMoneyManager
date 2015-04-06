@@ -1,4 +1,4 @@
-<section data-ng-controller="IncexpsCreateController as incexpCreateCtrl">
+<section data-ng-controller="IncexpsController as incexpsCtrl">
     <div class="modal-header">
         <h3 class="modal-title">New Vault</h3>
     </div>
@@ -19,20 +19,20 @@
                         <div class="form-group-sm">
                             <label class="control-label" for="displayName"> Display Name</label>
                             <div class="controls">
-                                <input type="text" data-ng-model="incexpCreateCtrl.displayName" id="displayName" class="form-control" required="true">
+                                <input type="text" data-ng-model="incexpsCtrl.displayName" id="displayName" class="form-control" required="true">
                             </div>
                         </div>
                         <div class="form-group-sm">
                             <label class="control-label" for="description"> Description</label>
                             <div class="controls">
-                                <input type="text" data-ng-model="incexpCreateCtrl.description" id="description" class="form-control" required>
+                                <input type="text" data-ng-model="incexpsCtrl.description" id="description" class="form-control" required>
                             </div>
                         </div>
                         <div class="form-group-sm">
                             <label class="control-label" for="type"> Type</label>
                             <div class="controls">
-                                <select data-ng-model="incexpCreateCtrl.type" id="type" class="form-control"
-                                        ng-options="incexpType.id as incexpType.label for incexpType in incexpCreateCtrl.getIncexpType()">
+                                <select data-ng-model="incexpsCtrl.type" id="type" class="form-control"
+                                        ng-options="incexpType.id as incexpType.label for incexpType in incexpsCtrl.getIncexpType()">
                                     <option value="" disabled>-- Choose Approval Type --</option>
                                 </select>
                             </div>
@@ -40,14 +40,14 @@
                         <div class="form-group-sm">
                             <label class="control-label" for="amount"> Amount</label>
                             <div class="controls">
-                                <input type="number" data-ng-model="incexpCreateCtrl.amount" id="amount" class="form-control" required>
+                                <input type="number" data-ng-model="incexpsCtrl.amount" id="amount" class="form-control" required>
                             </div>
                         </div>
                         <div class="form-group-sm">
                             <label class="control-label" for="vault"> Vault</label>
                             <div class="controls">
                                 <select data-ng-model="vault" id="vault" class="form-control"
-                                        data-ng-options="eachVault._id as eachVault.displayName for eachVault in incexpCreateCtrl.vaultsResult">
+                                        data-ng-options="eachVault._id as eachVault.displayName for eachVault in incexpsCtrl.vaultsResult">
                                     <option value="" disabled>-- Choose Vault --</option>
                                 </select>
                             </div>
@@ -55,7 +55,7 @@
                         <div class="form-group-sm">
                             <label class="control-label" for="tags"> Tags</label>
                             <div class="controls">
-                                <input type="text" data-ng-model="incexpCreateCtrl.tags" id="tags" class="form-control" required>
+                                <input type="text" data-ng-model="incexpsCtrl.tags" id="tags" class="form-control" required>
                             </div>
                         </div>
                         <div class="form-group-sm">
@@ -63,16 +63,16 @@
                             <div class="controls">
                                 <!--TODO - apply proper styling-->
                                 <div class="input-group1">
-                                    <input type="checkbox" data-ng-change="incexpCreateCtrl.onChangeReqApproval(incexpCreateCtrl.isPending)"
-                                           data-ng-model="incexpCreateCtrl.isPending" id="isPending" class="form-control" required>
+                                    <input type="checkbox" data-ng-change="incexpsCtrl.onChangeReqApproval(incexpsCtrl.isPending)"
+                                           data-ng-model="incexpsCtrl.isPending" id="isPending" class="form-control" required>
                                     </input>
                                     <!--<input type="checkbox" data-ng-model="incexpCreateCtrl.isPending" id="isPending" class="form-control" required>-->
-                                    <select data-ng-model="incexpCreateCtrl.pendingType" id="pendingType" class="form-control"
-                                            ng-options="approvalType.id as approvalType.label for approvalType in incexpCreateCtrl.getApprovalTypes()" data-ng-show="incexpCreateCtrl.isPending">
+                                    <select data-ng-model="incexpsCtrl.pendingType" id="pendingType" class="form-control"
+                                            ng-options="approvalType.id as approvalType.label for approvalType in incexpsCtrl.getApprovalTypes()" data-ng-show="incexpsCtrl.isPending">
                                         <!--<option value="" disabled>-- Choose Approval Type --</option>-->
                                     </select>
-                                    <textarea class="form-control" data-ng-show="incexpCreateCtrl.isPending" data-ng-model="incexpCreateCtrl.pendingMsg" id="pendingMsg" class="form-control"></textarea>
-                                    <select-users user="incexpCreateCtrl.pendingWith" data-ng-show="incexpCreateCtrl.isPending"></select-users>
+                                    <textarea class="form-control" data-ng-show="incexpsCtrl.isPending" data-ng-model="incexpsCtrl.pendingMsg" id="pendingMsg" class="form-control"></textarea>
+                                    <select-users user="incexpsCtrl.pendingWith" data-ng-show="incexpsCtrl.isPending"></select-users>
                                     <!--<i>Selected User : {{(incexpCreateCtrl.pendingWith.displayName == null ? 'Pls start bt typing above' : incexpCreateCtrl.pendingWith.displayName)}}</i>-->
                                 </div>
                             </div>
@@ -85,7 +85,7 @@
 
 
     <div class="modal-footer">
-        <button class="btn btn-success btn-sm" ng-click="incexpCreateCtrl.create(); ok()" ng-disabled="createIncexpForm.$invalid">Save & Close</button>
+        <button class="btn btn-success btn-sm" ng-click="incexpsCtrl.saveIncexp()" ng-disabled="createIncexpForm.$invalid">Save & Close</button>
          <!-- ng-disabled="createCustomerForm.$invalid -->
         <button class="btn btn-warning btn-sm" ng-click="cancel()">Cancel</button>
     </div>
