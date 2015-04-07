@@ -23,18 +23,19 @@
                 <td>
                     <button class="btn btn-danger btn-xs" 
                     		ng-click="incexpCtrl.remove(incexp)"
-                    		data-ng-class="incexpCtrl.authentication.user._id === incexp.owner._id ? '' : 'disabled'">
+                    		ng-disabled="! incexpCtrl.canDelete(incexp)">
                         <i class="fa fa-trash"></i>
                     </button>
                     <button class="btn btn-warning btn-xs" 
-                    		ng-click="incexpCtrl.editIncexp(incexp)">
+                    		ng-click="incexpCtrl.editIncexp(incexp)"
+                    		ng-disabled="! incexpCtrl.canEdit(incexp)">
                         <i class="fa fa-pencil"></i>
                     </button>
-<!-- 					<button class="btn btn-info btn-xs" 
-                    		ng-click="incexpCtrl.requestForEdit(incexp)"
-                    		data-ng-class="incexpCtrl.authentication.user._id !== incexp.owner._id ? '' : 'disabled'">
+ 					<button class="btn btn-info btn-xs" 
+                    		ng-click="! incexpCtrl.requestForEdit(incexp)"
+                    		ng-disabled="! incexpCtrl.canRequestEditAccess(incexp)">
                         <i class="fa fa-question-circle"></i>
-                    </button> -->
+                    </button> 
                 </td>
             </tr>
         </table>

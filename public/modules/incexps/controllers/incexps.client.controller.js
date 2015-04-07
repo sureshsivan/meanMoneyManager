@@ -38,7 +38,18 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
             $event.stopPropagation();
             $scope.datePickerOpened = true;
         };
-        
+        this.canEdit = function(incexp){
+        	console.log(incexp);
+        	console.log(Authentication.user);
+        	return incexp && incexp.owner && ((incexp.owner._id === Authentication.user._id) || 
+						(incexp.pendingWith && (incexp.pendingWith._id === Authentication.user._id)));
+        };
+        this.canDelete = function(incexp){
+        	return incexp && incexp.owner && incexp.owner._id === Authentication.user._id;
+        };
+        this.canRequestEditAccess = function(incexp){
+        	return incexp && incexp.owner && (incexp.owner._id !== Authentication.user._id) && (! incexp.pendingWith) ;
+        };
         this.applyDisablePendingFields = function(isSelected, incexp){
         	var toDisable = false;
         	if(typeof incexp === 'undefined'){

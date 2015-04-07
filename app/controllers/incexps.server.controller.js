@@ -124,6 +124,10 @@ exports.listByTrackerId = function(req, res) {
         'path' : 'tracker',
         'select' : 'displayName _id'
     })
+	.populate({
+		'path' : 'pendingWith',
+		'select' : 'displayName _id'
+	})
 	.sort('-created').exec(function(err, incexps) {
 		if (err) {
 			return res.status(400).send({
