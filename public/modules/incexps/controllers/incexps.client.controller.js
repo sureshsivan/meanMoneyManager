@@ -38,9 +38,24 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
             $event.stopPropagation();
             $scope.datePickerOpened = true;
         };
+        this.getInfoIconClasses = function(incExp, idx){
+            //TT
+            var classes = [];
+            //if((idx+1)%2 === 0){
+            //    classes.push('fa-user');
+            //    //} else {
+            //    //    classes.push('fa-user');
+            //}
+            //if((idx+1)%3 === 0){
+            //    classes.push('fa-bell');
+            //    //} else {
+            //    //    classes.push('fa-thumbs-up')
+            //}
+            classes.push('fa-user');
+            classes.push('fa-bell');
+            return classes;
+        };
         this.canEdit = function(incexp){
-        	console.log(incexp);
-        	console.log(Authentication.user);
         	return incexp && incexp.owner && ((incexp.owner._id === Authentication.user._id) || 
 						(incexp.pendingWith && (incexp.pendingWith._id === Authentication.user._id)));
         };
@@ -66,10 +81,6 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         		return false;
         	}
         };
-//        this.applyDisable = function(isSelected){
-//        	return !isSelected;
-//        };
-        
         this.findAll = function() {
             this.trackerIncexps = TrackerIncexps.listTrackerIncexps($stateParams);
         };
@@ -87,24 +98,6 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 incexpId: updatedIncexp._id
             });
         };
-        this.getInfoIconClasses = function(incExp, idx){
-            //TT
-            var classes = [];
-            //if((idx+1)%2 === 0){
-            //    classes.push('fa-user');
-            //    //} else {
-            //    //    classes.push('fa-user');
-            //}
-            //if((idx+1)%3 === 0){
-            //    classes.push('fa-bell');
-            //    //} else {
-            //    //    classes.push('fa-thumbs-up')
-            //}
-            classes.push('fa-user');
-            classes.push('fa-bell');
-            return classes;
-        };
-
         this.saveIncexp = function() {
             var incexp = new TrackerIncexps({
                 displayName: this.displayName,
@@ -143,7 +136,9 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 $scope.error = errorResponse.data.message;
             });
         };
-
+        this.requestForEdit = function(incexp){
+        	alert('Requesting this for edit access...');
+        };
 		this.remove = function(incexp) {
 			if ( incexp ) {
 				incexp.$remove({
