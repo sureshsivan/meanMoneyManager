@@ -107,7 +107,14 @@ exports.list = function(req, res) {
  * List of Vaults
  */
 exports.listByTrackerId = function(req, res) {
-	Incexp.find({tracker: mongoose.Types.ObjectId(req.query.trackerId)})
+	var trackerId = null;
+	if(req.query.trackerId){
+		trackerId = req.query.trackerId;	
+	} else if (req.params.trackerId){
+		trackerId = req.params.trackerId;
+	}
+	
+	Incexp.find({tracker: mongoose.Types.ObjectId(trackerId)})
 	// Vault.find({'tracker' : mongoose.Types.ObjectId(req.tracker._id)})
 	.populate({
 		'path' : 'owner',
@@ -132,7 +139,16 @@ exports.listByTrackerId = function(req, res) {
  * Incexp middleware
  */
 exports.incexpByID = function(req, res, next, id) { 
-	Incexp.findById(id).populate('user', 'displayName').exec(function(err, incexp) {
+	Incexp.findById(id)
+	.populate({
+		'path' : 'owner',
+		'select' : 'firstName lastName displayName email _id'
+	})
+    .populate({
+        'path' : 'tracker',
+        'select' : 'displayName _id'
+    })
+	.exec(function(err, incexp) {
 		if (err) return next(err);
 		if (! incexp) return next(new Error('Failed to load Incexp ' + id));
 		req.incexp = incexp ;
@@ -164,10 +180,10 @@ exports.incexpByTrackerIncexpID = function(req, res, next, id) {
  * Incexp authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
-    if(! (req.query.incexpId)){
-        return res.status(403).send('User is not authorized - no request body found');
-    }
-    var incexpId = req.query.incexpId;
+//    if(! (req.query.incexpId)){
+//        return res.status(403).send('User is not authorized - no request body found');
+//    }
+    var incexpId = req.incexp._id;
     Incexp.findById(incexpId)
         .populate('owner', 'displayName')
         .exec(function(err, incexp) {

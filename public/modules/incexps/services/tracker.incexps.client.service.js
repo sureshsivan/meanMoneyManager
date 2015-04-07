@@ -3,10 +3,9 @@
 //Vaults service used to communicate Vaults REST endpoints
 angular.module('incexps').factory('TrackerIncexps', ['$resource',
 	function($resource) {
-		return $resource('trackerincexps', null, {
+		return $resource('trackerincexps/:trackerId/:incexpId', null, {
 			update: {
-				method: 'PUT',
-                params: {incexpId : 'incexpId'}
+				method: 'PUT'
 			},
               listTrackerIncexps: {
                 method: 'GET',

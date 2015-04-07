@@ -5,7 +5,7 @@
 
 
     <div class="modal-body">
-        <form name="createIncexpForm">
+        <form name="editIncexpForm">
             <fieldset>
                 <div class="row">
                     <div class="form-group-xs">
@@ -33,7 +33,7 @@
                             <div class="controls">
                                 <select data-ng-model="incexpsCtrl.type" id="type" class="form-control"
                                         ng-options="incexpType.id as incexpType.label for incexpType in incexpsCtrl.getIncexpType()">
-                                    <option value="" disabled>-- Choose Approval Type --</option>
+                                    <option value="" disabled>-- Choose Income / Expense --</option>
                                 </select>
                             </div>
                         </div>
@@ -45,7 +45,7 @@
                                            is-open="datePickerOpened" min-date="2011-06-22" max-date="'2015-06-22'"
                                            close-text="Close" />
                                       <span class="input-group-btn">
-                                        <button type="button" class="btn btn-sm" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                        <button type="button" class="btn btn-sm" ng-click="incexpsCtrl.openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                                       </span>
                                 </p>
                             </div>
@@ -75,26 +75,25 @@
                             <label class="control-label" for="isPending"> Require Approval ? </label>
                             <div class="controls">
                                 <!--TODO - apply proper styling-->
-                                <p class="input-group">
+                                <div class="input-group">
                                   <span class="input-group-addon">
                                     <input class="form-control-md" type="checkbox" data-ng-change="incexpsCtrl.onChangeReqApproval(incexpsCtrl.isPending)"
-                                           data-ng-model="incexpsCtrl.isPending" id="isPending" >
-                                      </input>
+                                           data-ng-model="incexpsCtrl.isPending" id="isPending"/>
                                   </span>
                                   <span class="input-group-btn">
                                     <select data-ng-model="incexpsCtrl.pendingType" id="pendingType" class="form-control"
-                                            ng-options="approvalType.id as approvalType.label for approvalType in incexpsCtrl.getApprovalTypes()" data-ng-show="incexpsCtrl.isPending">
-                                        <!--<option value="" disabled>-- Choose Approval Type --</option>-->
+                                            ng-options="approvalType.id as approvalType.label for approvalType in incexpsCtrl.getApprovalTypes()" 
+                                            data-ng-disabled="! incexpsCtrl.isPending">
+                                        <option value="" disabled>-- Choose Approval Type --</option>
                                     </select>
                                   </span>
                                   <span class="input-group-btn">
-                                    <select-users user="incexpsCtrl.pendingWith" data-ng-show="incexpsCtrl.isPending"></select-users>
+                                    <select-users user="incexpsCtrl.pendingWith" 
+                                    	data-ng-disabled="! incexpsCtrl.isPending"></select-users>
                                   </span>
-                                </p>
-                                    <!--<input type="checkbox" data-ng-model="incexpCreateCtrl.isPending" id="isPending" class="form-control" required>-->
-
-                                    <textarea class="form-control" data-ng-show="incexpsCtrl.isPending" data-ng-model="incexpsCtrl.pendingMsg" id="pendingMsg" class="form-control"></textarea>
-                                    <!--<i>Selected User : {{(incexpCreateCtrl.pendingWith.displayName == null ? 'Pls start bt typing above' : incexpCreateCtrl.pendingWith.displayName)}}</i>-->
+                                </div>
+								<br/>
+                                <textarea placeholder="Type your message here...." class="form-control" data-ng-show="incexpsCtrl.isPending" data-ng-model="incexpsCtrl.pendingMsg" id="pendingMsg" class="form-control"></textarea>
                             </div>
                         </div>
                     </div>

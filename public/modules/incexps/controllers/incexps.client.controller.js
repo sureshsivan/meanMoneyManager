@@ -42,9 +42,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
             this.trackerIncexps = TrackerIncexps.listTrackerIncexps($stateParams);
         };
         this.findOne = function() {
-            $scope.incexp = Incexps.get({
-                incexpId: $stateParams.incexpId
-            });
+            $scope.incexp = TrackerIncexps.get($stateParams);
         };
 
 
@@ -99,6 +97,17 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
             incexp.$save(function(response) {
                 $state.go('listTrackerIncexps', $stateParams);
                 AppMessenger.sendInfoMsg('Successfully Created New Tracker');
+            }, function(errorResponse) {
+                $scope.error = errorResponse.data.message;
+            });
+        };
+        
+        this.updateIncexp = function(updatedIncexp){
+            var incexp = updatedIncexp;
+            delete incexp.tracker;
+            incexp.$update($stateParams, function() {
+              $state.go('listTrackerIncexps', $stateParams);
+              AppMessenger.sendInfoMsg('Successfully Updated the Income/Expense');
             }, function(errorResponse) {
                 $scope.error = errorResponse.data.message;
             });

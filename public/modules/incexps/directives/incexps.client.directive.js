@@ -24,7 +24,8 @@ angular.module('incexps')
             link: function(scope, element, attrs) {
             },
             scope: {
-                currentUser: '=user'
+                currentUser: '=user',
+                ngDisabled: '='
             },
             controller: function($scope){
                 $scope.authentication = Authentication;
