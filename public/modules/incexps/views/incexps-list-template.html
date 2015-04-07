@@ -21,13 +21,20 @@
                 <td>{{incexp.displayName}}</td>
                 <td>{{incexp.description}}</td>
                 <td>
-                    <button class="btn btn-danger btn-xs" ng-click="incexpCtrl.remove(incexp)">
+                    <button class="btn btn-danger btn-xs" 
+                    		ng-click="incexpCtrl.remove(incexp)"
+                    		data-ng-class="incexpCtrl.authentication.user._id === incexp.owner._id ? '' : 'disabled'">
                         <i class="fa fa-trash"></i>
                     </button>
-                    <button class="btn btn-warning btn-xs" ng-click="incexpCtrl.editIncexp(incexp)">
+                    <button class="btn btn-warning btn-xs" 
+                    		ng-click="incexpCtrl.editIncexp(incexp)">
                         <i class="fa fa-pencil"></i>
                     </button>
-
+<!-- 					<button class="btn btn-info btn-xs" 
+                    		ng-click="incexpCtrl.requestForEdit(incexp)"
+                    		data-ng-class="incexpCtrl.authentication.user._id !== incexp.owner._id ? '' : 'disabled'">
+                        <i class="fa fa-question-circle"></i>
+                    </button> -->
                 </td>
             </tr>
         </table>
