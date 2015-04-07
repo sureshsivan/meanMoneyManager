@@ -5,11 +5,11 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         'TrackerIncexps', '$modal', '$log', 'moment', 'AppStatics', 'Notify', 'VaultStatics', '$state', 'IncexpStatics', 'AppMessenger',
 	function($scope, $stateParams, $location, Authentication, Incexps,
              TrackerIncexps, $modal, $log, moment, AppStatics, Notify, VaultStatics, $state, IncexpStatics, AppMessenger) {
+		var _this = this;
         this.authentication = Authentication;
 		this.vaultStatics = VaultStatics;
         this.appStatics = AppStatics;
         this.incexpStatics = IncexpStatics;
-        var _this = this;
         this.getCurrencies = function(){
             return this.appStatics.getCurrencies();
         };
@@ -38,13 +38,33 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
             $event.stopPropagation();
             $scope.datePickerOpened = true;
         };
+        
+        this.applyDisablePendingFields = function(isSelected, incexp){
+        	var toDisable = false;
+        	if(typeof incexp === 'undefined'){
+        		toDisable = !isSelected;
+        	} else if(incexp && incexp.owner){
+        		toDisable = (Authentication.user._id !== incexp.owner._id) || (!isSelected);
+        	}
+        	return toDisable;
+        };
+        this.applyDisableForPendingCheckbox = function(incexp){
+        	if(incexp && incexp.owner){
+        		return Authentication.user._id !== incexp.owner._id;	
+        	} else {
+        		return false;
+        	}
+        };
+//        this.applyDisable = function(isSelected){
+//        	return !isSelected;
+//        };
+        
         this.findAll = function() {
             this.trackerIncexps = TrackerIncexps.listTrackerIncexps($stateParams);
         };
         this.findOne = function() {
             $scope.incexp = TrackerIncexps.get($stateParams);
         };
-
 
         this.createIncExp = function(){
             this.incexp = {};
@@ -114,11 +134,13 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         };
 
 		this.remove = function(incexp) {
-			console.log(incexp);
 			if ( incexp ) {
-				incexp.$remove({incexpId : incexp._id}, function(res){
-                    console.log(res);
-                    Notify.sendMsg('RefreshIncexps', $stateParams);
+				incexp.$remove({
+						incexpId : incexp._id,
+						trackerId: $stateParams.trackerId
+					}, function(res){
+					$state.go('listTrackerIncexps', $stateParams, {reload: true});
+		            AppMessenger.sendInfoMsg('Successfully Deleted the Income/Expense');
                 });
 			}
 		};

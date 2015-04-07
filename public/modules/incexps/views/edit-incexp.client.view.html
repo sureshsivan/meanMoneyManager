@@ -75,24 +75,26 @@
                             <div class="input-group">
                               <span class="input-group-addon">
                                 <input class="form-control-md" type="checkbox" 
-                                		data-ng-change="incexpsCtrl.onChangeReqApproval(incexpsCtrl.isPending)"
-                                		data-ng-disabled="incexp.owner._id !== incexpsCtrl.authentication.user.id" 
+                                		data-ng-disabled="incexpsCtrl.applyDisableForPendingCheckbox(incexp)" 
                                        data-ng-model="incexp.isPending" id="isPending"/>
                               </span>
                               <span class="input-group-btn">
                                 <select data-ng-model="incexp.pendingType" id="pendingType" class="form-control"
                                         ng-options="approvalType.id as approvalType.label for approvalType in incexpsCtrl.getApprovalTypes()" 
-                                        data-ng-disabled="! incexp.isPending">
+                                        data-ng-disabled="incexpsCtrl.applyDisablePendingFields(incexp.isPending, incexp)">
                                     <option value="" disabled>-- Choose Approval Type --</option>
                                 </select>
                               </span>
                               <span class="input-group-btn">
                                 <select-users user="incexp.pendingWith" 
-                                	data-ng-disabled="! incexp.isPending"></select-users>
+                                	data-ng-disabled="incexpsCtrl.applyDisablePendingFields(incexp.isPending, incexp)"></select-users>
                               </span>
                             </div>
 								<br/>
-                            <textarea placeholder="Type your message here...." class="form-control" data-ng-show="incexp.isPending" data-ng-model="incexpsCtrl.pendingMsg" id="pendingMsg" class="form-control"></textarea>
+                            <textarea placeholder="Type your message here...." class="form-control" 
+                            				data-ng-disabled="incexpsCtrl.applyDisablePendingFields(incexp.isPending, incexp)"
+                            				data-ng-model="incexp.pendingMsg" 
+                            				id="pendingMsg" class="form-control"></textarea>
                         </div>
                     </div>
                 </div>

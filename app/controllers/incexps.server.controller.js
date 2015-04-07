@@ -144,6 +144,10 @@ exports.incexpByID = function(req, res, next, id) {
 		'path' : 'owner',
 		'select' : 'firstName lastName displayName email _id'
 	})
+	.populate({
+		'path' : 'pendingWith',
+		'select' : 'displayName _id'
+	})
     .populate({
         'path' : 'tracker',
         'select' : 'displayName _id'
