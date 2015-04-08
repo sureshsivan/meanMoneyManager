@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('incexps').service('IncexpLocaleMessages', [ '$http',
+angular.module('incexps').service('CoreLocaleMessages', [ '$http',
 	function($http) {
 		var incexpLocaleMessageService = {};
 		

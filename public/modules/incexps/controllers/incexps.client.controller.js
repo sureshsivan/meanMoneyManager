@@ -2,9 +2,9 @@
 
 // Incexps controller
 angular.module('incexps').controller('IncexpsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Incexps',
-        'TrackerIncexps', '$modal', '$log', 'moment', 'AppStatics', 'Notify', 'VaultStatics', '$state', 'IncexpStatics', 'AppMessenger', 'IncexpLocaleMessages', 
+        'TrackerIncexps', '$modal', '$log', 'moment', 'AppStatics', 'Notify', 'VaultStatics', '$state', 'IncexpStatics', 'AppMessenger', 'IncexpLocaleMessages', '$q',
 	function($scope, $stateParams, $location, Authentication, Incexps,
-             TrackerIncexps, $modal, $log, moment, AppStatics, Notify, VaultStatics, $state, IncexpStatics, AppMessenger, IncexpLocaleMessages) {
+             TrackerIncexps, $modal, $log, moment, AppStatics, Notify, VaultStatics, $state, IncexpStatics, AppMessenger, IncexpLocaleMessages, $q) {
 		var _this = this;
         this.authentication = Authentication;
 		this.vaultStatics = VaultStatics;
@@ -12,14 +12,14 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         this.incexpStatics = IncexpStatics;
         //	TODO - bootstrapping the module only if the dependencies are loaded 
         //	Not sure whether this is correct way - but it works.
-        loadMessages().then(loadVaults).then(bootIncexModule);
-        
-        function loadMessages(){
-        	return IncexpLocaleMessages.pullMessages().then(function(response){
-    			_this.labelsObj = response.data;
+
+        var loadmsgs = function(){
+            return IncexpLocaleMessages.pullMessages().then(function(labels){
+                console.dir(labels);
+    			_this.labelsObj = labels;
             })
         };
-        function loadVaults(){
+        var loadvaults = function(){
             return _this.vaultStatics.queryVaults($stateParams.trackerId).then(function(response){
                 _this.vaultsResult = [];
                 response.data.map(function(item){
@@ -27,7 +27,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 });
             });
         }
-        function bootIncexModule(){
+        var bootmodule = function(){
             _this.getLabel = function(key){
             	return _this.labelsObj[key];
             }; 
@@ -160,7 +160,8 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
     			}
     		};        	
         };
-
+        loadmsgs().then(loadvaults).then(bootmodule);
+        //$q.all([loadmsgs, loadvaults]).then(bootmodule);
 
 	}
 ])
