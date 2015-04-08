@@ -1,5 +1,5 @@
 <div class="list-group">
-	<div class="col-xs-12 pad-top"
+	<div class="col-xs-12 pad-top tracker-list-item"
 		data-ng-repeat="tracker in trackersCtrl.trackers | filter:searchText">
 		<a ng-click="" class="list-group-item">
 			<div class="row">
@@ -24,13 +24,15 @@
 					<small class="list-group-item-text text-muted">
 						<strong>Created On : </strong><span data-ng-bind="trackersCtrl.getLocalTime(tracker.created)"></span>
 						<span class="pull-right pad-left">
-							<button class="btn btn-danger btn-sm" ng-click="trackersCtrl.remove(tracker)"
-								data-ng-class="tracker.owner._id == trackersCtrl.authentication.user._id ? '' : 'disabled'">
+							<button tooltip-placement="bottom" tooltip="Click to Delete"
+									class="btn btn-danger btn-sm" ng-click="trackersCtrl.remove(tracker)"
+									data-ng-class="tracker.owner._id == trackersCtrl.authentication.user._id ? '' : 'disabled'">
 								<i class="glyphicon glyphicon-trash"></i>
 							</button>
 						</span>
 						<span class="pull-right pad-left">
-							<button class="btn btn-warning btn-sm" ng-click="trackersCtrl.editTracker(tracker)"
+							<button tooltip-placement="bottom" tooltip-html-unsafe="Click to Delete<b>Some Bold</b> Text"
+									class="btn btn-warning btn-sm" ng-click="trackersCtrl.editTracker(tracker)"
 								data-ng-class="tracker.owner._id == trackersCtrl.authentication.user._id ? '' : 'disabled'">
 								<i class="glyphicon glyphicon-edit"></i>
 							</button>
