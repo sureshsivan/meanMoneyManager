@@ -2,7 +2,7 @@
 
 // Incexps controller
 angular.module('incexps').controller('IncexpsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Incexps',
-        'TrackerIncexps', '$modal', '$log', 'moment', 'AppStatics', 'Notify', 'VaultStatics', '$state', 'IncexpStatics', 'AppMessenger',
+        'TrackerIncexps', '$modal', '$log', 'moment', 'AppStatics', 'Notify', 'VaultStatics', '$state', 'IncexpStatics', 'AppMessenger', 
 	function($scope, $stateParams, $location, Authentication, Incexps,
              TrackerIncexps, $modal, $log, moment, AppStatics, Notify, VaultStatics, $state, IncexpStatics, AppMessenger) {
 		var _this = this;
@@ -99,6 +99,12 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
             });
         };
         this.saveIncexp = function() {
+//        	console.dir(this.tags);
+//        	var tagIds = [];
+//        	for(var idx in this.tags){
+//        		tagIds.push(this.tags[idx].id);
+//        	}
+//        	console.log(tagIds);
             var incexp = new TrackerIncexps({
                 displayName: this.displayName,
                 description: this.description,
@@ -107,7 +113,6 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 tags: this.tags,
                 amount: this.amount,
                 vault: this.vault,
-
                 owner: this.authentication.user._id,
                 created: this.created
             });

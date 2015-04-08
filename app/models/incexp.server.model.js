@@ -35,9 +35,7 @@ var IncexpSchema = new Schema({
         //required: 'Please fill Date of Income or Expense',
         default: Date.now
     },
-	tags: [{
-		type: String
-	}],
+	tags: [],
 	amount: {
 		type: Number,
 		required: 'Amount is mandatory'

@@ -1,0 +1,28 @@
+tags-input .tags .tag-item {
+  margin: 2px 4px;
+  padding: 1px;
+  background: none;
+  display: inline-block;
+  float: left;
+  font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  height: 26px;
+}
+
+tags-input .tags .tag-item {
+  color: white;
+  border: 1px solid #FFF;
+  border-radius: 4px;
+}
+.incexp-tag-item {
+	border-radius: 4px !important;
+	padding: 0px 10px;
+}
+tags-input .tags .tag-item.selected {
+  border: 1px solid #d43f3a !important;
+}
+
+tags-input .tags .tag-item.selected > div.incexp-tag-item{
+  color: white !important;
+  background: #d9534f !important;
+  border: 1px solid #d43f3a !important;
+}
