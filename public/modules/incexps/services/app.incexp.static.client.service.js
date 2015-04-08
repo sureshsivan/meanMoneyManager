@@ -26,6 +26,9 @@ angular.module('core').service('IncexpStatics', [ '$http',
             }
             return this.incexpType;
         };
+        incexpStatics.getTagsList = function(){
+            return $http.get('modules/incexps/json/incexpTags.json');
+        };
 		return incexpStatics;
 	}
 ]);

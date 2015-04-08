@@ -68,7 +68,18 @@
                         <div class="form-group-sm">
                             <label class="control-label" for="tags"> Tags</label>
                             <div class="controls">
-                                <input type="text" data-ng-model="incexpsCtrl.tags" id="tags" class="form-control" required>
+                                <tags-input ng-model="incexpsCtrl.tags" class="ti-input-sm" 
+                                                display-property="label" 
+								                placeholder="Add Tags" 
+								                replace-spaces-with-dashes="false"
+								                template="modules/incexps/templates/incexp-tag-input-template.client.html">
+	                                <auto-complete source="incexpsCtrl.incexpStatics.getTagsList()"
+					                     min-length="0"
+					                     load-on-focus="true"
+					                     load-on-empty="true"
+					                     max-results-to-show="32"
+					                     template="modules/incexps/templates/incexp-tag-auto-complete-input-template.client.html"></auto-complete>
+                                </tags-input>
                             </div>
                         </div>
                         <div class="form-group-sm">
@@ -114,3 +125,4 @@
         <button class="btn btn-warning btn-sm" ng-click="cancel()">Cancel</button>
     </div>
 </section>
+
