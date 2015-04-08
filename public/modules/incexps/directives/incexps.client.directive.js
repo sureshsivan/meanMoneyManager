@@ -2,11 +2,11 @@
 
 angular.module('incexps')
 
-	.directive('incexpsList', ['Incexps', 'TrackerIncexps', 'Notify', function(Incexps, TrackerIncexps, Notify) {
+	.directive('incexpsList', ['Incexps', 'TrackerIncexps', 'Notify', 'IncexpStatics', function(Incexps, TrackerIncexps, Notify, IncexpStatics) {
 	    return {
 	        restrict: 'E',
 	        transclude: true,
-	        templateUrl: 'modules/incexps/views/incexps-list-template.html',
+	        templateUrl: IncexpStatics.getListIncexpsTemplatePath(),
 	        link: function(scope, element, attrs) {
 	            Notify.getMsg('RefreshIncexps', function(event, data) {
                     scope.incexpCtrl.trackerIncexps = TrackerIncexps.listTrackerIncexps(data);

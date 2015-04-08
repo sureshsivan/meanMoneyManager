@@ -1,8 +1,12 @@
 'use strict';
 
-angular.module('core').service('IncexpStatics', [ '$http',
+angular.module('incexps').service('IncexpStatics', [ '$http',
 	function($http) {
 		var incexpStatics = {};
+		
+		incexpStatics.getListIncexpsTemplatePath = function(){
+			return 'modules/incexps/templates/incexps-list-template.client.html';
+		};
         incexpStatics.getApprovalTypesForCreation = function(){
 				if(! this.approvalTypesForCreation){
 					this.approvalTypesForCreation = [{id: 'UPD_REQ', label: 'Request for Update'}];
@@ -29,6 +33,7 @@ angular.module('core').service('IncexpStatics', [ '$http',
         incexpStatics.getTagsList = function(){
             return $http.get('modules/incexps/json/incexpTags.json');
         };
+        
 		return incexpStatics;
 	}
 ]);

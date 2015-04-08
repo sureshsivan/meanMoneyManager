@@ -1,0 +1,5 @@
+{
+	"app.incexps.lbl.incexp" : "Income or Expense",
+	"app.incexps.lbl.deleteIncexp" : "Delete Income or Expense",
+	"app.incexps.lbl.createIncexp" : "CreateIncome or Expense"
+}
