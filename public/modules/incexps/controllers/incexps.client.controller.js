@@ -10,7 +10,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
 		this.vaultStatics = VaultStatics;
         this.appStatics = AppStatics;
         this.incexpStatics = IncexpStatics;
-        //	TODO - bootstrapping the module only if the dependencies are loaded properly
+        //	TODO - bootstrapping the module only if the dependencies are loaded 
         //	Not sure whether this is correct way - but it works.
         loadMessages().then(loadVaults).then(bootIncexModule);
         
@@ -28,10 +28,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
             });
         }
         function bootIncexModule(){
-        	console.log('Booting Module');
             _this.getLabel = function(key){
-            	console.log(key);
-            	console.log(_this.labelsObj[key]);
             	return _this.labelsObj[key];
             }; 
             _this.getCurrencies = function(){
