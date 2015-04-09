@@ -15,7 +15,6 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
 
         var loadmsgs = function(){
             return IncexpLocaleMessages.pullMessages().then(function(labels){
-                console.dir(labels);
     			_this.labelsObj = labels;
             })
         };
