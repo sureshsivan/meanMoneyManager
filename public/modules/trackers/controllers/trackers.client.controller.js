@@ -130,6 +130,7 @@ angular.module('trackers')
             };
 
             //loadmsgs().then(bootmodule);
+            loadmsgs();
             bootmodule();
         }
     ])
