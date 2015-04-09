@@ -1,0 +1,29 @@
+{
+  "app.tracker.lbl.listOfTracker" : "List of Trackers",
+  "app.incexps.lbl.tracker" : "Tracker",
+  "app.incexps.lbl.owner" : "Tracker",
+  "app.incexps.lbl.users" : "Users",
+  "app.incexps.lbl.createdOn" : "Created on",
+  "app.incexps.lbl.newTracker" : "Create New Tracker",
+  "app.incexps.lbl.delTracker" : "Delete Tracker",
+  "app.incexps.lbl.updTracker" : "Update Tracker",
+  "app.incexps.lbl.cancel" : "Cancel",
+  "app.incexps.lbl.manageVaults" : "Manage Vaults in this tracker",
+  "app.incexps.lbl.manageIncexp" : "Manage Income/Expenses in tj=his Tracker",
+  "app.incexps.lbl.searchTracker" : "Search Trackers",
+  "app.incexps.lbl.search" : "Go",
+  "app.incexps.lbl.searchTracker" : "Search Trackers",
+  "app.incexps.lbl.trackerName" : "Tracker Name",
+  "app.incexps.lbl.trackerDesc" : "Tracker Description",
+  "app.incexps.lbl.trackerCurrency" : "Tracker Currency",
+  "app.incexps.lbl.shareTracker" : "Share Tracker with Others",
+  "app.incexps.lbl.addUser" : "Add User",
+
+  "app.incexps.ph.trackerName" : "Type Tracker Name",
+  "app.incexps.ph.trackerDesc" : "Type Tracker Description",
+  "app.incexps.ph.trackerCurrency" : "-- Choose Tracker Currency --",
+  "app.incexps.ph.addUsers" : "Type User Name/email to choose"
+
+
+
+}

@@ -3,21 +3,17 @@
 // Trackers controller
 
 angular.module('trackers')
-	.directive('trackersList', ['Trackers', 'Notify', '$state', function(Trackers, Notify, $state) {
+	.directive('trackersList', ['Trackers', 'TRACKER_CONST', '$state', function(Trackers, TRACKER_CONST, $state) {
 	    return {
 	        restrict: 'E',
 	        transclude: true,
-	        templateUrl: 'modules/trackers/views/trackers-list-template.html',
+	        templateUrl: TRACKER_CONST.TRACKER_LIST_TEMPLATE_URL,
 	        link: function(scope, element, attrs) {
-	            Notify.getMsg('RefreshTrackers', function(event, data) {
-	                scope.trackersCtrl.trackers = Trackers.query();
-                    $state.go('listTrackers');
-	            });
 	        }
 	    };
 	}])
 
-	.directive('addUsers', ['Trackers', 'AppStatics', 'Authentication', 'UserStatics', function(Trackers, AppStatics, Authentication, UserStatics) {
+	.directive('addUsers', ['Authentication', 'UserStatics', function(Authentication, UserStatics) {
 	    return {
 	        restrict: 'E',
 	        transclude: true,

@@ -1,0 +1,16 @@
+[{
+	"label": "Entertainment",
+	"id": "ENT",
+	"desc": "Any Items spent for Entertainment",
+	"color": "#000"
+}, {
+	"label": "Baby",
+	"id": "BABY",
+	"desc": "Any Items spent for Babycare",
+	"color": "#F4F"
+}, {
+	"label": "Necessary",
+	"id": "NEC",
+	"desc": "Any Items spent Home Making",
+	"color": "#7AA"
+}]
