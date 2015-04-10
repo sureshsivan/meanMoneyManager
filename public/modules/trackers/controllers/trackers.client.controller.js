@@ -129,15 +129,26 @@ angular.module('trackers')
 
             };
             
-            //	Bootstrapping based on application state
+            	//Bootstrapping based on application state
             if($state.current.name === TRACKER_CONST.LIST_TRACKERS_STATE_NAME){
-            	pullMsgs().then(pullTrackers).then(bootmodule);	
+            	pullMsgs().then(pullTrackers).then(bootmodule);
             } else if($state.current.name === TRACKER_CONST.CREATE_TRACKER_STATE_NAME){
             	pullMsgs().then(bootmodule);
             } else if($state.current.name === TRACKER_CONST.EDIT_TRACKER_STATE_NAME){
             	pullMsgs().then(pullTracker).then(bootmodule);
             }
-            
+
+            ////	Bootstrapping based on application state
+            //if($state.current.name === TRACKER_CONST.LIST_TRACKERS_STATE_NAME){
+            //    pullMsgs();
+            //    pullTrackers();
+            //    bootmodule);
+            //} else if($state.current.name === TRACKER_CONST.CREATE_TRACKER_STATE_NAME){
+            //    pullMsgs().then(bootmodule);
+            //} else if($state.current.name === TRACKER_CONST.EDIT_TRACKER_STATE_NAME){
+            //    pullMsgs().then(pullTracker).then(bootmodule);
+            //}
+
         }
     ])
 ;
