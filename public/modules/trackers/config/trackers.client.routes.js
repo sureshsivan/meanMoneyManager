@@ -1,25 +1,21 @@
 'use strict';
 
 //Setting up route
-angular.module('trackers').config(['$stateProvider',
-	function($stateProvider) {
+angular.module('trackers').config(['$stateProvider', 'TRACKER_CONST',
+	function($stateProvider, TRACKER_CONST) {
 		// Trackers state routing
 		$stateProvider.
-		state('listTrackers', {
-			url: '/trackers',
-			templateUrl: 'modules/trackers/views/list-trackers.client.view.html'
+		state(TRACKER_CONST.LIST_TRACKERS_STATE_NAME, {
+			url: TRACKER_CONST.LIST_TRACKERS_STATE_URL,
+			templateUrl: TRACKER_CONST.LIST_TRACKERS_STATE_TEMPLATE_URL
 		}).
-		state('createTracker', {
-			url: '/trackers/create',
-			templateUrl: 'modules/trackers/views/create-tracker.client.view.html'
-//		}).
-//		state('viewTracker', {
-//			url: '/trackers/:trackerId',
-//			templateUrl: 'modules/trackers/views/view-tracker.client.view.html'
+		state(TRACKER_CONST.CREATE_TRACKER_STATE_NAME, {
+			url: TRACKER_CONST.CREATE_TRACKER_STATE_URL,
+			templateUrl: TRACKER_CONST.CREATE_TRACKER_STATE_TEMPLATE_URL
 		}).
-		state('editTracker', {
-			url: '/trackers/:trackerId/edit',
-			templateUrl: 'modules/trackers/views/edit-tracker.client.view.html'
+		state(TRACKER_CONST.EDIT_TRACKER_STATE_NAME, {
+			url: TRACKER_CONST.EDIT_TRACKER_STATE_URL,
+			templateUrl: TRACKER_CONST.EDIT_TRACKER_STATE_TEMPLATE_URL
 		});
 	}
 ]);

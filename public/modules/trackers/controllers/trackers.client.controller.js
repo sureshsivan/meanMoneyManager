@@ -4,24 +4,32 @@
 
 
 angular.module('trackers')
-    .controller('TrackersController', ['$scope', '$state', '$stateParams', 'Authentication', 'Trackers', 'TrackerLocaleMessages', 'AppStatics', 'UserStatics', 'AppMessenger', 'moment',
-        function($scope, $state, $stateParams, Authentication, Trackers, TrackerLocaleMessages, AppStatics, UserStatics, AppMessenger, moment) {
+    .controller('TrackersController', ['$scope', '$state', '$stateParams', 'Authentication', 'Trackers', 'TrackerLocaleMessages', 'TRACKER_CONST', 'AppStatics', 'UserStatics', 'AppMessenger', 'moment',
+        function($scope, $state, $stateParams, Authentication, Trackers, TrackerLocaleMessages, TRACKER_CONST, AppStatics, UserStatics, AppMessenger, moment) {
             var _this = this;
             this.appStatics = AppStatics;
             this.userStatics = UserStatics;
             this.authentication = Authentication;
             this.assignedUsers = [];
             this.assignedUsers.push(Authentication.user);
-
-            var loadmsgs = function(){
-                console.log('loadmsgs');
+            console.dir($scope);
+            var pullMsgs = function(){
                 return TrackerLocaleMessages.pullMessages().then(function(labels){
                     _this.labelsObj = labels;
                 })
             };
 
+            var pullTrackers = function () {
+                _this.trackers = Trackers.query();
+            };
+            
+            var pullTracker = function () {
+                $scope.tracker = Trackers.get({
+                    trackerId: $stateParams.trackerId
+                });
+            };
+            
             var bootmodule = function () {
-                console.log('bootmodule');
                 _this.getLocalTime = function (time) {
                     return moment(time).toString();
                 };
@@ -50,15 +58,6 @@ angular.module('trackers')
                         users = 'Something wrong';
                     }
                     return users;
-                };
-                _this.findAll = function () {
-                    console.log('find all');
-                    _this.trackers = Trackers.query();
-                };
-                _this.findOne = function () {
-                    $scope.tracker = Trackers.get({
-                        trackerId: $stateParams.trackerId
-                    });
                 };
                 _this.loadVaults = function (trackerId) {
                     $state.go('listTrackerVaults', {trackerId: trackerId});
@@ -129,9 +128,14 @@ angular.module('trackers')
 
             };
 
-            //loadmsgs().then(bootmodule);
-            loadmsgs();
-            bootmodule();
+            if($state.current.name === TRACKER_CONST.LIST_TRACKERS_STATE_NAME){
+            	pullMsgs().then(pullTrackers).then(bootmodule);	
+            } else if($state.current.name === TRACKER_CONST.CREATE_TRACKER_STATE_NAME){
+            	pullMsgs().then(bootmodule);
+            } else if($state.current.name === TRACKER_CONST.EDIT_TRACKER_STATE_NAME){
+            	pullMsgs().then(pullTracker).then(bootmodule);
+            }
+            
         }
     ])
 ;
