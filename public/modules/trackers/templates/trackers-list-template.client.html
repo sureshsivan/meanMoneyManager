@@ -1,61 +1,116 @@
-<div class="list-group">
-	<div class="col-xs-12 pad-top tracker-list-item"
-		data-ng-repeat="tracker in trackersCtrl.trackers | filter:searchText">
-		<a ng-click="" class="list-group-item">
-			<div class="row">
-				<div class="col-xs-12">
-					<strong><h4>
-						Tracker : {{tracker.displayName}}
-						<span class="pull-right badge badge-warn margin-left">4</span>
-						<span class="pull-right badge badge-info margin-left">10</span>
-					</h4></strong>
-					<small class="text-muted">
-						<span data-ng-bind="tracker.description"></span>
-					</small>
-					<br/>
-					<small class="text-muted">
-						<strong>Owner : </strong><span data-ng-bind="trackersCtrl.getOwnerTxt(tracker)"></span>
-					</small>
-					<br/>
-					<small class="text-muted">
-						<strong>Users : </strong><span data-ng-bind="trackersCtrl.getUsersTxt(tracker)"></span>
-					</small>
-					<br/>
-					<small class="list-group-item-text text-muted">
-						<strong>Created On : </strong><span>{{tracker.created | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss A'}}</span>
-						<span class="pull-right pad-left">
-							<button tooltip-placement="bottom" tooltip="Click to Delete"
-									class="btn btn-danger btn-sm" ng-click="trackersCtrl.remove(tracker)"
-									data-ng-class="tracker.owner._id == trackersCtrl.authentication.user._id ? '' : 'disabled'">
-								<i class="glyphicon glyphicon-trash"></i>
-							</button>
-						</span>
-						<span class="pull-right pad-left">
-							<button tooltip-placement="bottom" tooltip-html-unsafe="Click to Delete<b>Some Bold</b> Text"
-									class="btn btn-warning btn-sm" ng-click="trackersCtrl.editTracker(tracker)"
-								data-ng-class="tracker.owner._id == trackersCtrl.authentication.user._id ? '' : 'disabled'">
-								<i class="glyphicon glyphicon-edit"></i>
-							</button>
-						</span>
-						<span class="pull-right pad-left">
-							<button class="btn btn-info btn-sm" ng-click="trackersCtrl.loadVaults(tracker._id)">
-								<i class="glyphicon glyphicon-piggy-bank"></i>
-							</button>
-						</span>
-						<span class="pull-right pad-left">
-							<button class="btn btn-primary btn-sm" ng-click="trackersCtrl.loadIncexps(tracker._id)">
-								<i class="glyphicon glyphicon-play"></i>
-							</button>
-						</span>
+<div class="panel panel-default" 
+		data-ng-repeat="tracker in trackersCtrl.trackers | filter:searchText"
+		data-ng-click="trackersCtrl.loadIncexps(tracker._id)">
+  <div class="panel-heading">
+  	Tracker : {{tracker.displayName}}
+  	<span class="pull-right badge margin-left badge-warn">4</span>
+  </div>
+  <div class="panel-body">
+	<small class="text-muted">
+		<span data-ng-bind="tracker.description"></span>
+	</small>
+	<br/>
+	<small class="text-muted">
+		<strong>Owner : </strong><span data-ng-bind="trackersCtrl.getOwnerTxt(tracker)"></span>
+	</small>
+	<br>
+	<small class="text-muted">
+		<strong>Users : </strong><span data-ng-bind="trackersCtrl.getUsersTxt(tracker)"></span>
+	</small>
+	<br/>
+	<small class="text-muted">
+		<strong>Currency : </strong><span data-ng-bind="trackersCtrl.getOwnerTxt(tracker)"></span>
+	</small>
+	<br/>
+	<small class="list-group-item-text text-muted">
+		<strong>Created On : </strong><span am-time-ago="tracker.created"></span>    (<span>{{tracker.created | amDateFormat:'dddd, MMMM Do YYYY'}}</span>)
+	</small>
+	<br/><br/>
+	<span class="pull-right pad-left">
+		<button tooltip-placement="bottom" tooltip="Click to Delete"
+				class="btn btn-danger btn-sm" ng-click="trackersCtrl.remove(tracker)"
+				data-ng-class="tracker.owner._id == trackersCtrl.authentication.user._id ? '' : 'disabled'">
+			<i class="glyphicon glyphicon-trash"></i>
+		</button>
+	</span>
+	<span class="pull-right pad-left">
+		<button tooltip-placement="bottom" tooltip-html-unsafe="Click to Delete<b>Some Bold</b> Text"
+				class="btn btn-warning btn-sm" ng-click="trackersCtrl.editTracker(tracker)"
+			data-ng-class="tracker.owner._id == trackersCtrl.authentication.user._id ? '' : 'disabled'">
+			<i class="glyphicon glyphicon-edit"></i>
+		</button>
+	</span>
+	<span class="pull-right pad-left">
+		<button class="btn btn-info btn-sm" ng-click="trackersCtrl.loadVaults(tracker._id)">
+			<i class="glyphicon glyphicon-piggy-bank"></i>
+		</button>
+	</span>
+	<span class="pull-right pad-left">
+		<button class="btn btn-primary btn-sm" ng-click="trackersCtrl.loadIncexps(tracker._id)">
+			<i class="glyphicon glyphicon-play"></i>
+		</button>
+	</span>
+  </div>	
+</div>
 
-					</small>
-				</div>
-			</div>
-		</a>
-	</div>
-</div>
-<div class="alert alert-warning text-center"
-	data-ng-hide="!trackers.$resolved || trackers.length">
-	No trackers yet, why don't you <a href="/#!/trackers/create">create
-		one</a>?
-</div>
+<!-- <div class="list-group"> -->
+<!-- 	<div class="col-xs-12 pad-top tracker-list-item" -->
+<!-- 		data-ng-repeat="tracker in trackersCtrl.trackers | filter:searchText"> -->
+<!-- 		<a data-ng-click="trackersCtrl.loadIncexps(tracker._id)" class="list-group-item"> -->
+<!-- 			<div class="row"> -->
+<!-- 				<div class="col-xs-12"> -->
+<!-- 					<strong><h4> -->
+<!-- 						Tracker : {{tracker.displayName}} -->
+<!-- 						<span class="pull-right badge badge-warn margin-left">4</span> -->
+<!-- 						<span class="pull-right badge badge-info margin-left">10</span> -->
+<!-- 					</h4></strong> -->
+<!-- 					<small class="text-muted"> -->
+<!-- 						<span data-ng-bind="tracker.description"></span> -->
+<!-- 					</small> -->
+<!-- 					<br/> -->
+<!-- 					<small class="text-muted"> -->
+<!-- 						<strong>Owner : </strong><span data-ng-bind="trackersCtrl.getOwnerTxt(tracker)"></span> -->
+<!-- 					</small> -->
+<!-- 					<br/> -->
+<!-- 					<small class="text-muted"> -->
+<!-- 						<strong>Users : </strong><span data-ng-bind="trackersCtrl.getUsersTxt(tracker)"></span> -->
+<!-- 					</small> -->
+<!-- 					<br/> -->
+<!-- 					<small class="list-group-item-text text-muted"> -->
+<!-- 						<strong>Created On : </strong><span am-time-ago="tracker.created"></span>    (<span>{{tracker.created | amDateFormat:'dddd, MMMM Do YYYY'}}</span>) -->
+<!-- 						<span class="pull-right pad-left"> -->
+<!-- 							<button tooltip-placement="bottom" tooltip="Click to Delete" -->
+<!-- 									class="btn btn-danger btn-sm" ng-click="trackersCtrl.remove(tracker)" -->
+<!-- 									data-ng-class="tracker.owner._id == trackersCtrl.authentication.user._id ? '' : 'disabled'"> -->
+<!-- 								<i class="glyphicon glyphicon-trash"></i> -->
+<!-- 							</button> -->
+<!-- 						</span> -->
+<!-- 						<span class="pull-right pad-left"> -->
+<!-- 							<button tooltip-placement="bottom" tooltip-html-unsafe="Click to Delete<b>Some Bold</b> Text" -->
+<!-- 									class="btn btn-warning btn-sm" ng-click="trackersCtrl.editTracker(tracker)" -->
+<!-- 								data-ng-class="tracker.owner._id == trackersCtrl.authentication.user._id ? '' : 'disabled'"> -->
+<!-- 								<i class="glyphicon glyphicon-edit"></i> -->
+<!-- 							</button> -->
+<!-- 						</span> -->
+<!-- 						<span class="pull-right pad-left"> -->
+<!-- 							<button class="btn btn-info btn-sm" ng-click="trackersCtrl.loadVaults(tracker._id)"> -->
+<!-- 								<i class="glyphicon glyphicon-piggy-bank"></i> -->
+<!-- 							</button> -->
+<!-- 						</span> -->
+<!-- 						<span class="pull-right pad-left"> -->
+<!-- 							<button class="btn btn-primary btn-sm" ng-click="trackersCtrl.loadIncexps(tracker._id)"> -->
+<!-- 								<i class="glyphicon glyphicon-play"></i> -->
+<!-- 							</button> -->
+<!-- 						</span> -->
+
+<!-- 					</small> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+<!-- 		</a> -->
+<!-- 	</div> -->
+<!-- </div> -->
+<!-- <div class="alert alert-warning text-center" -->
+<!-- 	data-ng-hide="!trackers.$resolved || trackers.length"> -->
+<!-- 	No trackers yet, why don't you <a href="/#!/trackers/create">create -->
+<!-- 		one</a>? -->
+<!-- </div> -->

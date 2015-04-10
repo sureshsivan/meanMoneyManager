@@ -1,28 +1,25 @@
 <section data-ng-controller="TrackersController as trackersCtrl">
     <div class="page-header">
-        <h1>Trackers</h1>
+        <h1>{{trackersCtrl.getLabel('app.trackers.lbl.listOfTrackers')}}</h1>
     </div>
     <div class="row">
-        <div class="col-xs-12 col-sm-9">
+        <div class="col-xs-12">
             <div class="input-group input-group">
-                <input type="text" ng-model="searchText" class="form-control" placeholder="Search Trackers...">
+                <input type="text" data-ng-model="searchText" class="form-control" placeholder="{{trackersCtrl.getLabel('app.trackers.lbl.searchTracker')}}">
                 <span class="input-group-btn">
-                    <button class="btn btn-default" type="button">Go!</button>
+		            <button type="button" class="pull-left btn btn-success text-center" data-ng-click="trackersCtrl.createTracker()">
+		                <i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;{{trackersCtrl.getLabel('app.trackers.lbl.newTracker')}}
+		            </button>
                 </span>
             </div>
-        </div>
-        <div class="col-xs-12 col-sm-3 text-center pull-right">
-            <button type="button" class="btn btn-success text-center" ng-click="trackersCtrl.createTracker()">
-                <i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;New Tracker
-            </button>
+
         </div>
     </div>
+    <br/>
+   	<trackers-list></trackers-list>
     <div class="row">
-    	<trackers-list></trackers-list>
-    </div>
-    <div class="row">
-        <div class="alert alert-warning text-center" data-ng-hide="!temps.$resolved || temps.length">
-            No Temps yet, why don't you <a href="/#!/trackers/create">create one</a>?
+        <div class="alert alert-warning text-center" data-ng-hide="!trackersCtrl.trackers.$resolved || trackersCtrl.trackers.length">
+            <a href="/#!/trackers/create">{{trackersCtrl.getLabel('app.trackers.lbl.noTrackerYet')}}</a>
         </div>
     </div>
 

@@ -29,6 +29,9 @@ angular.module('trackers')
             };
             
             var bootmodule = function () {
+                _this.getLabel = function(key){
+                	return _this.labelsObj[key];
+                };
                 _this.getLocalTime = function (time) {
                     return moment(time).toString();
                 };
