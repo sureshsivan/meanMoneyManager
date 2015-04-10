@@ -24,7 +24,7 @@
 	color: #FFF;
 }
 
-.tracker-list-item > a:hover{
+.tracker-list-item:hover{
 	border-color: #ccc;
 	border-color: rgba(82,168,236,.8);
 	outline: 0;
