@@ -7,12 +7,11 @@ angular.module('trackers')
     .controller('TrackersController', ['$scope', '$state', '$stateParams', 'Authentication', 'Trackers', 'TrackerLocaleMessages', 'TRACKER_CONST', 'AppStatics', 'UserStatics', 'AppMessenger', 'moment',
         function($scope, $state, $stateParams, Authentication, Trackers, TrackerLocaleMessages, TRACKER_CONST, AppStatics, UserStatics, AppMessenger, moment) {
             var _this = this;
-            this.appStatics = AppStatics;
-            this.userStatics = UserStatics;
-            this.authentication = Authentication;
-            this.assignedUsers = [];
-            this.assignedUsers.push(Authentication.user);
-            console.dir($scope);
+            _this.appStatics = AppStatics;
+            _this.userStatics = UserStatics;
+            _this.authentication = Authentication;
+            _this.assignedUsers = [];
+            _this.assignedUsers.push(Authentication.user);
             var pullMsgs = function(){
                 return TrackerLocaleMessages.pullMessages().then(function(labels){
                     _this.labelsObj = labels;
@@ -34,7 +33,7 @@ angular.module('trackers')
                     return moment(time).toString();
                 };
                 _this.getOwnerTxt = function (tracker) {
-                    return (tracker.owner && tracker.owner._id && (tracker.owner._id.toString() === Authentication.user._id.toString())) ? 'Me - This is my Awesome tracker' :
+                    return (tracker.owner && tracker.owner._id && (tracker.owner._id === Authentication.user._id)) ? 'Me' :
                         ((tracker.owner && tracker.owner.displayName) ? tracker.owner.displayName : 'No Name');
                 };
                 _this.getCurrencies = function () {
@@ -45,17 +44,16 @@ angular.module('trackers')
                     //TODO - splice owner name from this
                     if (tracker.users && tracker.users.length > 1) {
                         for (var i = 0; i < tracker.users.length; i++) {
-                            if (i !== 0) {
-                                users = users + ((i === tracker.users.length - 2) ? ' , ' : ' and ') + tracker.users[i].displayName;
+                        	if(tracker.users[i]._id === Authentication.user._id)	continue;
+                            if (users !== '') {
+                                users = users + ((i === tracker.users.length - 2) ? ' , ' : ' and ') + 
+                                	((tracker.users[i]._id === Authentication.user._id) ? 'Me' : tracker.users[i].displayName);
                             } else {
                                 users = tracker.users[i].displayName;
                             }
                         }
-                    } else if (tracker.users) {
-                        users = tracker.users[0].displayName;
-                    } else {
-                        // TODO - remove it later
-                        users = 'Something wrong';
+                    } else if (tracker.users && tracker.users.length === 1) {
+                        users = 'No one else - this is my private tracker';
                     }
                     return users;
                 };
@@ -127,7 +125,8 @@ angular.module('trackers')
                 };
 
             };
-
+            
+            //	Bootstrapping based on application state
             if($state.current.name === TRACKER_CONST.LIST_TRACKERS_STATE_NAME){
             	pullMsgs().then(pullTrackers).then(bootmodule);	
             } else if($state.current.name === TRACKER_CONST.CREATE_TRACKER_STATE_NAME){

@@ -22,7 +22,7 @@
 					</small>
 					<br/>
 					<small class="list-group-item-text text-muted">
-						<strong>Created On : </strong><span data-ng-bind="trackersCtrl.getLocalTime(tracker.created)"></span>
+						<strong>Created On : </strong><span>{{tracker.created | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss A'}}</span>
 						<span class="pull-right pad-left">
 							<button tooltip-placement="bottom" tooltip="Click to Delete"
 									class="btn btn-danger btn-sm" ng-click="trackersCtrl.remove(tracker)"
