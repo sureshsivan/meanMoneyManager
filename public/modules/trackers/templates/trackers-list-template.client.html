@@ -2,7 +2,7 @@
 		data-ng-repeat="tracker in trackersCtrl.trackers | filter:searchText"
 		data-ng-click="trackersCtrl.loadIncexps(tracker._id)">
   <div class="panel-heading">
-  	Tracker : {{tracker.displayName}}
+	  {{trackersCtrl.getLabel('app.trackers.lbl.tracker')}} : {{tracker.displayName}}
   	<span class="pull-right badge margin-left badge-warn">4</span>
   </div>
   <div class="panel-body">
@@ -11,42 +11,44 @@
 	</small>
 	<br/>
 	<small class="text-muted">
-		<strong>Owner : </strong><span data-ng-bind="trackersCtrl.getOwnerTxt(tracker)"></span>
+		<strong>{{trackersCtrl.getLabel('app.trackers.lbl.owner')}} : </strong><span data-ng-bind="trackersCtrl.getOwnerTxt(tracker)"></span>
 	</small>
 	<br>
 	<small class="text-muted">
-		<strong>Users : </strong><span data-ng-bind="trackersCtrl.getUsersTxt(tracker)"></span>
+		<strong>{{trackersCtrl.getLabel('app.trackers.lbl.users')}} : </strong><span data-ng-bind="trackersCtrl.getUsersTxt(tracker)"></span>
 	</small>
 	<br/>
 	<small class="text-muted">
-		<strong>Currency : </strong><span data-ng-bind="trackersCtrl.getOwnerTxt(tracker)"></span>
+		<strong>{{trackersCtrl.getLabel('app.trackers.lbl.currency')}} : </strong><span data-ng-bind="trackersCtrl.getOwnerTxt(tracker)"></span>
 	</small>
 	<br/>
 	<small class="list-group-item-text text-muted">
-		<strong>Created On : </strong><span am-time-ago="tracker.created"></span>    (<span>{{tracker.created | amDateFormat:'dddd, MMMM Do YYYY'}}</span>)
+		<strong>{{trackersCtrl.getLabel('app.trackers.lbl.createdOn')}} : </strong><span am-time-ago="tracker.created"></span>    (<span>{{tracker.created | amDateFormat:'dddd, MMMM Do YYYY'}}</span>)
 	</small>
 	<br/><br/>
 	<span class="pull-right pad-left">
-		<button tooltip-placement="bottom" tooltip="Click to Delete"
+		<button tooltip-placement="bottom" tooltip="{{trackersCtrl.getLabel('app.trackers.tt.deleteTracker')}}"
 				class="btn btn-danger btn-sm" ng-click="trackersCtrl.remove(tracker)"
 				data-ng-class="tracker.owner._id == trackersCtrl.authentication.user._id ? '' : 'disabled'">
 			<i class="glyphicon glyphicon-trash"></i>
 		</button>
 	</span>
 	<span class="pull-right pad-left">
-		<button tooltip-placement="bottom" tooltip-html-unsafe="Click to Delete<b>Some Bold</b> Text"
+		<button tooltip-placement="bottom" tooltip-html-unsafe="{{trackersCtrl.getLabel('app.trackers.tt.updateTracker')}}"
 				class="btn btn-warning btn-sm" ng-click="trackersCtrl.editTracker(tracker)"
 			data-ng-class="tracker.owner._id == trackersCtrl.authentication.user._id ? '' : 'disabled'">
 			<i class="glyphicon glyphicon-edit"></i>
 		</button>
 	</span>
 	<span class="pull-right pad-left">
-		<button class="btn btn-info btn-sm" ng-click="trackersCtrl.loadVaults(tracker._id)">
+		<button  tooltip-placement="bottom" tooltip-html-unsafe="{{trackersCtrl.getLabel('app.trackers.tt.showVaults')}}"
+				 class="btn btn-info btn-sm" ng-click="trackersCtrl.loadVaults(tracker._id)">
 			<i class="glyphicon glyphicon-piggy-bank"></i>
 		</button>
 	</span>
 	<span class="pull-right pad-left">
-		<button class="btn btn-primary btn-sm" ng-click="trackersCtrl.loadIncexps(tracker._id)">
+		<button  tooltip-placement="bottom" tooltip-html-unsafe="{{trackersCtrl.getLabel('app.trackers.tt.showIncomeExpenses')}}"
+				 class="btn btn-primary btn-sm" ng-click="trackersCtrl.loadIncexps(tracker._id)">
 			<i class="glyphicon glyphicon-play"></i>
 		</button>
 	</span>

@@ -8,7 +8,8 @@ var mongoose = require('mongoose'),
 	Tracker = mongoose.model('Tracker'),
 	_ = require('lodash'),
 	Schema = mongoose.Schema,
-	StaticStatus = require('../const/core.server.const');
+	StaticStatus = require('../const/core.server.const'),
+	Q = require('q');
 
 /**
  * Create a Tracker
@@ -160,6 +161,8 @@ exports.trackerByID = function(req, res, next, id) {
 		next();
 	});
 };
+
+
 
 /**
  * Tracker authorization middleware

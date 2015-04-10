@@ -4,10 +4,11 @@ module.exports = function(app) {
 	var users = require('../../app/controllers/users.server.controller');
 	var trackers = require('../../app/controllers/trackers.server.controller');
     var vaults = require('../../app/controllers/vaults.server.controller');
+	var incexps = require('../../app/controllers/incexps.server.controller');
 
 	// Trackers Routes
 	app.route('/trackers')
-		.get(users.requiresLogin, trackers.listByUserId)
+		.get(users.requiresLogin, incexps.findTrackerAlertCounts, trackers.listByUserId)
 		.post(users.requiresLogin, trackers.create);
 
 	app.route('/trackers/:trackerId')

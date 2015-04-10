@@ -6,7 +6,8 @@
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	Incexp = mongoose.model('Incexp'),
-	_ = require('lodash');
+	_ = require('lodash'),
+	Q = require('q');
 
 /**
  * Create a Incexp
@@ -183,6 +184,33 @@ exports.incexpByTrackerIncexpID = function(req, res, next, id) {
 	}
 };
 
+exports.findTrackerAlertCounts = function(req, res, next){
+	console.log('@@@@@@@@@@@');
+	//var deferred = q.deferred();
+	//[
+	//	{ "$match": { "to": user } },
+	//	{ "$sort": { "date": 1 } },
+	//	{ "$group": {
+	//		"_id": "from",
+	//		"to": { "$first": "$to" },
+	//		"message": { "$first": "$message" },
+	//		"date": { "$first": "$date" },
+	//		"origId": { "$first": "$_id" }
+	//	}}
+	//],
+	var agg = [
+		//{$match},
+		{$group: {
+			'_id': '$tracker',
+			'count': '1'
+		}}
+	];
+	Incexp.aggregate(agg, function(err, response){
+		console.log(response);
+		next();
+	});
+	//return deferred.promise;
+};
 
 /**
  * Incexp authorization middleware

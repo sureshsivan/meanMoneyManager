@@ -3,6 +3,7 @@
   "app.trackers.lbl.tracker" : "Tracker",
   "app.trackers.lbl.listOfTrackers" : "List of Trackers",
   "app.trackers.lbl.owner" : "Owner",
+  "app.trackers.lbl.currency" : "Currency",
   "app.trackers.lbl.users" : "Users",
   "app.trackers.lbl.createdOn" : "Created on",
   "app.trackers.lbl.newTracker" : "Create New Tracker",
@@ -23,8 +24,11 @@
   "app.trackers.ph.trackerName" : "Type Tracker Name",
   "app.trackers.ph.trackerDesc" : "Type Tracker Description",
   "app.trackers.ph.trackerCurrency" : "-- Choose Tracker Currency --",
-  "app.trackers.ph.addUsers" : "Type User Name/email to choose"
+  "app.trackers.ph.addUsers" : "Type User Name/email to choose",
 
-
+  "app.trackers.tt.deleteTracker" : "Delete Tracker",
+  "app.trackers.tt.updateTracker" : "Update Tracker",
+  "app.trackers.tt.showVaults" : "Show Vaults",
+  "app.trackers.tt.showIncomeExpenses" : "Show Income/Expenses"
 
 }
