@@ -3,7 +3,7 @@
 		data-ng-repeat="tracker in trackersCtrl.trackers | filter:searchText"
 		data-ng-click="trackersCtrl.loadIncexps(tracker._id)">
   <div class="panel-heading">
-	  {{trackersCtrl.getLabel('app.trackers.lbl.tracker')}} : {{tracker.displayName}}
+	  <strong>{{trackersCtrl.getLabel('app.trackers.lbl.tracker')}} : {{tracker.displayName}}</strong>
   	<span class="pull-right badge margin-left badge-warn">{{tracker.alertsCount ? tracker.alertsCount : 0}}</span>
   </div>
   <div class="panel-body">

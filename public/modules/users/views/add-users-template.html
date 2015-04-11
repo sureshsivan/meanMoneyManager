@@ -1,11 +1,16 @@
 <div class="controls">
-    <div class="input-group">
-        <input type="text" ng-model="currentUser" placeholder="Type to see users"
+    <div class="input-group input-group-sm">
+        <span class="input-group-btn">
+            <button class="btn btn-default " type="button"
+                    data-ng-disabled="!currentUser || !currentUser._id"
+                    data-ng-click="assignNewUser(currentUser)">
+                <i class="fa fa-user-plus"></i>
+                {{btntext}}
+            </button>
+        </span>
+        <input type="text" ng-model="currentUser" placeholder="{{placeholder}}"
             typeahead="user as user.displayName for user in queryUsers($viewValue)"
             typeahead-loading="loadingUsers" class="form-control"/>
-        <span class="input-group-btn">
-            <button class="btn btn-default" type="button" data-ng-click="assignNewUser(currentUser)">Add User</button>
-        </span>
         <i ng-show="loadingUsers" class="glyphicon glyphicon-refresh"></i>
     </div>
     <br/>
@@ -15,13 +20,27 @@
             data-ng-repeat="user in assignedUsers">
             <strong data-ng-show="user._id === authentication.user._id">Owner : </strong>
             {{user.displayName}} ({{user.email}})
-            <i class="fa fa-user pull-right"
-                    data-ng-hide="user._id !== authentication.user._id">
-            </i>
-            <i class="fa fa-close pull-right"
-                data-ng-hide="user._id === authentication.user._id"
-                data-ng-click="removeUser($index)">
-            </i>
+
+
+            <!--<i class="fa fa-user pull-right"-->
+                    <!--data-ng-hide="user._id !== authentication.user._id">-->
+            <!--</i>-->
+            <button type="button" class="close"
+                    data-ng-hide="user._id !== authentication.user._id"
+                    tooltip="Owner">
+                <span class="fa fa-user"></span>
+            </button>
+            <button type="button" class="close"
+                    data-ng-hide="user._id === authentication.user._id"
+                    data-ng-click="removeUser($index)"
+                    tooltip="Remove USer">
+                <span class="fa fa-times-circle"></span>
+            </button>
+
+            <!--<i class="fa fa-close pull-right"-->
+                <!--data-ng-hide="user._id === authentication.user._id"-->
+                <!--data-ng-click="removeUser($index)">-->
+            <!--</i>-->
         </li>
     </ul>
 </div>

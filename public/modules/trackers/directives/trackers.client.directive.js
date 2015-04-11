@@ -22,7 +22,9 @@ angular.module('trackers')
 	        link: function(scope, element, attrs) {
 	        },
 	        scope: {
-	        	assignedUsers: '=users'
+	        	assignedUsers: '=users',
+				placeholder: '=',
+				btntext: '='
 	        },
 	        controller: function($scope){
 	        	$scope.authentication = Authentication;
