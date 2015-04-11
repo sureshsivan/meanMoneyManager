@@ -22,11 +22,11 @@
 	<small class="text-muted">
 		<strong>{{trackersCtrl.getLabel('app.trackers.lbl.currency')}} : </strong><span data-ng-bind="trackersCtrl.getOwnerTxt(tracker)"></span>
 	</small>
-	<br/>
+	<strong> | </strong>
 	<small class="list-group-item-text text-muted">
 		<strong>{{trackersCtrl.getLabel('app.trackers.lbl.createdOn')}} : </strong><span am-time-ago="tracker.created"></span>    (<span>{{tracker.created | amDateFormat:'dddd, MMMM Do YYYY'}}</span>)
 	</small>
-	<br/><br/>
+	<br/>
 	<span class="pull-right pad-left">
 		<button tooltip-placement="bottom" tooltip="{{trackersCtrl.getLabel('app.trackers.tt.deleteTracker')}}"
 				class="btn btn-danger btn-sm" ng-click="trackersCtrl.remove(tracker)"
