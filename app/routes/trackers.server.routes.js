@@ -8,8 +8,8 @@ module.exports = function(app) {
 
 	// Trackers Routes
 	app.route('/trackers')
-		//.get(users.requiresLogin, incexps.findTrackerAlertCounts, trackers.listByUserId)
-		.get(users.requiresLogin, trackers.listByUserId)
+		.get(users.requiresLogin, trackers.findTrackerDetails)
+		//.get(users.requiresLogin, trackers.listByUserId)
 		.post(users.requiresLogin, trackers.create);
 
 	app.route('/trackers/:trackerId')

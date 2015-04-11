@@ -9,7 +9,8 @@ var mongoose = require('mongoose'),
 	_ = require('lodash'),
 	Schema = mongoose.Schema,
 	StaticStatus = require('../const/core.server.const'),
-	Q = require('q');
+	Q = require('q'),
+	incexps = require('../../app/controllers/incexps.server.controller');;
 
 /**
  * Create a Tracker
@@ -88,11 +89,28 @@ exports.list = function(req, res) {
 	});
 };
 
+
+exports.findTrackerDetails = function(req, res){
+	exports.listTrackersByUserId(req)
+		.then(incexps.findTrackerAlertCounts, function(err){
+			console.log(err);
+		})
+		.then(function(req){
+			exports.mergeTrackerDetails(req);
+			res.jsonp(req.trackers);
+		}, function(err){
+			console.log(err);
+		});
+}
+
+
 /**
  * List of Trackers by UserId
  * TODO :: Find a better way - should learng mongo DB better - Thius is stupid way - blame me
  */
-exports.listByUserId = function(req, res) {
+exports.listTrackersByUserId = function(req, res) {
+	var deferred = Q.defer();
+
 	var userId = req.user._id;
 	Tracker.find({'users' : mongoose.Types.ObjectId(req.user._id)})
 		.populate({
@@ -105,16 +123,39 @@ exports.listByUserId = function(req, res) {
 		})
 		.sort('-created')
 		.exec(function(err, trackers) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(trackers);
-		}
-	});
+			if (err) {
+				deferred.reject(err);
+			} else {
+				//	save data to request obj for future merge
+				req.trackers = trackers;
+				deferred.resolve(req);
+			}
+		});
 
+	return deferred.promise;
 };
+
+exports.mergeTrackerDetails = function(req){
+	var trackers = req.trackers;
+	var trackerIncExpAlerts = req.trackerIncExpAlerts;
+	var modTrackers = [];
+	_.each(trackers, function(tracker){
+		tracker = tracker.toObject();
+		//_.each(trackerVaults, function(vault){
+		//	if(tracker._id === vault._id){
+		//		tracker.vaultsCount = vault.count;
+		//	}
+		//});
+		_.each(trackerIncExpAlerts, function(alert){
+			if(tracker._id.toString() === alert._id.toString()){
+				tracker.alertsCount = alert.count;
+			}
+		});
+		modTrackers.push(tracker);
+	});
+	req.trackers = modTrackers;
+};
+
 
 /**
  * Update a Tracker by Id

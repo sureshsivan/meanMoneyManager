@@ -184,32 +184,34 @@ exports.incexpByTrackerIncexpID = function(req, res, next, id) {
 	}
 };
 
-exports.findTrackerAlertCounts = function(req, res, next){
-	console.log('@@@@@@@@@@@');
-	//var deferred = q.deferred();
-	//[
-	//	{ "$match": { "to": user } },
-	//	{ "$sort": { "date": 1 } },
-	//	{ "$group": {
-	//		"_id": "from",
-	//		"to": { "$first": "$to" },
-	//		"message": { "$first": "$message" },
-	//		"date": { "$first": "$date" },
-	//		"origId": { "$first": "$_id" }
-	//	}}
-	//],
-	var agg = [
-		//{$match},
-		{$group: {
-			'_id': '$tracker',
-			'count': '1'
-		}}
-	];
-	Incexp.aggregate(agg, function(err, response){
-		console.log(response);
-		next();
+
+
+exports.findTrackerAlertCounts = function(req){
+	var trackerIds = [];
+	_.each(req.trackers, function(tracker){
+		trackerIds.push(mongoose.Types.ObjectId(tracker._id));
 	});
-	//return deferred.promise;
+	var deferred = Q.defer();
+	mongoose.set("debug", "true");
+	if(!trackerIds || !trackerIds.length){
+		deferred.resolve(null);
+	} else {
+		var agg = [];
+		//TODO - add user and approval flag pending conditions
+		agg.push({$match: {"tracker": {$in: trackerIds}}});
+		agg.push({$group:{_id:"$tracker", count:{$sum:1}}});
+		//agg.push({$project:{_id: 0, count: 1}});
+		Incexp.aggregate(agg, function(err, response){
+			if(err){
+				deferred.reject(err);
+			}
+			if(response){
+				req.trackerIncExpAlerts = response;
+				deferred.resolve(req);
+			}
+		});
+	}
+	return deferred.promise;
 };
 
 /**

@@ -1,9 +1,10 @@
-<div class="panel panel-default tracker-list-item" 
+<div class="panel"
+	 	data-ng-class="(tracker.alertsCount && tracker.alertsCount > 0) ? 'panel-danger tracker-list-item-danger' : 'panel-info tracker-list-item-info'"
 		data-ng-repeat="tracker in trackersCtrl.trackers | filter:searchText"
 		data-ng-click="trackersCtrl.loadIncexps(tracker._id)">
   <div class="panel-heading">
 	  {{trackersCtrl.getLabel('app.trackers.lbl.tracker')}} : {{tracker.displayName}}
-  	<span class="pull-right badge margin-left badge-warn">4</span>
+  	<span class="pull-right badge margin-left badge-warn">{{tracker.alertsCount ? tracker.alertsCount : 0}}</span>
   </div>
   <div class="panel-body">
 	<small class="text-muted">
@@ -13,7 +14,7 @@
 	<small class="text-muted">
 		<strong>{{trackersCtrl.getLabel('app.trackers.lbl.owner')}} : </strong><span data-ng-bind="trackersCtrl.getOwnerTxt(tracker)"></span>
 	</small>
-	<br>
+	<strong> | </strong>
 	<small class="text-muted">
 		<strong>{{trackersCtrl.getLabel('app.trackers.lbl.users')}} : </strong><span data-ng-bind="trackersCtrl.getUsersTxt(tracker)"></span>
 	</small>
