@@ -24,7 +24,10 @@ angular.module('trackers')
 	        scope: {
 	        	assignedUsers: '=users',
 				placeholder: '=',
-				btntext: '='
+				btntext: '=',
+				ttOwner: '=',
+				ttUser: '=',
+				ownerTxt: '='
 	        },
 	        controller: function($scope){
 	        	$scope.authentication = Authentication;

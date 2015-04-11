@@ -18,7 +18,7 @@
         <li class="list-group-item list-group-item-info"
             data-ng-class="user._id === authentication.user._id ? 'list-group-item-danger' : 'list-group-item-info'"
             data-ng-repeat="user in assignedUsers">
-            <strong data-ng-show="user._id === authentication.user._id">Owner : </strong>
+            <strong data-ng-show="user._id === authentication.user._id">{{ownerTxt}} : </strong>
             {{user.displayName}} ({{user.email}})
 
 
@@ -27,13 +27,13 @@
             <!--</i>-->
             <button type="button" class="close"
                     data-ng-hide="user._id !== authentication.user._id"
-                    tooltip="Owner">
+                    tooltip="{{ttOwner}}">
                 <span class="fa fa-user"></span>
             </button>
             <button type="button" class="close"
                     data-ng-hide="user._id === authentication.user._id"
                     data-ng-click="removeUser($index)"
-                    tooltip="Remove USer">
+                    tooltip="{{ttUser}}">
                 <span class="fa fa-times-circle"></span>
             </button>
 

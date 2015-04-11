@@ -29,6 +29,8 @@
   "app.trackers.tt.deleteTracker" : "Delete Tracker",
   "app.trackers.tt.updateTracker" : "Update Tracker",
   "app.trackers.tt.showVaults" : "Show Vaults",
-  "app.trackers.tt.showIncomeExpenses" : "Show Income/Expenses"
+  "app.trackers.tt.showIncomeExpenses" : "Show Income/Expenses",
+  "app.trackers.tt.trackerOwner" : "Owner...",
+  "app.trackers.tt.trackerUser" : "Remove User"
 
 }

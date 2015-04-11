@@ -39,8 +39,13 @@
                         <label class="control-label"> {{trackersCtrl.getLabel('app.trackers.lbl.shareTracker')}}</label>
                         <div class="controls">
                             <add-users data-users="trackersCtrl.assignedUsers"
-                                       data-placeholder="trackersCtrl.getLabel('app.trackers.ph.addUsers')"
-                                       data-btntext="trackersCtrl.getLabel('app.trackers.lbl.addUser')"></add-users>
+                                       data-btntext="trackersCtrl.getLabel('app.trackers.lbl.addUser')"
+                                       data-tt-owner="trackersCtrl.getLabel('app.trackers.tt.trackerOwner')"
+                                       data-tt-user="trackersCtrl.getLabel('app.trackers.tt.trackerUser')"
+                                       data-owner-txt="trackersCtrl.getLabel('app.trackers.lbl.owner')"
+                                       data-placeholder="trackersCtrl.getLabel('app.trackers.ph.addUsers')">
+
+                            </add-users>
                         </div>
                     </div>
 
