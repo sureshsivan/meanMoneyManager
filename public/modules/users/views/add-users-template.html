@@ -10,7 +10,7 @@
         </span>
         <input type="text" ng-model="currentUser" placeholder="{{placeholder}}"
             typeahead="user as user.displayName for user in queryUsers($viewValue)"
-            typeahead-loading="loadingUsers" class="form-control"/>
+            typeahead-loading="loadingUsers" class="form-control" formnovalidate/>
         <i ng-show="loadingUsers" class="glyphicon glyphicon-refresh"></i>
     </div>
     <br/>
@@ -20,11 +20,6 @@
             data-ng-repeat="user in assignedUsers">
             <strong data-ng-show="user._id === authentication.user._id">{{ownerTxt}} : </strong>
             {{user.displayName}} ({{user.email}})
-
-
-            <!--<i class="fa fa-user pull-right"-->
-                    <!--data-ng-hide="user._id !== authentication.user._id">-->
-            <!--</i>-->
             <button type="button" class="close"
                     data-ng-hide="user._id !== authentication.user._id"
                     tooltip="{{ttOwner}}">
@@ -36,11 +31,6 @@
                     tooltip="{{ttUser}}">
                 <span class="fa fa-times-circle"></span>
             </button>
-
-            <!--<i class="fa fa-close pull-right"-->
-                <!--data-ng-hide="user._id === authentication.user._id"-->
-                <!--data-ng-click="removeUser($index)">-->
-            <!--</i>-->
         </li>
     </ul>
 </div>

@@ -10,7 +10,7 @@ var mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
 	StaticStatus = require('../const/core.server.const'),
 	Q = require('q'),
-	incexps = require('../../app/controllers/incexps.server.controller');;
+	incexps = require('../../app/controllers/incexps.server.controller');
 
 /**
  * Create a Tracker
@@ -101,7 +101,7 @@ exports.findTrackerDetails = function(req, res){
 		}, function(err){
 			console.log(err);
 		});
-}
+};
 
 
 /**

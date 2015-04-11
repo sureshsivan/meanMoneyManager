@@ -16,6 +16,6 @@ angular.module('incexps').service('TrackerLocaleMessages', [ '$http', '$q',
 				}
 				return deferred.promise;
 			}
-		}
+		};
 	}
 ]);

@@ -15,7 +15,7 @@ angular.module('trackers')
             var pullMsgs = function(){
                 return TrackerLocaleMessages.pullMessages().then(function(labels){
                     _this.labelsObj = labels;
-                })
+                });
             };
 
             var pullTrackers = function () {

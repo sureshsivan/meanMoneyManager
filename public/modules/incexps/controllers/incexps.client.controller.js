@@ -16,7 +16,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         var loadmsgs = function(){
             return IncexpLocaleMessages.pullMessages().then(function(labels){
     			_this.labelsObj = labels;
-            })
+            });
         };
         var loadvaults = function(){
             return _this.vaultStatics.queryVaults($stateParams.trackerId).then(function(response){
@@ -25,7 +25,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     _this.vaultsResult.push(item);
                 });
             });
-        }
+        };
         var bootmodule = function(){
             _this.getLabel = function(key){
             	return _this.labelsObj[key];

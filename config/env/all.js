@@ -23,7 +23,8 @@ module.exports = {
 			],
 			js: [
 				'public/lib/angular/angular.js',
-				'public/lib/angular-resource/angular-resource.js', 
+				//'public/lib/bootstrap/dist/js/bootstrap.js',
+				'public/lib/angular-resource/angular-resource.js',
 				'public/lib/angular-cookies/angular-cookies.js', 
 				'public/lib/angular-animate/angular-animate.js', 
 				'public/lib/angular-touch/angular-touch.js', 
@@ -35,6 +36,7 @@ module.exports = {
 				'public/lib/angular-moment/angular-moment.js',
                 'public/lib/angular-loading-bar/build/loading-bar.js',
                 'public/lib/ng-tags-input/ng-tags-input.js'
+				//'public/lib/xtform/xtForm.js'
 //				'public/lib/highcharts/highcharts.src.js',
 //				'public/lib/highcharts-ng/dist/highcharts-ng.js'
 				

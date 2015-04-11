@@ -192,14 +192,13 @@ exports.findTrackerAlertCounts = function(req){
 		trackerIds.push(mongoose.Types.ObjectId(tracker._id));
 	});
 	var deferred = Q.defer();
-	mongoose.set("debug", "true");
 	if(!trackerIds || !trackerIds.length){
 		deferred.resolve(null);
 	} else {
 		var agg = [];
 		//TODO - add user and approval flag pending conditions
-		agg.push({$match: {"tracker": {$in: trackerIds}}});
-		agg.push({$group:{_id:"$tracker", count:{$sum:1}}});
+		agg.push({$match: {'tracker': {$in: trackerIds}}});
+		agg.push({$group:{_id:'$tracker', count:{$sum:1}}});
 		//agg.push({$project:{_id: 0, count: 1}});
 		Incexp.aggregate(agg, function(err, response){
 			if(err){

@@ -31,6 +31,12 @@
   "app.trackers.tt.showVaults" : "Show Vaults",
   "app.trackers.tt.showIncomeExpenses" : "Show Income/Expenses",
   "app.trackers.tt.trackerOwner" : "Owner...",
-  "app.trackers.tt.trackerUser" : "Remove User"
+  "app.trackers.tt.trackerUser" : "Remove User",
+
+
+  "app.trackers.err.msg.inputTrackerName" : "Please input a name for the Tracker",
+  "app.trackers.err.msg.minMaxLengthTrackerName" : "Tracker Name should be between 6 to 20 characters",
+  "app.trackers.err.msg.inputTrackerDesc" : "Please input description for the Tracker",
+  "app.trackers.err.msg.minMaxLengthTrackerDesc" : "Tracker Description should be between 12 to 40 characters"
 
 }

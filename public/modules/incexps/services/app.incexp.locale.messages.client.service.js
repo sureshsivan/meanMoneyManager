@@ -17,6 +17,6 @@ angular.module('incexps').service('IncexpLocaleMessages', [ '$http', '$q',
 				}
 				return deferred.promise;
 			}
-		}
+		};
 	}
 ]);
