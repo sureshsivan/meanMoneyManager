@@ -11,7 +11,7 @@
                         <div class="controls">
                             <input type="text" data-ng-model="trackersCtrl.displayName" name="displayName" id="displayName" class="form-control"
                                    placeholder="{{trackersCtrl.getLabel('app.trackers.ph.trackerName')}}"
-                                   data-ng-minlength="6" data-ng-maxlength="8" required/>
+                                   data-ng-minlength="8" data-ng-maxlength="20" required/>
                             <div ng-if="createTrackerForm.displayName.$invalid && createTrackerForm.displayName.$dirty"
                                  ng-messages="createTrackerForm.displayName.$error">
                                 <span ng-if="createTrackerForm.displayName.$error.required"
@@ -30,7 +30,7 @@
                         <div class="controls">
                             <input type="text" data-ng-model="trackersCtrl.description" id="description" class="form-control" name="description"
                                    placeholder="{{trackersCtrl.getLabel('app.trackers.ph.trackerDesc')}}"
-                                   data-ng-minlength="6" data-ng-maxlength="8" required>
+                                   data-ng-minlength="12" data-ng-maxlength="50" required>
                             <div ng-if="createTrackerForm.description.$invalid && createTrackerForm.description.$dirty"
                                  ng-messages="createTrackerForm.description.$error">
                                 <span ng-if="createTrackerForm.description.$error.required"

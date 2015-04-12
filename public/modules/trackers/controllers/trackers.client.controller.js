@@ -47,7 +47,7 @@ angular.module('trackers')
                     //TODO - splice owner name from this
                     if (tracker.users && tracker.users.length > 1) {
                         for (var i = 0; i < tracker.users.length; i++) {
-                        	if(tracker.users[i]._id === Authentication.user._id)	continue;
+                            if(tracker.owner._id === tracker.users[i]._id)	continue;
                             if (users !== '') {
                                 users = users + ((i === tracker.users.length - 2) ? ' , ' : ' and ') + 
                                 	((tracker.users[i]._id === Authentication.user._id) ? 'Me' : tracker.users[i].displayName);

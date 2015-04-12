@@ -193,7 +193,7 @@ exports.findTrackerAlertCounts = function(req){
 	});
 	var deferred = Q.defer();
 	if(!trackerIds || !trackerIds.length){
-		deferred.resolve(null);
+		deferred.resolve(req);
 	} else {
 		var agg = [];
 		//TODO - add user and approval flag pending conditions
@@ -211,6 +211,60 @@ exports.findTrackerAlertCounts = function(req){
 		});
 	}
 	return deferred.promise;
+};
+
+exports.findTrackerAlertCountsForUser = function(req){
+    var trackerIds = [];
+    _.each(req.trackers, function(tracker){
+        trackerIds.push(mongoose.Types.ObjectId(tracker._id));
+    });
+    var deferred = Q.defer();
+    if(!trackerIds || !trackerIds.length){
+        deferred.resolve(req);
+    } else {
+        var agg = [];
+        //TODO - add user and approval flag pending conditions
+        agg.push({$match: {'tracker': {$in: trackerIds}}});
+        agg.push({$group:{_id:'$tracker', count:{$sum:1}}});
+        //agg.push({$project:{_id: 0, count: 1}});
+        Incexp.aggregate(agg, function(err, response){
+            if(err){
+                deferred.reject(err);
+            }
+            if(response){
+                req.trackerIncExpUserAlerts = response;
+                deferred.resolve(req);
+            }
+        });
+    }
+    return deferred.promise;
+};
+
+exports.findTrackerIncexpCounts = function(req){
+    var trackerIds = [];
+    _.each(req.trackers, function(tracker){
+        trackerIds.push(mongoose.Types.ObjectId(tracker._id));
+    });
+    var deferred = Q.defer();
+    if(!trackerIds || !trackerIds.length){
+        deferred.resolve(req);
+    } else {
+        var agg = [];
+        //TODO - add user and approval flag pending conditions
+        agg.push({$match: {'tracker': {$in: trackerIds}}});
+        agg.push({$group:{_id:'$tracker', count:{$sum:1}}});
+        //agg.push({$project:{_id: 0, count: 1}});
+        Incexp.aggregate(agg, function(err, response){
+            if(err){
+                deferred.reject(err);
+            }
+            if(response){
+                req.trackerIncexpCounts = response;
+                deferred.resolve(req);
+            }
+        });
+    }
+    return deferred.promise;
 };
 
 /**

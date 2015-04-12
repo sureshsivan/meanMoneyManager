@@ -5,7 +5,7 @@
   "app.trackers.lbl.owner" : "Owner",
   "app.trackers.lbl.currency" : "Currency",
   "app.trackers.lbl.users" : "Users",
-  "app.trackers.lbl.createdOn" : "Created on",
+  "app.trackers.lbl.createdOn" : "Created ",
   "app.trackers.lbl.newTracker" : "Create New Tracker",
   "app.trackers.lbl.delTracker" : "Delete Tracker",
   "app.trackers.lbl.updTracker" : "Update Tracker",
@@ -20,6 +20,10 @@
   "app.trackers.lbl.trackerCurrency" : "Tracker Currency",
   "app.trackers.lbl.shareTracker" : "Share Tracker with Others",
   "app.trackers.lbl.addUser" : "Add User",
+  "app.trackers.lbl.totalVaults" : "No. of Vaults : ",
+  "app.trackers.lbl.totalIncexps" : "Total Records : ",
+
+
 
   "app.trackers.ph.trackerName" : "Type Tracker Name",
   "app.trackers.ph.trackerDesc" : "Type Tracker Description",
@@ -35,8 +39,8 @@
 
 
   "app.trackers.err.msg.inputTrackerName" : "Please input a name for the Tracker",
-  "app.trackers.err.msg.minMaxLengthTrackerName" : "Tracker Name should be between 6 to 20 characters",
+  "app.trackers.err.msg.minMaxLengthTrackerName" : "Tracker Name should be between 8 to 20 characters",
   "app.trackers.err.msg.inputTrackerDesc" : "Please input description for the Tracker",
-  "app.trackers.err.msg.minMaxLengthTrackerDesc" : "Tracker Description should be between 12 to 40 characters"
+  "app.trackers.err.msg.minMaxLengthTrackerDesc" : "Tracker Description should be between 12 to 50 characters"
 
 }

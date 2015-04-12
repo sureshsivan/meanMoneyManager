@@ -6,7 +6,8 @@
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	Vault = mongoose.model('Vault'),
-	_ = require('lodash');
+	_ = require('lodash'),
+    Q = require('q');
 
 /**
  * Create a Vault
@@ -193,6 +194,34 @@ exports.vaultByTrackerVaultID = function(req, res, next, id) {
 	} else {
 		next();	
 	}
+};
+
+
+exports.findTrackerVaultCounts = function(req){
+    var trackerIds = [];
+    _.each(req.trackers, function(tracker){
+        trackerIds.push(mongoose.Types.ObjectId(tracker._id));
+    });
+    var deferred = Q.defer();
+    if(!trackerIds || !trackerIds.length){
+        deferred.resolve(req);
+    } else {
+        var agg = [];
+        //TODO - add user and approval flag pending conditions
+        agg.push({$match: {'tracker': {$in: trackerIds}}});
+        agg.push({$group:{_id:'$tracker', count:{$sum:1}}});
+        //agg.push({$project:{_id: 0, count: 1}});
+        Vault.aggregate(agg, function(err, response){
+            if(err){
+                deferred.reject(err);
+            }
+            if(response){
+                req.trackerVaultCounts = response;
+                deferred.resolve(req);
+            }
+        });
+    }
+    return deferred.promise;
 };
 
 /**

@@ -10,6 +10,7 @@ var mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
 	StaticStatus = require('../const/core.server.const'),
 	Q = require('q'),
+    vaults = require('../../app/controllers/vaults.server.controller'),
 	incexps = require('../../app/controllers/incexps.server.controller');
 
 /**
@@ -92,9 +93,18 @@ exports.list = function(req, res) {
 
 exports.findTrackerDetails = function(req, res){
 	exports.listTrackersByUserId(req)
-		.then(incexps.findTrackerAlertCounts, function(err){
-			console.log(err);
-		})
+        .then(vaults.findTrackerVaultCounts, function(err){
+            console.log(err);
+        })
+        .then(incexps.findTrackerIncexpCounts, function(err){
+            console.log(err);
+        })
+        .then(incexps.findTrackerAlertCounts, function(err){
+            console.log(err);
+        })
+        .then(incexps.findTrackerAlertCountsForUser, function(err){
+            console.log(err);
+        })
 		.then(function(req){
 			exports.mergeTrackerDetails(req);
 			res.jsonp(req.trackers);
@@ -138,19 +148,37 @@ exports.listTrackersByUserId = function(req, res) {
 exports.mergeTrackerDetails = function(req){
 	var trackers = req.trackers;
 	var trackerIncExpAlerts = req.trackerIncExpAlerts;
+    var trackerIncExpUserAlerts = req.trackerIncExpUserAlerts;
+    var trackerIncexpCounts = req.trackerIncexpCounts;
+    var trackerVaultCounts = req.trackerVaultCounts;
 	var modTrackers = [];
 	_.each(trackers, function(tracker){
 		tracker = tracker.toObject();
-		//_.each(trackerVaults, function(vault){
-		//	if(tracker._id === vault._id){
-		//		tracker.vaultsCount = vault.count;
-		//	}
-		//});
-		_.each(trackerIncExpAlerts, function(alert){
-			if(tracker._id.toString() === alert._id.toString()){
-				tracker.alertsCount = alert.count;
+        tracker.vaultsCount = 0;
+        tracker.incexpCount = 0;
+        tracker.alertsCount = 0;
+        tracker.userAlertsCount = 0;
+            //TODO - to check whether return false to break off the loop
+		_.each(trackerVaultCounts, function(vault){
+			if(tracker._id.toString() === vault._id.toString()){
+				tracker.vaultsCount = vault.count;
 			}
 		});
+        _.each(trackerIncexpCounts, function(incexp){
+            if(tracker._id.toString() === incexp._id.toString()){
+                tracker.incexpCount = incexp.count;
+            }
+        });
+		_.each(trackerIncExpAlerts, function(incexpAlert){
+			if(tracker._id.toString() === incexpAlert._id.toString()){
+				tracker.alertsCount = incexpAlert.count;
+			}
+		});
+        _.each(trackerIncExpUserAlerts, function(incexpUserAlert){
+            if(tracker._id.toString() === incexpUserAlert._id.toString()){
+                tracker.userAlertsCount = incexpUserAlert.count;
+            }
+        });
 		modTrackers.push(tracker);
 	});
 	req.trackers = modTrackers;
