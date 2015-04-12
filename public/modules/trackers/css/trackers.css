@@ -45,3 +45,15 @@
 	box-shadow: 0 0 8px rgba(236, 39, 32, .6);
 	cursor: pointer;
 }
+
+.tracker-list-item-warning:hover{
+    border-color: #ccc;
+    border-color: rgba(138,109,59, 0.8);
+    /*outline: 0;*/
+    /*outline: thin dotted \9;*/
+    -webkit-box-shadow: 0 0 8px rgba(138,109,59, .6);
+    -moz-box-shadow: 0 0 8px rgba(138,109,59, .6);
+    box-shadow: 0 0 8px rgba(138,109,59, .6);
+    cursor: pointer;
+}
+

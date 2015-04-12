@@ -197,7 +197,15 @@ exports.findTrackerAlertCounts = function(req){
 	} else {
 		var agg = [];
 		//TODO - add user and approval flag pending conditions
-		agg.push({$match: {'tracker': {$in: trackerIds}}});
+        agg.push({
+            $match: {
+                '$and': [{
+                    'tracker': {$in: trackerIds}
+                }, {
+                    'isPending': true
+                }]
+            }
+        });
 		agg.push({$group:{_id:'$tracker', count:{$sum:1}}});
 		//agg.push({$project:{_id: 0, count: 1}});
 		Incexp.aggregate(agg, function(err, response){
@@ -214,6 +222,7 @@ exports.findTrackerAlertCounts = function(req){
 };
 
 exports.findTrackerAlertCountsForUser = function(req){
+    var userId = req.user._id;
     var trackerIds = [];
     _.each(req.trackers, function(tracker){
         trackerIds.push(mongoose.Types.ObjectId(tracker._id));
@@ -224,7 +233,17 @@ exports.findTrackerAlertCountsForUser = function(req){
     } else {
         var agg = [];
         //TODO - add user and approval flag pending conditions
-        agg.push({$match: {'tracker': {$in: trackerIds}}});
+        agg.push({
+            $match: {
+                '$and': [{
+                    'tracker': {$in: trackerIds}
+                }, {
+                    'isPending': true
+                }, {
+                    'pendingWith': mongoose.Types.ObjectId(userId)
+                }]
+            }
+        });
         agg.push({$group:{_id:'$tracker', count:{$sum:1}}});
         //agg.push({$project:{_id: 0, count: 1}});
         Incexp.aggregate(agg, function(err, response){

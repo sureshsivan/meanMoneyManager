@@ -36,6 +36,9 @@
   "app.trackers.tt.showIncomeExpenses" : "Show Income/Expenses",
   "app.trackers.tt.trackerOwner" : "Owner...",
   "app.trackers.tt.trackerUser" : "Remove User",
+  "app.trackers.tt.recordsRequireApproval" : "Items require your Approval",
+
+
 
 
   "app.trackers.err.msg.inputTrackerName" : "Please input a name for the Tracker",

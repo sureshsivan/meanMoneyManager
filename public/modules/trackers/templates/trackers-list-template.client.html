@@ -1,10 +1,12 @@
 <div class="panel"
-	 	data-ng-class="(tracker.userAlertsCount > 0) ? 'panel-danger tracker-list-item-danger' : ((tracker.alertsCount > 0) ? 'panel-warning tracker-list-item-danger' : 'panel-info tracker-list-item-info')"
+	 	data-ng-class="(tracker.userAlertsCount > 0) ? 'panel-danger tracker-list-item-danger' : ((tracker.alertsCount > 0) ? 'panel-warning tracker-list-item-warning' : 'panel-info tracker-list-item-info')"
 		data-ng-repeat="tracker in trackersCtrl.trackers | filter:searchText">
 		<!--data-ng-click="trackersCtrl.loadIncexps(tracker._id)">-->
   <div class="panel-heading">
 	  <strong>{{trackersCtrl.getLabel('app.trackers.lbl.tracker')}} : {{tracker.displayName}}</strong>
-  	<span class="pull-right badge margin-left badge-warn">{{tracker.alertsCount ? tracker.alertsCount : 0}}</span>
+  	<span ng-if="tracker.userAlertsCount > 0" class="pull-right badge margin-left badge-warn" tooltip-placement="bottom"
+          tooltip="{{trackersCtrl.getLabel('app.trackers.tt.recordsRequireApproval')}}">{{tracker.userAlertsCount}}
+    </span>
   </div>
   <div class="panel-body">
 	<small class="text-muted">
