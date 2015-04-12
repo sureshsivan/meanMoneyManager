@@ -74,6 +74,9 @@ angular.module('trackers')
                 _this.editTracker = function (tracker) {
                     $state.go('editTracker', {trackerId: tracker._id});
                 };
+                _this.cancelTrackerEdit = function (tracker) {
+                    $state.go('listTrackers');
+                };
                 _this.saveTracker = function (size) {
                     var tracker = new Trackers({
                         displayName: _this.displayName,

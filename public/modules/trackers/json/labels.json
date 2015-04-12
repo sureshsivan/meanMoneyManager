@@ -22,6 +22,7 @@
   "app.trackers.lbl.addUser" : "Add User",
   "app.trackers.lbl.totalVaults" : "No. of Vaults : ",
   "app.trackers.lbl.totalIncexps" : "Total Records : ",
+  "app.trackers.lbl.update" : "Update : ",
 
 
 
@@ -44,6 +45,6 @@
   "app.trackers.err.msg.inputTrackerName" : "Please input a name for the Tracker",
   "app.trackers.err.msg.minMaxLengthTrackerName" : "Tracker Name should be between 8 to 20 characters",
   "app.trackers.err.msg.inputTrackerDesc" : "Please input description for the Tracker",
-  "app.trackers.err.msg.minMaxLengthTrackerDesc" : "Tracker Description should be between 12 to 50 characters"
-
+  "app.trackers.err.msg.minMaxLengthTrackerDesc" : "Tracker Description should be between 12 to 50 characters",
+  "app.trackers.err.msg.selectTrackerCurrency" : "Please select a Tracker Currency"
 }

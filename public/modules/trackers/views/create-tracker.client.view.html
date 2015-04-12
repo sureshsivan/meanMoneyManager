@@ -30,7 +30,7 @@
                         <div class="controls">
                             <input type="text" data-ng-model="trackersCtrl.description" id="description" class="form-control" name="description"
                                    placeholder="{{trackersCtrl.getLabel('app.trackers.ph.trackerDesc')}}"
-                                   data-ng-minlength="12" data-ng-maxlength="50" required>
+                                   data-ng-minlength="12" data-ng-maxlength="50" required/>
                             <div ng-if="createTrackerForm.description.$invalid && createTrackerForm.description.$dirty"
                                  ng-messages="createTrackerForm.description.$error">
                                 <span ng-if="createTrackerForm.description.$error.required"
@@ -55,7 +55,7 @@
                                  ng-messages="createTrackerForm.displayName.$error">
                                 <span ng-if="createTrackerForm.currency.$error.required"
                                       class="label label-warning" ng-message="required">
-                                    {{trackersCtrl.getLabel('app.trackers.err.msg.inputTrackerName')}}
+                                    {{trackersCtrl.getLabel('app.trackers.err.msg.selectTrackerCurrency')}}
                                 </span>
                             </div>
                         </div>
@@ -78,10 +78,7 @@
             <div class="form-group">
                 <!--<input type="submit" class="btn btn-default pull-right">-->
                 <button class="btn btn-success btn-sm pull-right"
-                        ng-disabled="createTrackerForm.$invalid">{{trackersCtrl.getLabel('app.trackers.lbl.newTracker')}}</button>
-            </div>
-            <div data-ng-show="error" class="text-danger">
-                <strong data-ng-bind="error"></strong>
+                        data-ng-disabled="createTrackerForm.$invalid">{{trackersCtrl.getLabel('app.trackers.lbl.newTracker')}}</button>
             </div>
         </fieldset>
     </form>
