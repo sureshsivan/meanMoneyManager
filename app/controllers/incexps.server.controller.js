@@ -286,6 +286,33 @@ exports.findTrackerIncexpCounts = function(req){
     return deferred.promise;
 };
 
+exports.findTrackerVaultCounts = function(req){
+    var vaultIds = [];
+    _.each(req.trackerVaults, function(vault){
+        vaultIds.push(mongoose.Types.ObjectId(vault._id));
+    });
+    var deferred = Q.defer();
+    if(!vaultIds || !vaultIds.length){
+        deferred.resolve(req);
+    } else {
+        var agg = [];
+        //TODO - add user and approval flag pending conditions
+        agg.push({$match: {'vault': {$in: vaultIds}}});
+        agg.push({$group:{_id:'$vault', count:{$sum:1}}});
+        //agg.push({$project:{_id: 0, count: 1}});
+        Incexp.aggregate(agg, function(err, response){
+            if(err){
+                deferred.reject(err);
+            }
+            if(response){
+                req.trackerVaultCounts = response;
+                deferred.resolve(req);
+            }
+        });
+    }
+    return deferred.promise;
+};
+
 /**
  * Incexp authorization middleware
  */

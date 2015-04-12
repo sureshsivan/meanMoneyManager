@@ -9,27 +9,47 @@ angular.module('vaults')
                 'Vaults', 'TrackerVaults', '$modal', '$log', 'moment', 'AppStatics', 'Notify', 'AppMessenger',
         function($scope, $stateParams, $location, Authentication, $state,
                     Vaults, TrackerVaults, $modal, $log, moment, AppStatics, Notify, AppMessenger) {
-            this.authentication = Authentication;
-            this.appStatics = AppStatics;
-            this.findAll = function() {
-                this.trackerVaults = TrackerVaults.listTrackerVaults($stateParams);
+            var _this = this;
+            _this.authentication = Authentication;
+            _this.appStatics = AppStatics;
+
+
+            //var pullMsgs = function(){
+            //    return TrackerLocaleMessages.pullMessages().then(function(labels){
+            //        _this.labelsObj = labels;
+            //    });
+            //};
+            //
+            //var pullTrackers = function () {
+            //    _this.trackers = Trackers.query();
+            //};
+            //
+            //var pullTracker = function () {
+            //    $scope.tracker = Trackers.get({
+            //        trackerId: $stateParams.trackerId
+            //    });
+            //};
+
+
+            _this.findAll = function() {
+                _this.trackerVaults = TrackerVaults.listTrackerVaults($stateParams);
             };
-            this.findOne = function() {
+            _this.findOne = function() {
                 $scope.vault = Vaults.get({
                     vaultId: $stateParams.vaultId
                 });
             };
-            this.createVault = function() {
-                this.vault = {};
+            _this.createVault = function() {
+                _this.vault = {};
                 $state.go('createVault', $stateParams);
             };
-            this.saveVault = function() {
+            _this.saveVault = function() {
                 var vault = new TrackerVaults({
-                    displayName: this.displayName,
-                    description: this.description,
+                    displayName: _this.displayName,
+                    description: _this.description,
                     tracker: $stateParams.trackerId,
-                    owner: this.authentication.user._id,
-                    created: this.created
+                    owner: _this.authentication.user._id,
+                    created: _this.created
                 });
                 // Redirect after save
                 vault.$save(function(response) {
@@ -39,10 +59,10 @@ angular.module('vaults')
                     $scope.error = errorResponse.data.message;
                 });
             };
-            this.editVault = function(vault) {
+            _this.editVault = function(vault) {
                 $state.go('editVault', {vaultId: vault._id});
             };
-            this.updateVault = function(updatedVault){
+            _this.updateVault = function(updatedVault){
                 var vault = updatedVault;
                 var trackerId = vault.tracker._id;
                 delete vault.tracker;
@@ -56,7 +76,7 @@ angular.module('vaults')
                 });
             };
 
-            this.remove = function(vault) {
+            _this.remove = function(vault) {
                 console.log(vault);
                 if ( vault ) {
                     vault.$remove({vaultId : vault._id}, function(res){
