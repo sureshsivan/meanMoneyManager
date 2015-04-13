@@ -3,7 +3,7 @@
 // Trackers controller
 
 angular.module('trackers')
-	.directive('trackersList', ['Trackers', 'TRACKER_CONST', '$state', function(Trackers, TRACKER_CONST, $state) {
+	.directive('trackersList', ['TRACKER_CONST', function(TRACKER_CONST) {
 	    return {
 	        restrict: 'E',
 	        transclude: true,

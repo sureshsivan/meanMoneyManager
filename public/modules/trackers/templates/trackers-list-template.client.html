@@ -3,6 +3,7 @@
 		data-ng-repeat="tracker in trackersCtrl.trackers | filter:searchText">
 		<!--data-ng-click="trackersCtrl.loadIncexps(tracker._id)">-->
   <div class="panel-heading">
+		<span class="fa fa-table"> </span>
 	  <strong>{{trackersCtrl.getLabel('app.trackers.lbl.tracker')}} : {{tracker.displayName}}</strong>
   	<span ng-if="tracker.userAlertsCount > 0" class="pull-right badge margin-left badge-warn" tooltip-placement="bottom"
           tooltip="{{trackersCtrl.getLabel('app.trackers.tt.recordsRequireApproval')}}">{{tracker.userAlertsCount}}
@@ -54,13 +55,13 @@
 	<span class="pull-right pad-left">
 		<button  tooltip-placement="bottom" tooltip-html-unsafe="{{trackersCtrl.getLabel('app.trackers.tt.showVaults')}}"
 				 class="btn btn-info btn-sm" ng-click="trackersCtrl.loadVaults(tracker._id)">
-			<i class="glyphicon glyphicon-piggy-bank"></i>
+			<i class="fa fa-suitcase"></i>
 		</button>
 	</span>
 	<span class="pull-right pad-left">
 		<button  tooltip-placement="bottom" tooltip-html-unsafe="{{trackersCtrl.getLabel('app.trackers.tt.showIncomeExpenses')}}"
 				 class="btn btn-primary btn-sm" ng-click="trackersCtrl.loadIncexps(tracker._id)">
-			<i class="glyphicon glyphicon-play"></i>
+			<i class="fa fa-money"></i>
 		</button>
 	</span>
   </div>

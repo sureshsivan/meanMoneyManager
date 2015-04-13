@@ -4,8 +4,8 @@
 
 
 angular.module('trackers')
-    .controller('TrackersController', ['$scope', '$state', '$stateParams', 'Authentication', 'Trackers', 'TrackerLocaleMessages', 'TRACKER_CONST', 'AppStatics', 'UserStatics', 'AppMessenger', 'moment',
-        function($scope, $state, $stateParams, Authentication, Trackers, TrackerLocaleMessages, TRACKER_CONST, AppStatics, UserStatics, AppMessenger, moment) {
+    .controller('TrackersController', ['$scope', '$state', '$stateParams', 'Authentication', 'Trackers', 'TrackerLocaleMessages', 'TRACKER_CONST', 'VAULT_CONST', 'AppStatics', 'UserStatics', 'AppMessenger', 'moment',
+        function($scope, $state, $stateParams, Authentication, Trackers, TrackerLocaleMessages, TRACKER_CONST, VAULT_CONST, AppStatics, UserStatics, AppMessenger, moment) {
             var _this = this;
             _this.appStatics = AppStatics;
             _this.userStatics = UserStatics;
@@ -61,7 +61,7 @@ angular.module('trackers')
                     return users;
                 };
                 _this.loadVaults = function (trackerId) {
-                    $state.go('listTrackerVaults', {trackerId: trackerId});
+                    $state.go(VAULT_CONST.LIST_VAULTS_STATE_NAME, {trackerId: trackerId});
                 };
                 _this.loadIncexps = function (trackerId) {
                     $state.go('listTrackerIncexps', {trackerId: trackerId});
@@ -69,13 +69,13 @@ angular.module('trackers')
 
                 _this.createTracker = function (size) {
                     _this.tracker = {};
-                    $state.go('createTracker');
+                    $state.go(TRACKER_CONST.CREATE_TRACKER_STATE_NAME);
                 };
                 _this.editTracker = function (tracker) {
-                    $state.go('editTracker', {trackerId: tracker._id});
+                    $state.go(TRACKER_CONST.EDIT_TRACKER_STATE_NAME, {trackerId: tracker._id});
                 };
                 _this.cancelTrackerEdit = function (tracker) {
-                    $state.go('listTrackers');
+                    $state.go(TRACKER_CONST.LIST_TRACKERS_STATE_NAME);
                 };
                 _this.saveTracker = function (size) {
                     var tracker = new Trackers({
@@ -91,7 +91,7 @@ angular.module('trackers')
                         tracker.users.push(value._id);
                     });
                     tracker.$save(function (response) {
-                        $state.go('listTrackers');
+                        $state.go(TRACKER_CONST.LIST_TRACKERS_STATE_NAME);
                         AppMessenger.sendInfoMsg('Successfully Created New Tracker');
                     }, function (errorResponse) {
                         $scope.error = errorResponse.data.message;
@@ -107,7 +107,7 @@ angular.module('trackers')
                     tracker.owner = owner;
                     tracker.users = users;
                     tracker.$update(function () {
-                        $state.go('listTrackers');
+                        $state.go(TRACKER_CONST.LIST_TRACKERS_STATE_NAME);
                         AppMessenger.sendInfoMsg('Successfully Updated theTracker');
                     }, function (errorResponse) {
                         $scope.error = errorResponse.data.message;
@@ -117,15 +117,11 @@ angular.module('trackers')
 
                 _this.remove = function (tracker) {
                     if (tracker) {
-                        tracker.$remove();
-
-                        for (var i in _this.trackers) {
-                            if (_this.trackers[i] === tracker) {
-                                _this.trackers.splice(i, 1);
-                            }
-                        }
-                    } else {
-                        _this.tracker.$remove(function () {
+                        tracker.$remove(function () {
+                            $state.go(TRACKER_CONST.LIST_TRACKERS_STATE_NAME);
+                            AppMessenger.sendInfoMsg('Successfully Deleted the Tracker');
+                        }, function (errorResponse) {
+                            $scope.error = errorResponse.data.message;
                         });
                     }
                 };

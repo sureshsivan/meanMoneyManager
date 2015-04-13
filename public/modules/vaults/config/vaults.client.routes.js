@@ -1,30 +1,20 @@
 'use strict';
 
 //Setting up route
-angular.module('vaults').config(['$stateProvider',
-	function($stateProvider) {
-		// '$stateProvider', '$urlRouterProvider'
-		// Vaults state routing
+angular.module('vaults').config(['$stateProvider', 'VAULT_CONST',
+	function($stateProvider, VAULT_CONST) {
 		$stateProvider.
-		state('listTrackerVaults', {
-			url: '/trackervaults/:trackerId',
-			templateUrl: 'modules/vaults/views/list-vaults.client.view.html'
-		// }).
-		// state('listVaults', {
-		// 	url: '/vaults',
-		// 	templateUrl: 'modules/vaults/views/list-vaults.client.view.html'
+		state(VAULT_CONST.LIST_VAULTS_STATE_NAME, {
+			url: VAULT_CONST.LIST_VAULTS_STATE_URL,
+			templateUrl: VAULT_CONST.LIST_VAULTS_STATE_TEMPLATE_URL
 		}).
-		state('createVault', {
-			url: '/trackervaults/:trackerId/create',
-			templateUrl: 'modules/vaults/views/create-vault.client.view.html'
-		//}).
-		// state('viewVault', {
-		// 	url: '/vaults/:vaultId',
-		// 	templateUrl: 'modules/vaults/views/view-vault.client.view.html'
+		state(VAULT_CONST.CREATE_VAULT_STATE_NAME, {
+			url: VAULT_CONST.CREATE_VAULT_STATE_URL,
+			templateUrl: VAULT_CONST.CREATE_VAULT_STATE_TEMPLATE_URL
 		}).
-		state('editVault', {
-			url: '/vaults/:vaultId/edit',
-			templateUrl: 'modules/vaults/views/edit-vault.client.view.html'
+		state(VAULT_CONST.EDIT_VAULT_STATE_NAME, {
+			url: VAULT_CONST.EDIT_VAULT_STATE_URL,
+			templateUrl: VAULT_CONST.EDIT_VAULT_STATE_TEMPLATE_URL
 		});
 	}
 ]);

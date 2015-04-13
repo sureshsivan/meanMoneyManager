@@ -13,8 +13,6 @@ angular.module('vaults').service('VaultStatics', [ '$http', '$q',
                 }
             });
         };
-
-
 		return vaultStatics;
 	}
 ]);

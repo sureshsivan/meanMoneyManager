@@ -1,18 +1,18 @@
 'use strict';
 
 angular.module('vaults').constant('VAULT_CONST', {
-	'TRACKER_LIST_TEMPLATE_URL': 'modules/trackers/templates/trackers-list-template.client.html',
+	'VAULT_LIST_TEMPLATE_URL': 'modules/vaults/templates/vaults-list-template.client.html',
 	
-	'LIST_TRACKERS_STATE_NAME': 'listTrackers',
-	'LIST_TRACKERS_STATE_URL': '/trackers',
-	'LIST_TRACKERS_STATE_TEMPLATE_URL': 'modules/trackers/views/list-trackers.client.view.html',
+	'LIST_VAULTS_STATE_NAME': 'listTrackerVaults',
+	'LIST_VAULTS_STATE_URL': '/trackervaults/:trackerId',
+	'LIST_VAULTS_STATE_TEMPLATE_URL': 'modules/vaults/views/list-vaults.client.view.html',
 
-	'CREATE_TRACKER_STATE_NAME': 'createTracker',
-	'CREATE_TRACKER_STATE_URL': '/trackers/create',
-	'CREATE_TRACKER_STATE_TEMPLATE_URL': 'modules/trackers/views/create-tracker.client.view.html',
+	'CREATE_VAULT_STATE_NAME': 'createVault',
+	'CREATE_VAULT_STATE_URL': '/trackervaults/:trackerId/create',
+	'CREATE_VAULT_STATE_TEMPLATE_URL': 'modules/vaults/views/create-vault.client.view.html',
 	
-	'EDIT_TRACKER_STATE_NAME': 'editTracker',
-	'EDIT_TRACKER_STATE_URL': '/trackers/:trackerId/edit',
-	'EDIT_TRACKER_STATE_TEMPLATE_URL': 'modules/trackers/views/edit-tracker.client.view.html'
+	'EDIT_VAULT_STATE_NAME': 'editVault',
+	'EDIT_VAULT_STATE_URL': '/trackervaults/:trackerId/:vaultId/edit',
+	'EDIT_VAULT_STATE_TEMPLATE_URL': 'modules/vaults/views/edit-vault.client.view.html'
 	
 });

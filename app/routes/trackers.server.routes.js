@@ -8,9 +8,9 @@ module.exports = function(app) {
 
 	// Trackers Routes
 	app.route('/trackers')
-		.get(users.requiresLogin, trackers.findTrackerDetails)
+		.get(users.requiresLogin, trackers.findTrackerDetails);
 		//.get(users.requiresLogin, trackers.listByUserId)
-		.post(users.requiresLogin, trackers.create);
+//		.post(users.requiresLogin, trackers.create);
 
 	app.route('/trackers/:trackerId')
 		.get(trackers.read)
