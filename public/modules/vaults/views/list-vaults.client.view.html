@@ -23,7 +23,7 @@
        <vaults-list></vaults-list>
     <div class="row">
         <div class="alert alert-warning text-center" data-ng-hide="!vaultsCtrl.trackerVaults.$resolved || vaultsCtrl.trackerVaults.length">
-            <a href="/#!/trackervaults/create">{{vaultsCtrl.getLabel('app.vaults.lbl.noVaultYet')}}</a>?
+            <a data-ui-sref="createVault($stateParams)">{{vaultsCtrl.getLabel('app.vaults.lbl.noVaultYet')}}</a>?
         </div>
     </div>
 </section>

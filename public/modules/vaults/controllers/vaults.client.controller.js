@@ -12,7 +12,7 @@ angular.module('vaults')
             var _this = this;
             _this.authentication = Authentication;
             _this.appStatics = AppStatics;
-
+            $scope.$stateParams = $stateParams;
 
             var pullMsgs = function(){
                 return VaultLocaleMessages.pullMessages().then(function(labels){
