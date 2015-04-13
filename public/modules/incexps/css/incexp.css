@@ -26,3 +26,11 @@ tags-input .tags .tag-item.selected > div.incexp-tag-item{
   background: #d9534f !important;
   border: 1px solid #d43f3a !important;
 }
+.info-icon{
+    color: #404040;
+    padding: 0 2px;
+}
+.info-icon:hover{
+    color: #52bcdc;
+    cursor: pointer;
+}

@@ -65,7 +65,20 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
             };
             _this.getInfoIconClasses = function(incExp, idx){
                 var classes = [];
-                classes.push('fa-user');
+                //var obj1 = {
+                //    'clazz': 'fa-warning',
+                //    'tooltip': 'Warning Tooltip'
+                //};
+                //var obj2 = {
+                //    'clazz': 'fa-user',
+                //    'tooltip': 'User Tooltip'
+                //};
+                //
+                //classes.push(obj1);
+                //classes.push(obj2);
+
+
+                classes.push('fa-warning');
                 classes.push('fa-bell');
                 return classes;
             };
@@ -167,7 +180,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         
         if($state.current.name === 'listTrackerIncexps'){
         	pullMsgs().then(pullIncexps).then(bootmodule);
-        };
+        }
         
 //        loadmsgs().then(loadvaults).then(bootmodule);
         //$q.all([loadmsgs, loadvaults]).then(bootmodule);

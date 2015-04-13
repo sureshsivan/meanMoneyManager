@@ -17,9 +17,9 @@
             <tr data-ng-repeat="incexp in incexpCtrl.trackerIncexps | filter:searchText">
                 <td scope="row">{{$index+1}}</td>
                 <td>
-                    <i data-ng-repeat="claz in incexpCtrl.getInfoIconClasses(incexp, $index)" >
-                        <i class="fa" data-ng-class="claz"> </i>
-                    </i>
+                    <span class="fa info-icon" data-ng-class="cl" tooltip="{{cl}}"
+                          data-ng-repeat="cl in incexpCtrl.getInfoIconClasses(incexp, $index)" >
+                    </span>
                 </td>
                 <td>
                 	<span data-tooltip="{{incexp.displayName}}">
