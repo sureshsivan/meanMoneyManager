@@ -26,7 +26,7 @@
 	<br/>
 	<span class="pull-right pad-left">
 		<button data-tooltip-placement="bottom" data-tooltip="{{vaultsCtrl.getLabel('app.vaults.lbl.deleteVault')}}"
-				class="btn btn-danger btn-sm" data-ng-click="vaultsCtrl.remove(tracker)"
+				class="btn btn-danger btn-sm" data-ng-click="vaultsCtrl.deleteVault(vault)"
 				data-ng-class="(vault.owner._id == vaultsCtrl.authentication.user._id && vault.incexpCount == 0) ? '' : 'disabled'">
 			<i class="glyphicon glyphicon-trash"></i>
 		</button>

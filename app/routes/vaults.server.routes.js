@@ -13,7 +13,7 @@ module.exports = function(app) {
   app.route('/trackervaults/:trackerId/:vaultId')
 	.get(users.requiresLogin, vaults.read)
 	.put(users.requiresLogin, vaults.hasAuthorization, vaults.update)
-	.delete(users.requiresLogin, vaults.hasAuthorization, vaults.create);
+	.delete(users.requiresLogin, vaults.hasAuthorization, vaults.delete);
 	//	TODO - to check whether the tracker does not has any childs(vaults or income/expenses)
   
   

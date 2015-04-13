@@ -76,12 +76,14 @@ angular.module('vaults')
                 _this.cancelVaultEdit = function(){
                 	$state.go(VAULT_CONST.LIST_VAULTS_STATE_NAME, $stateParams);
                 };
-                _this.remove = function(vault) {
-                    console.log(vault);
-                    if ( vault ) {
-                        vault.$remove({vaultId : vault._id}, function(res){
-                            console.log(res);
-                            Notify.sendMsg('RefreshVaults', $stateParams);
+                _this.deleteVault = function(vault) {
+                    if (vault) {
+                        vault.$remove({
+                        	trackerId : $stateParams.trackerId,
+                        	vaultId: vault._id
+                        }, function(res){
+                        	$state.go(VAULT_CONST.LIST_VAULTS_STATE_NAME, $stateParams, {reload: true});
+                            AppMessenger.sendInfoMsg('Successfully Deleted the Vault');
                         });
                     }
                 };	
