@@ -8,12 +8,17 @@
   "app.vaults.lbl.createdBy" : "Owner : ",
   "app.vaults.lbl.createdOn" : "Created On : ",
   "app.vaults.lbl.noOfRecords" : "No of income/Expense Items : ",
+  "app.vaults.lbl.vaultName" : "Vault Name",
+  "app.vaults.lbl.vaultDesc" : "Vault Description",  
   
-  
-  "app.vaults.ph.trackerName" : "Type Tracker Name",
+  "app.vaults.ph.vaultName" : "Type Vault Name",
+  "app.vaults.ph.vaultDesc" : "Type Vault Description",
 
   "app.vaults.tt.deleteVault" : "Delete Vault",
   "app.vault.tt.updateVault" : "Update Vault",
 
-  "app.vaults.err.msg.inputTrackerName" : "Please input a name for the Tracker"
+  "app.vaults.err.msg.inputVaultName" : "Please input a name for the Vault",
+  "app.vaults.err.msg.minMaxLengthVaultName" : "Vault Name should be between 8 to 20 characters",
+  "app.vaults.err.msg.inputVaultDesc" : "Please input description for the Vault",
+  "app.vaults.err.msg.minMaxLengthVaultDesc" : "Vault Description should be between 12 to 50 characters"
 }

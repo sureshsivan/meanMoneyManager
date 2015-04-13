@@ -22,7 +22,8 @@ module.exports = function(app) {
 //        .delete(users.requiresLogin, vaults.hasAuthorizationWithTracker, vaults.delete);
 
   app.route('/trackervaults/:trackerId')
-  	.get(users.requiresLogin, vaults.listVaultDetailsForTracker);
+  	.get(users.requiresLogin, vaults.listVaultDetailsForTracker)
+  	.post(users.requiresLogin, vaults.create);
 	
 
 //    // Tracker Vaults Routes

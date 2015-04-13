@@ -49,7 +49,7 @@ angular.module('vaults')
                         created: _this.created
                     });
                     // Redirect after save
-                    vault.$save(function(response) {
+                    vault.$save($stateParams,function(response) {
                         $state.go('listTrackerVaults', $stateParams);
                         AppMessenger.sendInfoMsg('Successfully Created New Vault');
                     }, function(errorResponse) {

@@ -1,48 +1,55 @@
 <section data-ng-controller="VaultsController as vaultsCtrl">
     <div class="page-header">
-        <h3">New Tracker</h3>
+        <h3>{{vaultsCtrl.getLabel('app.vaults.lbl.newVault')}}</h3>
     </div>
-
-
     <form name="createVaultForm" data-ng-submit="vaultsCtrl.saveVault()" novalidate>
         <fieldset>
             <div class="row">
-                <div class="form-group-xs">
-                    <div data-ng-show="error" class="text-center text-danger">
-                        <div class="alert alert-danger" role="alert">
-                            <strong data-ng-bind="error"></strong>
-                        </div>
-                    </div>
-                </div>
                 <div class="col-sm-12">
                     <div class="form-group form-group-sm">
-                        <label class="control-label" for="displayName"> Display Name</label>
+                        <label class="control-label" for="displayName"> {{vaultsCtrl.getLabel('app.vaults.lbl.vaultName')}}</label>
                         <div class="controls">
-                            <input type="text" data-ng-model="vaultsCtrl.displayName" id="displayName" class="form-control" required="true">
+                            <input type="text" data-ng-model="vaultsCtrl.displayName" name="displayName" id="displayName" class="form-control"
+                                   placeholder="{{vaultsCtrl.getLabel('app.vaults.ph.vaultName')}}"
+                                   data-ng-minlength="8" data-ng-maxlength="20" required/>
+                            <div data-ng-if="createVaultForm.displayName.$invalid && createVaultForm.displayName.$dirty"
+                                 data-data-ng-messages="createVaultForm.displayName.$error">
+                                <span data-ng-if="createVaultForm.displayName.$error.required"
+                                      class="label label-warning" data-ng-message="required">
+                                    {{vaultsCtrl.getLabel('app.vaults.err.msg.inputVaultName')}}
+                                </span>
+                                <span data-ng-if="createVaultForm.displayName.$error.minlength || createVaultForm.displayName.$error.maxlength"
+                                      class="label label-warning" data-ng-message="minlength, maxlength">
+                                    {{vaultsCtrl.getLabel('app.vaults.err.msg.minMaxLengthVaultName')}}
+                                </span>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label" for="description"> Description</label>
+                    <div class="form-group form-group-sm">
+                        <label class="control-label" for="description"> {{vaultsCtrl.getLabel('app.vaults.lbl.vaultDesc')}}</label>
                         <div class="controls">
-                            <input type="text" data-ng-model="vaultsCtrl.description" id="description" class="form-control" required>
+                            <input type="text" data-ng-model="vaultsCtrl.description" id="description" class="form-control" name="description"
+                                   placeholder="{{vaultsCtrl.getLabel('app.vaults.ph.vaultDesc')}}"
+                                   data-ng-minlength="12" data-ng-maxlength="50" required/>
+                            <div data-ng-if="createVaultForm.description.$invalid && createVaultForm.description.$dirty"
+                                 data-data-ng-messages="createVaultForm.description.$error">
+                                <span data-ng-if="createVaultForm.description.$error.required"
+                                      class="label label-warning" data-ng-message="required">
+                                    {{vaultsCtrl.getLabel('app.vaults.err.msg.inputVaultDesc')}}
+                                </span>
+                                <span data-ng-if="createVaultForm.description.$error.minlength || createVaultForm.description.$error.maxlength"
+                                      class="label label-warning" data-ng-message="minlength, maxlength">
+                                    {{vaultsCtrl.getLabel('app.vaults.err.msg.minMaxLengthVaultDesc')}}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="form-group">
-                <!--<input type="submit" class="btn btn-default pull-right">-->
                 <button class="btn btn-success btn-sm pull-right"
-                        ng-disabled="createVaultForm.$invalid">Save New Vault</button>
-            </div>
-            <div data-ng-show="error" class="text-danger">
-                <strong data-ng-bind="error"></strong>
+                        data-ng-disabled="createVaultForm.$invalid">{{vaultsCtrl.getLabel('app.vaults.lbl.newVault')}}</button>
             </div>
         </fieldset>
     </form>
-
-
-
-    <!--<div class="modal-footer">-->
-        <!--<button class="btn btn-success btn-sm" ng-disabled="createVaultForm.$invalid">Save New Vault</button>-->
-    <!--</div>-->
 </section>

@@ -119,7 +119,7 @@ exports.listVaultDetailsForTracker = function(req, res){
 	}, function(err){
 		console.log(err);
 	});
-}
+};
 
 /**
  * List of Vaults
