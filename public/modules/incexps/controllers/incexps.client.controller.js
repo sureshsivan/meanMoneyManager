@@ -6,14 +6,14 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
 	function($scope, $stateParams, $location, Authentication, Incexps,
              TrackerIncexps, $modal, $log, moment, AppStatics, Notify, VaultStatics, $state, IncexpStatics, AppMessenger, IncexpLocaleMessages, $q) {
 		var _this = this;
-        this.authentication = Authentication;
-		this.vaultStatics = VaultStatics;
-        this.appStatics = AppStatics;
-        this.incexpStatics = IncexpStatics;
+        _this.authentication = Authentication;
+		_this.vaultStatics = VaultStatics;
+        _this.appStatics = AppStatics;
+        _this.incexpStatics = IncexpStatics;
         //	TODO - bootstrapping the module only if the dependencies are loaded 
         //	Not sure whether this is correct way - but it works.
 
-        var loadmsgs = function(){
+        var pullMsgs = function(){
             return IncexpLocaleMessages.pullMessages().then(function(labels){
     			_this.labelsObj = labels;
             });
@@ -26,6 +26,11 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 });
             });
         };
+        
+        var pullIncexps = function () {
+        	_this.trackerIncexps = TrackerIncexps.listTrackerIncexps($stateParams);
+        };
+        
         var bootmodule = function(){
             _this.getLabel = function(key){
             	return _this.labelsObj[key];
@@ -159,7 +164,12 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
     			}
     		};        	
         };
-        loadmsgs().then(loadvaults).then(bootmodule);
+        
+        if($state.current.name === 'listTrackerIncexps'){
+        	pullMsgs().then(pullIncexps).then(bootmodule);
+        };
+        
+//        loadmsgs().then(loadvaults).then(bootmodule);
         //$q.all([loadmsgs, loadvaults]).then(bootmodule);
 
 	}
