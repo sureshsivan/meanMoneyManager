@@ -1,10 +1,19 @@
 {
   "app.vaults.lbl.vaultsOf" : "Vaults of ",
   "app.vaults.lbl.noVaults" : "No Vaults found",
-
+  "app.vaults.lbl.searchVaults" : "Search Vaults",
+  "app.vaults.lbl.newVault" : "Create New Vault",
+  "app.vaults.lbl.noVaultYet" : "No Vaults yet. Why don't you create one",
+  "app.vaults.lbl.vault" : "Vault",
+  "app.vaults.lbl.createdBy" : "Owner : ",
+  "app.vaults.lbl.createdOn" : "Created On : ",
+  "app.vaults.lbl.noOfRecords" : "No of income/Expense Items : ",
+  
+  
   "app.vaults.ph.trackerName" : "Type Tracker Name",
 
-  "app.vaults.tt.deleteTracker" : "Delete Tracker",
+  "app.vaults.tt.deleteVault" : "Delete Vault",
+  "app.vault.tt.updateVault" : "Update Vault",
 
   "app.vaults.err.msg.inputTrackerName" : "Please input a name for the Tracker"
 }

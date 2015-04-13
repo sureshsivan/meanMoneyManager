@@ -1,29 +1,29 @@
 <section data-ng-controller="VaultsController as vaultCtrl" data-ng-init="vaultCtrl.findAll()">
     <div class="page-header">
-        <h1 data-ng-if="vaultCtrl.trackerVaults && vaultCtrl.trackerVaults.length > 0">{{trackersCtrl.getLabel('app.vaults.lbl.vaultsOf')}} {{vaultCtrl.trackerVaults[0].tracker.displayName}}</h1>
-        <h1 data-ng-if="vaultCtrl.trackerVaults && vaultCtrl.trackerVaults.length && vaultCtrl.trackerVaults.length === 0">{{trackersCtrl.getLabel('app.vaults.lbl.noVaults')}}</h1>
+        <h1 data-ng-if="vaultCtrl.trackerVaults && vaultCtrl.trackerVaults.length > 0">
+        	{{vaultCtrl.getLabel('app.vaults.lbl.vaultsOf') + "\"" + vaultCtrl.trackerVaults[0].tracker.displayName + "\""}}
+        </h1>
+        <h1 data-ng-if="vaultCtrl.trackerVaults && vaultCtrl.trackerVaults.length && vaultCtrl.trackerVaults.length === 0">
+        	{{vaultCtrl.getLabel('app.vaults.lbl.noVaults')}}
+        </h1>
     </div>
     <div class="row">
-        <div class="col-xs-12 col-sm-9">
-            <div class="input-group input-group">
-                <input type="text" data-ng-model="searchText" class="form-control" placeholder="Search Vaults...">
+        <div class="col-xs-12">
+            <div class="input-group">
+                <input type="text" data-ng-model="searchText" class="form-control" placeholder="{{vaultCtrl.getLabel('app.vaults.lbl.searchVaults')}}">
                 <span class="input-group-btn">
-                    <button class="btn btn-default" type="button">Go!</button>
+		            <button type="button" class="pull-left btn btn-success text-center" data-ng-click="trackersCtrl.createVault()">
+		                <i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;{{vaultCtrl.getLabel('app.vaults.lbl.newVault')}}
+		            </button>
                 </span>
             </div>
         </div>
-        <div class="col-xs-12 col-sm-3 text-center pull-right">
-            <button type="button" class="btn btn-success text-center" ng-click="vaultCtrl.createVault()">
-                <i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;New Vault
-            </button>
-        </div>
     </div>
+   	<br>
+       <vaults-list></vaults-list>
     <div class="row">
-        <vaults-list></vaults-list>
-    </div>
-    <div class="row">
-        <div class="alert alert-warning text-center" data-ng-hide="!temps.$resolved || temps.length">
-            No Temps yet, why don't you <a href="/#!/trackervaults/create">create one</a>?
+        <div class="alert alert-warning text-center" data-ng-hide="!vaultCtrl.trackerVaults.$resolved || vaultCtrl.trackerVaults.length">
+            <a href="/#!/trackervaults/create">{{vaultCtrl.getLabel('app.vaults.lbl.noVaultYet')}}</a>?
         </div>
     </div>
 </section>

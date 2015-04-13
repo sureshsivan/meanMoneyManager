@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	Vault = mongoose.model('Vault'),
 	_ = require('lodash'),
+	incexps = require('../../app/controllers/incexps.server.controller'),
     Q = require('q');
 
 /**
@@ -40,7 +41,6 @@ exports.read = function(req, res) {
  */
 exports.update = function(req, res) {
 	var vault = req.vault ;
-    console.log(vault);
 	vault = _.extend(vault , req.body);
 
 	vault.save(function(err) {
@@ -107,12 +107,26 @@ exports.list = function(req, res) {
 	});
 };
 
+
+exports.listVaultDetailsForTracker = function(req, res){
+	exports.listVaultsForTracker(req)
+    .then(incexps.findVaultIncexpCounts, function(err){
+        console.log(err);
+    })
+	.then(function(req){
+		exports.mergeVaultDetails(req);
+		res.jsonp(req.trackerVaults);
+	}, function(err){
+		console.log(err);
+	});
+}
+
 /**
  * List of Vaults
  */
-exports.listByTrackerId = function(req, res) {
-	Vault.find({tracker: mongoose.Types.ObjectId(req.query.trackerId)})
-	// Vault.find({'tracker' : mongoose.Types.ObjectId(req.tracker._id)})
+exports.listVaultsForTracker = function(req, res) {
+	var deferred = Q.defer();
+	Vault.find({tracker: mongoose.Types.ObjectId(req.tracker._id)})
 	.populate({
 		'path' : 'owner',
 		'select' : 'firstName lastName displayName email _id'
@@ -123,20 +137,20 @@ exports.listByTrackerId = function(req, res) {
     })
 	.sort('-created').exec(function(err, vaults) {
 		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
+			deferred.reject(err);
 		} else {
-			res.jsonp(vaults);
+			//	save data to request obj for future merge
+			req.trackerVaults = vaults;
+			deferred.resolve(req);
 		}
 	});
+	return deferred.promise;
 };
 
 /**
  * List of Vaults - excluding vaults
  */
 exports.listByTrackerIdExcludeVaults = function(req, res) {
-    console.log(req.query       );
 	var vaults = req.query.exv;
 	var excludeVaults = [];
 	if(vaults && vaults.length > 0){
@@ -251,4 +265,23 @@ exports.hasAuthorization = function(req, res, next) {
         return res.status(403).send('User is not authorized');
     }
     next();
+};
+
+
+exports.mergeVaultDetails = function(req){
+	var trackerVaults = req.trackerVaults;
+	var vaultIncexpCounts = req.vaultIncexpCounts;
+	var modifiedVaults = [];
+	_.each(trackerVaults, function(vault){
+		vault = vault.toObject();
+		vault.incexpCount = 0;
+            //TODO - to check whether return false to break off the loop
+		_.each(vaultIncexpCounts, function(vaultIncexpCounts){
+			if(vaultIncexpCounts._id.toString() === vault._id.toString()){
+				vault.incexpCount = vaultIncexpCounts.count;
+			}
+		});
+		modifiedVaults.push(vault);
+	});
+	req.trackerVaults = modifiedVaults;
 };

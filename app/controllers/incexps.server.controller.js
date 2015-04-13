@@ -286,7 +286,7 @@ exports.findTrackerIncexpCounts = function(req){
     return deferred.promise;
 };
 
-exports.findTrackerVaultCounts = function(req){
+exports.findVaultIncexpCounts = function(req){
     var vaultIds = [];
     _.each(req.trackerVaults, function(vault){
         vaultIds.push(mongoose.Types.ObjectId(vault._id));
@@ -305,7 +305,7 @@ exports.findTrackerVaultCounts = function(req){
                 deferred.reject(err);
             }
             if(response){
-                req.trackerVaultCounts = response;
+                req.vaultIncexpCounts = response;
                 deferred.resolve(req);
             }
         });

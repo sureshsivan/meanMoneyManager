@@ -63,7 +63,6 @@ exports.update = function(req, res) {
  */
 exports.delete = function(req, res) {
 	var tracker = req.tracker ;
-    console.log('DELETING TRACKERS');
 	tracker.remove(function(err) {
 		if (err) {
 			return res.status(400).send({
@@ -196,7 +195,6 @@ exports.updateById = function(req, res) {
 	delete tracker.owner;
 	// delete req.body.users;
 	// delete tracker.users;
-	// console.log('#########');
 	Tracker.update(query, tracker, function(err){
 //	Tracker.update(tracker,function(err) {
 		if (err) {

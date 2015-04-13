@@ -33,7 +33,6 @@ exports.searchAllUsers = function(req, res) {
 	if(users && users.length > 0){
 		excludeUsers = users.split(',');
 	}
-	// console.log(query.length);
 	var filter = {};
 	if(query && query.length > 0){
 		var queryRegX = new RegExp(query, 'i');

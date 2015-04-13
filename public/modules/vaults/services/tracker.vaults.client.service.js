@@ -3,7 +3,7 @@
 //Vaults service used to communicate Vaults REST endpoints
 angular.module('vaults').factory('TrackerVaults', ['$resource',
 	function($resource) {
-		return $resource('trackervaults', null, {
+		return $resource('trackervaults/:trackerId/:vaultId', null, {
 			update: {
 				method: 'PUT',
                 params: {vaultId : 'vaultId'}

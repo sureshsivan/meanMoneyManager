@@ -6,21 +6,24 @@ module.exports = function(app) {
     var trackers = require('../../app/controllers/trackers.server.controller');
 
 	// Vaults Routes
-	app.route('/vaults')
-		.get(users.requiresLogin, vaults.list)
-		.post(users.requiresLogin, vaults.create);
-	app.route('/vaults/:vaultId')
-		.get(users.requiresLogin, vaults.read)
-		.put(users.requiresLogin, vaults.hasAuthorization, vaults.update)
-		.delete(users.requiresLogin, vaults.hasAuthorization, vaults.delete);
+//	app.route('/vaults')
+//		.get(users.requiresLogin, vaults.list)
+//		.post(users.requiresLogin, vaults.create);
+//	app.route('/vaults/:vaultId')
+//		.get(users.requiresLogin, vaults.read)
+//		.put(users.requiresLogin, vaults.hasAuthorization, vaults.update)
+//		.delete(users.requiresLogin, vaults.hasAuthorization, vaults.delete);
+//
+//	// Tracker Vaults Routes
+//	app.route('/trackervaults')
+//		.get(users.requiresLogin, vaults.listByTrackerId)
+//		.post(users.requiresLogin, vaults.create)
+//        .put(users.requiresLogin, vaults.hasAuthorization, vaults.update)
+//        .delete(users.requiresLogin, vaults.hasAuthorizationWithTracker, vaults.delete);
 
-	// Tracker Vaults Routes
-	app.route('/trackervaults')
-		.get(users.requiresLogin, vaults.listByTrackerId)
-		.post(users.requiresLogin, vaults.create)
-        .put(users.requiresLogin, vaults.hasAuthorization, vaults.update)
-        .delete(users.requiresLogin, vaults.hasAuthorizationWithTracker, vaults.delete);
-
+  app.route('/trackervaults/:trackerId')
+  	.get(users.requiresLogin, vaults.listVaultDetailsForTracker);
+	
 
 //    // Tracker Vaults Routes
 //    app.route('/trackervaults/:trackerId/:vaultId')
@@ -43,7 +46,7 @@ module.exports = function(app) {
 
 	// Finish by binding the Vault middleware
 	app.param('vaultId', vaults.vaultByID);
-//    app.param('trackerId', vaults.vaultByTrackerVaultID);
+    app.param('trackerId', trackers.trackerByID);
 };
 
 

@@ -29,6 +29,13 @@ angular.module('vaults')
             };
 
             var bootmodule = function(){
+                _this.getLabel = function(key){
+                	return _this.labelsObj[key];
+                };
+                _this.getOwnerTxt = function (vault) {
+                    return (vault.owner && vault.owner._id && (vault.owner._id === Authentication.user._id)) ? 'Me' :
+                        ((vault.owner && vault.owner.displayName) ? vault.owner.displayName : 'No Name');
+                };
                 _this.createVault = function() {
                     _this.vault = {};
                     $state.go(VAULT_CONST.CREATE_VAULT_STATE_NAME, $stateParams);
