@@ -5,8 +5,8 @@
   <div class="panel-heading">
 		<span class="fa fa-table"> </span>
 	  <strong>{{trackersCtrl.getLabel('app.trackers.lbl.tracker')}} : {{tracker.displayName}}</strong>
-  	<span ng-if="tracker.userAlertsCount > 0" class="pull-right badge margin-left badge-warn" tooltip-placement="bottom"
-          tooltip="{{trackersCtrl.getLabel('app.trackers.tt.recordsRequireApproval')}}">{{tracker.userAlertsCount}}
+  	<span data-ng-if="tracker.userAlertsCount > 0" class="pull-right badge margin-left badge-warn" data-tooltip-placement="bottom"
+          data-tooltip="{{trackersCtrl.getLabel('app.trackers.tt.recordsRequireApproval')}}">{{tracker.userAlertsCount}}
     </span>
   </div>
   <div class="panel-body">
@@ -27,7 +27,7 @@
 	</small>
     <br/>
 	<small class="list-group-item-text text-muted">
-		<strong>{{trackersCtrl.getLabel('app.trackers.lbl.createdOn')}} : </strong><span am-time-ago="tracker.created"></span>    (<span>{{tracker.created | amDateFormat:'dddd, MMMM Do YYYY'}}</span>)
+		<strong>{{trackersCtrl.getLabel('app.trackers.lbl.createdOn')}} : </strong><span data-am-time-ago="tracker.created"></span>    (<span>{{tracker.created | amDateFormat:'dddd, MMMM Do YYYY'}}</span>)
 	</small>
     <strong> , </strong>
     <small class="list-group-item-text text-muted">
@@ -39,28 +39,28 @@
     </small>
 	<br/>
 	<span class="pull-right pad-left">
-		<button tooltip-placement="bottom" tooltip="{{trackersCtrl.getLabel('app.trackers.tt.deleteTracker')}}"
-				class="btn btn-danger btn-sm" ng-click="trackersCtrl.remove(tracker)"
+		<button data-tooltip-placement="bottom" data-tooltip="{{trackersCtrl.getLabel('app.trackers.tt.deleteTracker')}}"
+				class="btn btn-danger btn-sm" data-ng-click="trackersCtrl.remove(tracker)"
 				data-ng-class="tracker.owner._id == trackersCtrl.authentication.user._id ? (tracker.incexpCount>0 || tracker.vaultsCount>0 ? 'disabled' : '') : 'disabled'">
 			<i class="glyphicon glyphicon-trash"></i>
 		</button>
 	</span>
 	<span class="pull-right pad-left">
-		<button tooltip-placement="bottom" tooltip-html-unsafe="{{trackersCtrl.getLabel('app.trackers.tt.updateTracker')}}"
-				class="btn btn-warning btn-sm" ng-click="trackersCtrl.editTracker(tracker)"
+		<button data-tooltip-placement="bottom" data-tooltip-html-unsafe="{{trackersCtrl.getLabel('app.trackers.tt.updateTracker')}}"
+				class="btn btn-warning btn-sm" data-ng-click="trackersCtrl.editTracker(tracker)"
 			data-ng-class="tracker.owner._id == trackersCtrl.authentication.user._id ? '' : 'disabled'">
 			<i class="glyphicon glyphicon-edit"></i>
 		</button>
 	</span>
 	<span class="pull-right pad-left">
-		<button  tooltip-placement="bottom" tooltip-html-unsafe="{{trackersCtrl.getLabel('app.trackers.tt.showVaults')}}"
-				 class="btn btn-info btn-sm" ng-click="trackersCtrl.loadVaults(tracker._id)">
+		<button  data-tooltip-placement="bottom" data-tooltip-html-unsafe="{{trackersCtrl.getLabel('app.trackers.tt.showVaults')}}"
+				 class="btn btn-info btn-sm" data-ng-click="trackersCtrl.loadVaults(tracker._id)">
 			<i class="fa fa-suitcase"></i>
 		</button>
 	</span>
 	<span class="pull-right pad-left">
-		<button  tooltip-placement="bottom" tooltip-html-unsafe="{{trackersCtrl.getLabel('app.trackers.tt.showIncomeExpenses')}}"
-				 class="btn btn-primary btn-sm" ng-click="trackersCtrl.loadIncexps(tracker._id)">
+		<button data-tooltip-placement="bottom" data-tooltip-html-unsafe="{{trackersCtrl.getLabel('app.trackers.tt.showIncomeExpenses')}}"
+				 class="btn btn-primary btn-sm" data-ng-click="trackersCtrl.loadIncexps(tracker._id)">
 			<i class="fa fa-money"></i>
 		</button>
 	</span>

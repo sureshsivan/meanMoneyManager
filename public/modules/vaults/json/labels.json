@@ -1,50 +1,10 @@
 {
-  "app.tracker.lbl.listOfTracker" : "List of Trackers",
-  "app.trackers.lbl.tracker" : "Tracker",
-  "app.trackers.lbl.listOfTrackers" : "List of Trackers",
-  "app.trackers.lbl.owner" : "Owner",
-  "app.trackers.lbl.currency" : "Currency",
-  "app.trackers.lbl.users" : "Users",
-  "app.trackers.lbl.createdOn" : "Created ",
-  "app.trackers.lbl.newTracker" : "Create New Tracker",
-  "app.trackers.lbl.delTracker" : "Delete Tracker",
-  "app.trackers.lbl.updTracker" : "Update Tracker",
-  "app.trackers.lbl.cancel" : "Cancel",
-  "app.trackers.lbl.manageVaults" : "Manage Vaults in this tracker",
-  "app.trackers.lbl.manageIncexp" : "Manage Income/Expenses in tj=his Tracker",
-  "app.trackers.lbl.searchTracker" : "Search Trackers...",
-  "app.trackers.lbl.search" : "Go.!",
-  "app.trackers.lbl.noTrackerYet" : "No Trackers yet. Why don't you create one",
-  "app.trackers.lbl.trackerName" : "Tracker Name",
-  "app.trackers.lbl.trackerDesc" : "Tracker Description",
-  "app.trackers.lbl.trackerCurrency" : "Tracker Currency",
-  "app.trackers.lbl.shareTracker" : "Share Tracker with Others",
-  "app.trackers.lbl.addUser" : "Add User",
-  "app.trackers.lbl.totalVaults" : "No. of Vaults : ",
-  "app.trackers.lbl.totalIncexps" : "Total Records : ",
-  "app.trackers.lbl.update" : "Update : ",
+  "app.vaults.lbl.vaultsOf" : "Vaults of ",
+  "app.vaults.lbl.noVaults" : "No Vaults found",
 
+  "app.vaults.ph.trackerName" : "Type Tracker Name",
 
+  "app.vaults.tt.deleteTracker" : "Delete Tracker",
 
-  "app.trackers.ph.trackerName" : "Type Tracker Name",
-  "app.trackers.ph.trackerDesc" : "Type Tracker Description",
-  "app.trackers.ph.trackerCurrency" : "-- Choose Tracker Currency --",
-  "app.trackers.ph.addUsers" : "Type User Name/email to choose",
-
-  "app.trackers.tt.deleteTracker" : "Delete Tracker",
-  "app.trackers.tt.updateTracker" : "Update Tracker",
-  "app.trackers.tt.showVaults" : "Show Vaults",
-  "app.trackers.tt.showIncomeExpenses" : "Show Income/Expenses",
-  "app.trackers.tt.trackerOwner" : "Owner...",
-  "app.trackers.tt.trackerUser" : "Remove User",
-  "app.trackers.tt.recordsRequireApproval" : "Items require your Approval",
-
-
-
-
-  "app.trackers.err.msg.inputTrackerName" : "Please input a name for the Tracker",
-  "app.trackers.err.msg.minMaxLengthTrackerName" : "Tracker Name should be between 8 to 20 characters",
-  "app.trackers.err.msg.inputTrackerDesc" : "Please input description for the Tracker",
-  "app.trackers.err.msg.minMaxLengthTrackerDesc" : "Tracker Description should be between 12 to 50 characters",
-  "app.trackers.err.msg.selectTrackerCurrency" : "Please select a Tracker Currency"
+  "app.vaults.err.msg.inputTrackerName" : "Please input a name for the Tracker"
 }

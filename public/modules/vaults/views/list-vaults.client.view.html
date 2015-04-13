@@ -1,11 +1,12 @@
 <section data-ng-controller="VaultsController as vaultCtrl" data-ng-init="vaultCtrl.findAll()">
     <div class="page-header">
-        <h1>Vaults{{ (vaultCtrl.trackerVaults && vaultCtrl.trackerVaults.length > 0) ? ' of ' + vaultCtrl.trackerVaults[0].tracker.displayName : ''}}</h1>
+        <h1 data-ng-if="vaultCtrl.trackerVaults && vaultCtrl.trackerVaults.length > 0">{{trackersCtrl.getLabel('app.vaults.lbl.vaultsOf')}} {{vaultCtrl.trackerVaults[0].tracker.displayName}}</h1>
+        <h1 data-ng-if="vaultCtrl.trackerVaults && vaultCtrl.trackerVaults.length && vaultCtrl.trackerVaults.length === 0">{{trackersCtrl.getLabel('app.vaults.lbl.noVaults')}}</h1>
     </div>
     <div class="row">
         <div class="col-xs-12 col-sm-9">
             <div class="input-group input-group">
-                <input type="text" ng-model="searchText" class="form-control" placeholder="Search Vaults...">
+                <input type="text" data-ng-model="searchText" class="form-control" placeholder="Search Vaults...">
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="button">Go!</button>
                 </span>

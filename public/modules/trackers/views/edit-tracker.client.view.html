@@ -13,14 +13,14 @@
                             <input type="text" data-ng-model="tracker.displayName" name="displayName" id="displayName"class="form-control"
                                    placeholder="{{trackersCtrl.getLabel('app.trackers.ph.trackerName')}}"
                                    data-ng-minlength="8" data-ng-maxlength="20" required/>
-                            <div ng-if="editTrackerForm.displayName.$invalid && editTrackerForm.displayName.$dirty"
-                                 ng-messages="editTrackerForm.displayName.$error">
-                                <span ng-if="editTrackerForm.displayName.$error.required"
-                                      class="label label-warning" ng-message="required">
+                            <div data-ng-if="editTrackerForm.displayName.$invalid && editTrackerForm.displayName.$dirty"
+                                 data-ng-messages="editTrackerForm.displayName.$error">
+                                <span data-ng-if="editTrackerForm.displayName.$error.required"
+                                      class="label label-warning" data-ng-message="required">
                                     {{trackersCtrl.getLabel('app.trackers.err.msg.inputTrackerName')}}
                                 </span>
-                                <span ng-if="editTrackerForm.displayName.$error.minlength || editTrackerForm.displayName.$error.maxlength"
-                                      class="label label-warning" ng-message="minlength, maxlength">
+                                <span data-ng-if="editTrackerForm.displayName.$error.minlength || editTrackerForm.displayName.$error.maxlength"
+                                      class="label label-warning" data-ng-message="minlength, maxlength">
                                     {{trackersCtrl.getLabel('app.trackers.err.msg.minMaxLengthTrackerName')}}
                                 </span>
                             </div>
@@ -32,14 +32,14 @@
                             <input type="text" data-ng-model="tracker.description" name="description" id="description" class="form-control"
                                    placeholder="{{trackersCtrl.getLabel('app.trackers.ph.trackerDesc')}}"
                                    data-ng-minlength="12" data-ng-maxlength="50" required/>
-                            <div ng-if="editTrackerForm.description.$invalid && editTrackerForm.description.$dirty"
-                                 ng-messages="editTrackerForm.description.$error">
-                                <span ng-if="editTrackerForm.description.$error.required"
-                                      class="label label-warning" ng-message="required">
+                            <div data-ng-if="editTrackerForm.description.$invalid && editTrackerForm.description.$dirty"
+                                 data-ng-messages="editTrackerForm.description.$error">
+                                <span data-ng-if="editTrackerForm.description.$error.required"
+                                      class="label label-warning" data-ng-message="required">
                                     {{trackersCtrl.getLabel('app.trackers.err.msg.inputTrackerDesc')}}
                                 </span>
-                                <span ng-if="editTrackerForm.description.$error.minlength || editTrackerForm.description.$error.maxlength"
-                                      class="label label-warning" ng-message="minlength, maxlength">
+                                <span data-ng-if="editTrackerForm.description.$error.minlength || editTrackerForm.description.$error.maxlength"
+                                      class="label label-warning" data-ng-message="minlength, maxlength">
                                     {{trackersCtrl.getLabel('app.trackers.err.msg.minMaxLengthTrackerDesc')}}
                                 </span>
                             </div>
@@ -52,10 +52,10 @@
                                     data-ng-options="currencyItem.id as currencyItem.label for currencyItem in trackersCtrl.getCurrencies()" required>
                                 <option value="">{{trackersCtrl.getLabel('app.trackers.ph.trackerCurrency')}}</option>
                             </select>
-                            <div ng-if="editTrackerForm.currency.$invalid && editTrackerForm.currency.$dirty"
-                                 ng-messages="editTrackerForm.displayName.$error">
-                                <span ng-if="editTrackerForm.currency.$error.required"
-                                      class="label label-warning" ng-message="required">
+                            <div data-ng-if="editTrackerForm.currency.$invalid && editTrackerForm.currency.$dirty"
+                                 data-ng-messages="editTrackerForm.displayName.$error">
+                                <span data-ng-if="editTrackerForm.currency.$error.required"
+                                      class="label label-warning" data-ng-message="required">
                                     {{trackersCtrl.getLabel('app.trackers.err.msg.selectTrackerCurrency')}}
                                 </span>
                             </div>
