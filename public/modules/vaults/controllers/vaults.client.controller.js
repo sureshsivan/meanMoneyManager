@@ -25,7 +25,7 @@ angular.module('vaults')
             };
             
             var pullVault = function () {
-                $scope.vault = Vaults.get($stateParams);
+                $scope.vault = TrackerVaults.get($stateParams);
             };
 
             var bootmodule = function(){
@@ -50,29 +50,32 @@ angular.module('vaults')
                     });
                     // Redirect after save
                     vault.$save($stateParams,function(response) {
-                        $state.go('listTrackerVaults', $stateParams);
+                        $state.go(VAULT_CONST.LIST_VAULTS_STATE_NAME, $stateParams);
                         AppMessenger.sendInfoMsg('Successfully Created New Vault');
                     }, function(errorResponse) {
                         $scope.error = errorResponse.data.message;
                     });
                 };
                 _this.editVault = function(vault) {
-                    $state.go('editVault', {vaultId: vault._id});
+                    $state.go('editVault', {
+                    	trackerId : $stateParams.trackerId,
+                    	vaultId: vault._id
+                    });
                 };
                 _this.updateVault = function(updatedVault){
                     var vault = updatedVault;
                     var trackerId = vault.tracker._id;
                     delete vault.tracker;
-                    vault.$update({
-                        vaultId: vault._id
-                    }, function() {
-                        $state.go('listTrackerVaults', {trackerId: trackerId});
+                    vault.$update($stateParams, function() {
+                    	$state.go(VAULT_CONST.LIST_VAULTS_STATE_NAME, $stateParams);
                         AppMessenger.sendInfoMsg('Successfully Updated the Vault');
                     }, function(errorResponse) {
                         $scope.error = errorResponse.data.message;
                     });
                 };
-
+                _this.cancelVaultEdit = function(){
+                	$state.go(VAULT_CONST.LIST_VAULTS_STATE_NAME, $stateParams);
+                };
                 _this.remove = function(vault) {
                     console.log(vault);
                     if ( vault ) {

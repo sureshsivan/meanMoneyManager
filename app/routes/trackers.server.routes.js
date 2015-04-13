@@ -9,14 +9,14 @@ module.exports = function(app) {
 	// Trackers Routes
 	app.route('/trackers')
 		.get(users.requiresLogin, trackers.findTrackerDetails);
-		//.get(users.requiresLogin, trackers.listByUserId)
-//		.post(users.requiresLogin, trackers.create);
 
 	app.route('/trackers/:trackerId')
-		.get(trackers.read)
+		.get(users.requiresLogin, trackers.read)
 		.put(users.requiresLogin, trackers.hasAuthorization, trackers.updateById)
 		.delete(users.requiresLogin, trackers.hasAuthorization, vaults.deleteByTrackerId, trackers.delete);
-
+	//	TODO - to check whether the tracker does not has any childs(vaults or income/expenses)
+	
+	
 	// Finish by binding the Tracker middleware
 	app.param('trackerId', trackers.trackerByID);
 };

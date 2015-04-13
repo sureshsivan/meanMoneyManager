@@ -3,6 +3,8 @@
   "app.vaults.lbl.noVaults" : "No Vaults found",
   "app.vaults.lbl.searchVaults" : "Search Vaults",
   "app.vaults.lbl.newVault" : "Create New Vault",
+  "app.vaults.lbl.deleteVault" : "Delete Vault",
+  "app.vaults.lbl.updateVault" : "Update Vault",
   "app.vaults.lbl.noVaultYet" : "No Vaults yet. Why don't you create one",
   "app.vaults.lbl.vault" : "Vault",
   "app.vaults.lbl.createdBy" : "Owner : ",
@@ -10,6 +12,7 @@
   "app.vaults.lbl.noOfRecords" : "No of income/Expense Items : ",
   "app.vaults.lbl.vaultName" : "Vault Name",
   "app.vaults.lbl.vaultDesc" : "Vault Description",  
+  "app.vaults.lbl.update" : "Update : ",
   
   "app.vaults.ph.vaultName" : "Type Vault Name",
   "app.vaults.ph.vaultDesc" : "Type Vault Description",

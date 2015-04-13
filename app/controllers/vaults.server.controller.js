@@ -14,7 +14,6 @@ var mongoose = require('mongoose'),
  * Create a Vault
  */
 exports.create = function(req, res) {
-
 	var vault = new Vault(req.body);
 	vault.user = req.user;
 
@@ -40,7 +39,7 @@ exports.read = function(req, res) {
  * Update a Vault
  */
 exports.update = function(req, res) {
-	var vault = req.vault ;
+	var vault = req.vault;
 	vault = _.extend(vault , req.body);
 
 	vault.save(function(err) {

@@ -1,19 +1,19 @@
-<section data-ng-controller="VaultsController as vaultCtrl" data-ng-init="vaultCtrl.findAll()">
+<section data-ng-controller="VaultsController as vaultsCtrl" data-ng-init="vaultsCtrl.findAll()">
     <div class="page-header">
-        <h1 data-ng-if="vaultCtrl.trackerVaults && vaultCtrl.trackerVaults.length > 0">
-        	{{vaultCtrl.getLabel('app.vaults.lbl.vaultsOf') + "\"" + vaultCtrl.trackerVaults[0].tracker.displayName + "\""}}
+        <h1 data-ng-if="vaultsCtrl.trackerVaults && vaultsCtrl.trackerVaults.length > 0">
+        	{{vaultsCtrl.getLabel('app.vaults.lbl.vaultsOf') + "\"" + vaultsCtrl.trackerVaults[0].tracker.displayName + "\""}}
         </h1>
-        <h1 data-ng-if="vaultCtrl.trackerVaults && vaultCtrl.trackerVaults.length && vaultCtrl.trackerVaults.length === 0">
-        	{{vaultCtrl.getLabel('app.vaults.lbl.noVaults')}}
+        <h1 data-ng-if="vaultsCtrl.trackerVaults && vaultsCtrl.trackerVaults.length && vaultsCtrl.trackerVaults.length === 0">
+        	{{vaultsCtrl.getLabel('app.vaults.lbl.noVaults')}}
         </h1>
     </div>
     <div class="row">
         <div class="col-xs-12">
             <div class="input-group">
-                <input type="text" data-ng-model="searchText" class="form-control" placeholder="{{vaultCtrl.getLabel('app.vaults.lbl.searchVaults')}}">
+                <input type="text" data-ng-model="searchText" class="form-control" placeholder="{{vaultsCtrl.getLabel('app.vaults.lbl.searchVaults')}}">
                 <span class="input-group-btn">
-		            <button type="button" class="pull-left btn btn-success text-center" data-ng-click="vaultCtrl.createVault()">
-		                <i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;{{vaultCtrl.getLabel('app.vaults.lbl.newVault')}}
+		            <button type="button" class="pull-left btn btn-success text-center" data-ng-click="vaultsCtrl.createVault()">
+		                <i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;{{vaultsCtrl.getLabel('app.vaults.lbl.newVault')}}
 		            </button>
                 </span>
             </div>
@@ -22,8 +22,8 @@
    	<br>
        <vaults-list></vaults-list>
     <div class="row">
-        <div class="alert alert-warning text-center" data-ng-hide="!vaultCtrl.trackerVaults.$resolved || vaultCtrl.trackerVaults.length">
-            <a href="/#!/trackervaults/create">{{vaultCtrl.getLabel('app.vaults.lbl.noVaultYet')}}</a>?
+        <div class="alert alert-warning text-center" data-ng-hide="!vaultsCtrl.trackerVaults.$resolved || vaultsCtrl.trackerVaults.length">
+            <a href="/#!/trackervaults/create">{{vaultsCtrl.getLabel('app.vaults.lbl.noVaultYet')}}</a>?
         </div>
     </div>
 </section>
