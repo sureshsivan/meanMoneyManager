@@ -8,6 +8,9 @@
                 <th>#</th>
                 <th><i class="fa fa-info-circle"></i></th>
                 <th>Name</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Vault</th>
                 <th>Description</th>
                 <th>Action</th>
             </tr>
@@ -18,60 +21,50 @@
                         <i class="fa" data-ng-class="claz"> </i>
                     </i>
                 </td>
-                <td>{{incexp.displayName}}</td>
-                <td>{{incexp.description}}</td>
+                <td>
+                	<span data-tooltip="{{incexp.displayName}}">
+                		{{incexp.displayName.length < 10 ? incexp.displayName : incexp.displayName.substr(0,10)+'...' }}
+                	</span>
+                </td>
+                <td>
+                	<span>
+                		{{incexp.evDate}}
+                	</span>
+                </td>
+                <td>
+                	<span>
+                		{{incexp.amount}}
+                	</span>
+                </td>
+                <td>
+                	<span>
+                		{{incexp.vault.displayName}}
+                	</span>
+                </td>
+                <td>
+					<span data-tooltip="{{incexp.description}}">
+                		{{incexp.description.length < 10 ? incexp.description : incexp.description.substr(0,10)+'...' }}
+                	</span>
+                </td>
                 <td>
                     <button class="btn btn-danger btn-xs" 
-                    		ng-click="incexpCtrl.remove(incexp)"
-                    		ng-disabled="! incexpCtrl.canDelete(incexp)">
+                    		data-ng-click="incexpCtrl.remove(incexp)"
+                    		data-ng-disabled="! incexpCtrl.canDelete(incexp)">
                         <i class="fa fa-trash"></i>
                     </button>
                     <button class="btn btn-warning btn-xs" 
-                    		ng-click="incexpCtrl.editIncexp(incexp)"
-                    		ng-disabled="! incexpCtrl.canEdit(incexp)">
+                    		data-ng-click="incexpCtrl.editIncexp(incexp)"
+                    		data-ng-disabled="! incexpCtrl.canEdit(incexp)">
                         <i class="fa fa-pencil"></i>
                     </button>
  					<button class="btn btn-info btn-xs" 
-                    		ng-click="! incexpCtrl.requestForEdit(incexp)"
-                    		ng-disabled="! incexpCtrl.canRequestEditAccess(incexp)">
+                    		data-ng-click="! incexpCtrl.requestForEdit(incexp)"
+                    		data-ng-disabled="! incexpCtrl.canRequestEditAccess(incexp)">
                         <i class="fa fa-question-circle"></i>
                     </button> 
                 </td>
             </tr>
         </table>
-
-		<!--<a ng-click="" class="list-group-item">-->
-			<!--<div class="row">-->
-				<!--<div class="col-xs-12">-->
-					<!--<strong><h4>-->
-						<!--IncExp : {{incexp.displayName}}-->
-					<!--</h4></strong>-->
-					<!--<small class="text-muted">-->
-						<!--<span data-ng-bind="incexp.description"></span>-->
-					<!--</small>-->
-					<!--<br/>-->
-                    <!--<small class="text-muted">-->
-                        <!--<strong>Created By : </strong><span data-ng-bind="incexp.owner.displayName"></span>-->
-                    <!--</small>-->
-					<!--<br/>-->
-					<!--<small class="list-group-item-text text-muted">-->
-						<!--<strong>Created On : </strong><span data-ng-bind="incexp.created"></span>-->
-						<!--<span class="pull-right pad-left">-->
-							<!--<button class="btn btn-danger btn-sm" ng-click="incexpCtrl.remove(incexp)"-->
-								<!--data-ng-class="incexp.owner._id == incexpCtrl.authentication.user._id ? '' : 'disabled'">-->
-								<!--<i class="glyphicon glyphicon-trash"></i>-->
-							<!--</button>-->
-						<!--</span>-->
-						<!--<span class="pull-right pad-left">-->
-							<!--<button class="btn btn-warning btn-sm" ng-click="incexpCtrl.modalUpdate('lg', incexp)"-->
-								<!--data-ng-class="incexp.owner._id == incexpCtrl.authentication.user._id ? '' : 'disabled'">-->
-								<!--<i class="glyphicon glyphicon-edit"></i>-->
-							<!--</button>-->
-						<!--</span>-->
-					<!--</small>-->
-				<!--</div>-->
-			<!--</div>-->
-		<!--</a>-->
 	</div>
 </div>
 <div class="alert alert-warning text-center"
