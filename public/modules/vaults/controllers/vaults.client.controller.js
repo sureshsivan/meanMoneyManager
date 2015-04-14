@@ -6,9 +6,9 @@ angular.module('vaults')
 
 
     .controller('VaultsController', ['$scope', '$stateParams', 'Authentication', '$state', 'VAULT_CONST',
-                'Vaults', 'TrackerVaults', '$modal', '$log', 'moment', 'AppStatics', 'Notify', 'AppMessenger', 'VaultLocaleMessages',
+                'TrackerVaults', 'moment', 'AppStatics', 'AppMessenger', 'VaultLocaleMessages',
         function($scope, $stateParams, Authentication, $state, VAULT_CONST, 
-                    Vaults, TrackerVaults, $modal, $log, moment, AppStatics, Notify, AppMessenger, VaultLocaleMessages) {
+                    TrackerVaults, moment, AppStatics, AppMessenger, VaultLocaleMessages) {
             var _this = this;
             _this.authentication = Authentication;
             _this.appStatics = AppStatics;
