@@ -43,27 +43,29 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     if(incexp.isPending && incexp.pendingWith._id === Authentication.user._id){
                         incexp.infoAlerts.push({
                             'clazz': 'fa-warning danger-icon',
-                            'tooltip': 'Requires action from me...'
+                            'tooltip': _this.getLabel('app.incexps.tt.requireActionFrmMe')
                         });
                     }
                     if(incexp.isPending && incexp.pendingWith._id !== Authentication.user._id){
                         incexp.infoAlerts.push({
-                            'clazz': 'fa-warning warn-icon',
-                            'tooltip': 'Requires action from ' + incexp.pendingWith.displayName
+                            'clazz': 'fa-exclamation-circle warn-icon',
+                            'tooltip': _this.getLabel('app.incexps.tt.requireActionFrm') + incexp.pendingWith.displayName
                         });
                     }
                     if(incexp.infoAlerts.length === 0){
                         if(incexp.owner._id === Authentication.user._id){
                             incexp.infoAlerts.push({
                                 'clazz': 'fa-user info-icon',
-                                'tooltip': 'Create by Me...'
+                                'tooltip': _this.getLabel('app.incexps.tt.createdByMe')
                             });
                         }
                         incexp.infoAlerts.push({
                             'clazz': 'fa-check-circle info-icon',
-                            'tooltip': 'All OK...'
+                            'tooltip': _this.getLabel('app.incexps.tt.allOk')
                         });
                     }
+                    incexp.collapsed = true;
+                    incexp.currency = AppStatics.getCurrencyObj(incexp.currency);
                     console.dir(incexp);
                 }
             });
@@ -94,6 +96,20 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 $event.preventDefault();
                 $event.stopPropagation();
                 $scope.datePickerOpened = true;
+            };
+            _this.expandRow = function(incexpArg){
+                if(!incexpArg.collapsed){
+                    incexpArg.collapsed = true;
+                    return;
+                }
+                for(var i=0; i<_this.trackerIncexps.length; i++){
+                    var incexp = _this.trackerIncexps[i];
+                    if(incexp._id === incexpArg._id){
+                        incexp.collapsed = false;
+                    } else {
+                        incexp.collapsed = true;
+                    }
+                }
             };
             _this.canEdit = function(incexp){
             	return incexp && incexp.owner && ((incexp.owner._id === Authentication.user._id) || 

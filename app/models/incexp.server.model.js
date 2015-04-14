@@ -57,6 +57,13 @@ var IncexpSchema = new Schema({
 		type: Schema.ObjectId,
 		ref: 'User'
 	},
+    //pendingSince: {
+    //    type: Date
+    //},
+    //requestedBy: {
+    //    type: Schema.ObjectId,
+    //    ref: 'User'
+    //},
 	created: {
 		type: Date,
 		default: Date.now

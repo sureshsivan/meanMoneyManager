@@ -3,18 +3,19 @@
 
         <br/><br/>
 
-        <table class="table table-striped table-hover1 table-condensed">
+        <table class="table table-striped table-hover table-condensed incexp-row-item">
             <tr>
-                <th>#</th>
-                <th><i class="fa fa-warning" tooltip="Pending Actions"></i></th>
-                <th>Date</th>
-                <th>Name</th>
-                <th>Amount</th>
-                <th>Vault</th>
-                <th>Description</th>
-                <th>Action</th>
+                <th>{{incexpsCtrl.labelsObj['app.incexps.lbl.slNo']}}</th>
+                <th><i class="fa fa-cogs" tooltip="{{incexpsCtrl.labelsObj['app.incexps.tt.incexpInfo']}}"></i></th>
+                <th>{{incexpsCtrl.labelsObj['app.incexps.lbl.date']}}</th>
+                <th>{{incexpsCtrl.labelsObj['app.incexps.lbl.name']}}</th>
+                <th>{{incexpsCtrl.labelsObj['app.incexps.lbl.amount']}}</th>
+                <th>{{incexpsCtrl.labelsObj['app.incexps.lbl.vault']}}</th>
+                <th>{{incexpsCtrl.labelsObj['app.incexps.lbl.desc']}}</th>
+                <th>{{incexpsCtrl.labelsObj['app.incexps.lbl.action']}}</th>
             </tr>
-            <tr data-ng-repeat="incexp in incexpsCtrl.trackerIncexps | filter:searchText"
+            <tr data-ng-repeat-start="incexp in incexpsCtrl.trackerIncexps | filter:searchText"
+                data-ng-click="incexpsCtrl.expandRow(incexp)"
                     data-ng-class="(incexp.isPending ? (incexp.pendingWith._id === incexpsCtrl.authentication.user._id ? 'danger' : 'warning') : '')">
                 <td scope="row">{{$index+1}}</td>
                 <td>
@@ -24,26 +25,26 @@
                 </td>
                 <td>
                 	<span>
-                		{{incexp.evDate}}
+                        {{incexp.evDate | amDateFormat:'MMMM Do YYYY'}}
                 	</span>
                 </td>
                 <td>
-                	<span data-tooltip="{{incexp.displayName}}">
+                	<span>
                 		{{incexp.displayName.length < 10 ? incexp.displayName : incexp.displayName.substr(0,10)+'...' }}
                 	</span>
                 </td>
                 <td>
                 	<span>
-                		<span class="fa" data-ng-class="incexpsCtrl.appStatics.getCurrencyObj(incexp.tracker.currency).faIconCls"> {{incexp.amount}}</span>
+                		<span class="fa" data-ng-class="incexp.tracker.currency.faIconCls"> {{incexp.amount}}</span>
                 	</span>
                 </td>
                 <td>
                 	<span>
-                		{{incexp.vault.displayName}}
+                        {{incexp.vault.displayName.length < 10 ? incexp.vault.displayName : incexp.vault.displayName.substr(0,10)+'...' }}
                 	</span>
                 </td>
                 <td>
-					<span data-tooltip="{{incexp.description}}">
+					<span>
                 		{{incexp.description.length < 10 ? incexp.description : incexp.description.substr(0,10)+'...' }}
                 	</span>
                 </td>
@@ -65,11 +66,32 @@
                     </button> 
                 </td>
             </tr>
+            <tr data-ng-class="(incexp.isPending ? (incexp.pendingWith._id === incexpsCtrl.authentication.user._id ? 'danger' : 'warning') : '')"
+                data-ng-repeat-end style="padding: 0 !important; border: 0 !important">
+                <td colspan="8" style="padding: 0 !important;">
+                    <div collapse="incexp.collapsed" class="" style="padding: 10px">
+                        Name : {{incexp.displayName}}
+                        <br/>
+                        Date : <span data-am-time-ago="incexp.evDate"></span>    (<span>{{incexp.evDate | amDateFormat:'dddd, MMMM Do YYYY'}}</span>)
+                        <br/>
+                        Description : {{incexp.description}}
+                        <br/>
+                        Amount : <span class="fa" data-ng-class="incexpsCtrl.appStatics.getCurrencyObj(incexp.tracker.currency).faIconCls"> {{incexp.amount}}</span>
+                        <br/>
+                        Vault : {{incexp.vault.displayName}}
+                        <br/>
+                        Tags : {{incexp.vault.displayName}}
+                        <br/>
+                        Approval Request Type : {{incexp.vault.displayName}}
+                        <br/>
+                        Approval Requested to : {{incexp.vault.displayName}}
+                        <br/>
+                        Approval Requested By : {{incexp.vault.displayName}}
+                        <br/>
+                        Approval Request Msg : {{incexp.vault.displayName}}
+                    </div>
+                </td>
+            </tr>
         </table>
 	</div>
-</div>
-<div class="alert alert-warning text-center"
-	data-ng-hide="!trackerIncExps.$resolved || trackerIncExps.length">
-	No incexps yet, why don't you <a href="/#!/trackers/create">create
-		one</a>?
 </div>

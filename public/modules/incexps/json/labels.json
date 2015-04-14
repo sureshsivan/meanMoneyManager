@@ -10,7 +10,7 @@
     "app.incexps.lbl.slNo" : "#",
     "app.incexps.lbl.name" : "Name",
     "app.incexps.lbl.date" : "Date",
-    "app.incexps.lbl.name" : "Amount",
+    "app.incexps.lbl.amount" : "Amount",
     "app.incexps.lbl.vault" : "Vault",
     "app.incexps.lbl.desc" : "Description",
     "app.incexps.lbl.action" : "Action",
@@ -20,27 +20,35 @@
 	"app.incexps.lbl.name" : "Display Name",
 	"app.incexps.lbl.description" : "Description",
 	"app.incexps.lbl.type" : "Type (Income/Expense)",
-	"app.incexps.lbl.date" : "Income/Expense Date",
+	"app.incexps.lbl.date" : "Date",
 	"app.incexps.lbl.vault" : "Vault",
 	"app.incexps.lbl.amount" : "Amount",
 	"app.incexps.lbl.tags" : "Tags - add many if necessary",
 	"app.incexps.lbl.reqVerification" : "Does this Entry Require Verification..?",
-	
-	"app.incexps.ph.name" : "Type Display Name",
-	"app.incexps.ph.description" : "Type Description",
-	"app.incexps.ph.type" : "-- Choose Type (Income/Expense) --",
-	"app.incexps.ph.date" : "Choose Income/Expense Date",
-	"app.incexps.ph.vault" : "-- Choose Vault --",
-	"app.incexps.ph.amount" : "Type Amount",
-	"app.incexps.ph.tags" : "Choose Tags from list",
-	"app.incexps.ph.userSelection" : "Type to See users",
-	"app.incexps.ph.appMsg" : "Type your Message here...",
-	
-	
+
 	"app.incexps.lbl.deleteIncexp" : "Delete Income or Expense",
 	"app.incexps.lbl.createIncexp" : "Create Income or Expense",
 	"app.incexps.lbl.updateIncexp" : "Update Income or Expense",
 	"app.incexps.lbl.approveIncexp" : "Approve Income or Expense",
-	"app.incexps.lbl.reqUpdateAccess" : "Request Access to Update Income/Expense"	
-	
+	"app.incexps.lbl.reqUpdateAccess" : "Request Access to Update Income/Expense",
+
+
+    "app.incexps.ph.name" : "Type Display Name",
+    "app.incexps.ph.description" : "Type Description",
+    "app.incexps.ph.type" : "-- Choose Type (Income/Expense) --",
+    "app.incexps.ph.date" : "Choose Income/Expense Date",
+    "app.incexps.ph.vault" : "-- Choose Vault --",
+    "app.incexps.ph.amount" : "Type Amount",
+    "app.incexps.ph.tags" : "Choose Tags from list",
+    "app.incexps.ph.userSelection" : "Type to See users",
+    "app.incexps.ph.appMsg" : "Type your Message here...",
+
+
+    "app.incexps.tt.requireActionFrm" : "Requires action from",
+    "app.incexps.tt.requireActionFrmMe" : "Requires action from Me",
+    "app.incexps.tt.createdByMe" : "Created By Me",
+    "app.incexps.tt.allOk" : "All OK",
+    "app.incexps.tt.incexpInfo" : "Details"
+
 }
+
