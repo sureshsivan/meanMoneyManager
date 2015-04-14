@@ -22,15 +22,51 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
             return _this.vaultStatics.queryVaults($stateParams.trackerId).then(function(response){
                 _this.vaultsResult = [];
                 response.data.map(function(item){
+                    _this.loadInfoAlerts(item);
                     _this.vaultsResult.push(item);
                 });
             });
         };
         
         var pullIncexps = function () {
-        	_this.trackerIncexps = TrackerIncexps.listTrackerIncexps($stateParams);
+        	return _this.trackerIncexps = TrackerIncexps.listTrackerIncexps($stateParams);
         };
-        
+
+        var loadIncexpAlerts = function(response){
+            response.$promise.then(function(incexps){
+                for(var i=0; i<incexps.length; i++){
+                    console.log(typeof incexps);
+                    var incexp = incexps[i];
+                    incexp.infoAlerts = [];
+                    if(incexp.isPending && incexp.pendingWith._id === Authentication.user._id){
+                        incexp.infoAlerts.push({
+                            'clazz': 'fa-warning danger-icon',
+                            'tooltip': 'Requires action from me...'
+                        });
+                    }
+                    if(incexp.isPending && incexp.pendingWith._id !== Authentication.user._id){
+                        incexp.infoAlerts.push({
+                            'clazz': 'fa-warning warn-icon',
+                            'tooltip': 'Requires action from ' + incexp.pendingWith.displayName
+                        });
+                    }
+                    if(incexp.infoAlerts.length === 0){
+                        if(incexp.owner._id === Authentication.user._id){
+                            incexp.infoAlerts.push({
+                                'clazz': 'fa-user info-icon',
+                                'tooltip': 'Create by Me...'
+                            });
+                        }
+                        incexp.infoAlerts.push({
+                            'clazz': 'fa-check-circle info-icon',
+                            'tooltip': 'All OK...'
+                        });
+                    }
+                    console.dir(incexp);
+                }
+            });
+        };
+
         var bootmodule = function(){
             _this.getLabel = function(key){
             	return _this.labelsObj[key];
@@ -52,35 +88,10 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     _this.pendingWith = null;
                 }
             };
-            _this.vaultStatics.queryVaults($stateParams.trackerId).then(function(response){
-                _this.vaultsResult = [];
-                response.data.map(function(item){
-                    _this.vaultsResult.push(item);
-                });
-            });
             _this.openDatePicker = function($event) {
                 $event.preventDefault();
                 $event.stopPropagation();
                 $scope.datePickerOpened = true;
-            };
-            _this.getInfoIconClasses = function(incExp, idx){
-                var classes = [];
-                //var obj1 = {
-                //    'clazz': 'fa-warning',
-                //    'tooltip': 'Warning Tooltip'
-                //};
-                //var obj2 = {
-                //    'clazz': 'fa-user',
-                //    'tooltip': 'User Tooltip'
-                //};
-                //
-                //classes.push(obj1);
-                //classes.push(obj2);
-
-
-                classes.push('fa-warning');
-                classes.push('fa-bell');
-                return classes;
             };
             _this.canEdit = function(incexp){
             	return incexp && incexp.owner && ((incexp.owner._id === Authentication.user._id) || 
@@ -179,7 +190,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         };
         
         if($state.current.name === 'listTrackerIncexps'){
-        	pullMsgs().then(pullIncexps).then(bootmodule);
+        	pullMsgs().then(pullIncexps).then(loadIncexpAlerts).then(bootmodule);
         }
         
 //        loadmsgs().then(loadvaults).then(bootmodule);

@@ -129,7 +129,11 @@ exports.listByTrackerId = function(req, res) {
 		'path' : 'pendingWith',
 		'select' : 'displayName _id'
 	})
-	.sort('-created').exec(function(err, incexps) {
+    .populate({
+        'path' : 'vault',
+        'select' : 'displayName _id'
+    })
+	.sort('-evDate').exec(function(err, incexps) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)

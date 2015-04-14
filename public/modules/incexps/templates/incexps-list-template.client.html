@@ -6,7 +6,7 @@
         <table class="table table-striped table-hover1 table-condensed">
             <tr>
                 <th>#</th>
-                <th><i class="fa fa-info-circle"></i></th>
+                <th><i class="fa fa-warning" tooltip="Pending Actions"></i></th>
                 <th>Name</th>
                 <th>Date</th>
                 <th>Amount</th>
@@ -17,8 +17,8 @@
             <tr data-ng-repeat="incexp in incexpCtrl.trackerIncexps | filter:searchText">
                 <td scope="row">{{$index+1}}</td>
                 <td>
-                    <span class="fa info-icon" data-ng-class="cl" tooltip="{{cl}}"
-                          data-ng-repeat="cl in incexpCtrl.getInfoIconClasses(incexp, $index)" >
+                    <span class="fa" data-ng-class="item.clazz" tooltip="{{item.tooltip}}"
+                          data-ng-repeat="item in incexp.infoAlerts" >
                     </span>
                 </td>
                 <td>
