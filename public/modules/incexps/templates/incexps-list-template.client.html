@@ -14,7 +14,8 @@
                 <th>Description</th>
                 <th>Action</th>
             </tr>
-            <tr data-ng-repeat="incexp in incexpCtrl.trackerIncexps | filter:searchText">
+            <tr data-ng-repeat="incexp in incexpCtrl.trackerIncexps | filter:searchText"
+                    data-ng-class="(incexp.isPending ? (incexp.pendingWith._id === incexpCtrl.authentication.user._id ? 'danger' : 'warning') : '')">
                 <td scope="row">{{$index+1}}</td>
                 <td>
                     <span class="fa" data-ng-class="item.clazz" tooltip="{{item.tooltip}}"
@@ -33,7 +34,7 @@
                 </td>
                 <td>
                 	<span>
-                		{{incexp.amount}}
+                		<span class="fa" data-ng-class="incexpCtrl.appStatics.getCurrencyObj(incexp.tracker.currency).faIconCls"> {{incexp.amount}}</span>
                 	</span>
                 </td>
                 <td>

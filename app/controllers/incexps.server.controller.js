@@ -123,7 +123,7 @@ exports.listByTrackerId = function(req, res) {
 	})
     .populate({
         'path' : 'tracker',
-        'select' : 'displayName _id'
+        'select' : 'displayName currency _id'
     })
 	.populate({
 		'path' : 'pendingWith',
