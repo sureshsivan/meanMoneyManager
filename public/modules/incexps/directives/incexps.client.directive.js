@@ -2,21 +2,18 @@
 
 angular.module('incexps')
 
-	.directive('incexpsList', ['Incexps', 'TrackerIncexps', 'Notify', 'IncexpStatics', function(Incexps, TrackerIncexps, Notify, IncexpStatics) {
+	.directive('incexpsList', ['INCEXP_CONST', function(INCEXP_CONST) {
 	    return {
 	        restrict: 'E',
 	        transclude: true,
-	        templateUrl: IncexpStatics.getListIncexpsTemplatePath(),
+	        templateUrl: INCEXP_CONST.INCEXP_LIST_TEMPLATE_URL,
 	        link: function(scope, element, attrs) {
-	            Notify.getMsg('RefreshIncexps', function(event, data) {
-                    scope.incexpCtrl.trackerIncexps = TrackerIncexps.listTrackerIncexps(data);
-	            });
 	        }
 	    };
 	}])
 
-    .directive('selectUsers', ['Incexps', 'TrackerIncexps', 'AppStatics', 'Authentication', 'UserStatics', 
-                               function(Incexps, TrackerIncexps, AppStatics, Authentication, UserStatics) {
+    .directive('selectUsers', ['Authentication', 'UserStatics',
+                               function(Authentication, UserStatics) {
         return {
             restrict: 'E',
             transclude: true,

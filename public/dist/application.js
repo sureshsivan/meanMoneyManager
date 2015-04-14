@@ -636,7 +636,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
 	    return {
 	        restrict: 'E',
 	        transclude: true,
-	        templateUrl: 'modules/incexps/views/incexps-list-template.html',
+	        templateUrl: 'modules/incexps/templates/incexps-list-template.html',
 	        link: function(scope, element, attrs) {
 	            //when a new customer is added, update the customer list
 	            Notify.getMsg('RefreshIncexps', function(event, data) {

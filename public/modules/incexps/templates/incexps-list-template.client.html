@@ -7,20 +7,25 @@
             <tr>
                 <th>#</th>
                 <th><i class="fa fa-warning" tooltip="Pending Actions"></i></th>
-                <th>Name</th>
                 <th>Date</th>
+                <th>Name</th>
                 <th>Amount</th>
                 <th>Vault</th>
                 <th>Description</th>
                 <th>Action</th>
             </tr>
-            <tr data-ng-repeat="incexp in incexpCtrl.trackerIncexps | filter:searchText"
-                    data-ng-class="(incexp.isPending ? (incexp.pendingWith._id === incexpCtrl.authentication.user._id ? 'danger' : 'warning') : '')">
+            <tr data-ng-repeat="incexp in incexpsCtrl.trackerIncexps | filter:searchText"
+                    data-ng-class="(incexp.isPending ? (incexp.pendingWith._id === incexpsCtrl.authentication.user._id ? 'danger' : 'warning') : '')">
                 <td scope="row">{{$index+1}}</td>
                 <td>
                     <span class="fa" data-ng-class="item.clazz" tooltip="{{item.tooltip}}"
                           data-ng-repeat="item in incexp.infoAlerts" >
                     </span>
+                </td>
+                <td>
+                	<span>
+                		{{incexp.evDate}}
+                	</span>
                 </td>
                 <td>
                 	<span data-tooltip="{{incexp.displayName}}">
@@ -29,12 +34,7 @@
                 </td>
                 <td>
                 	<span>
-                		{{incexp.evDate}}
-                	</span>
-                </td>
-                <td>
-                	<span>
-                		<span class="fa" data-ng-class="incexpCtrl.appStatics.getCurrencyObj(incexp.tracker.currency).faIconCls"> {{incexp.amount}}</span>
+                		<span class="fa" data-ng-class="incexpsCtrl.appStatics.getCurrencyObj(incexp.tracker.currency).faIconCls"> {{incexp.amount}}</span>
                 	</span>
                 </td>
                 <td>
@@ -49,18 +49,18 @@
                 </td>
                 <td>
                     <button class="btn btn-danger btn-xs" 
-                    		data-ng-click="incexpCtrl.remove(incexp)"
-                    		data-ng-disabled="! incexpCtrl.canDelete(incexp)">
+                    		data-ng-click="incexpsCtrl.remove(incexp)"
+                    		data-ng-disabled="! incexpsCtrl.canDelete(incexp)">
                         <i class="fa fa-trash"></i>
                     </button>
                     <button class="btn btn-warning btn-xs" 
-                    		data-ng-click="incexpCtrl.editIncexp(incexp)"
-                    		data-ng-disabled="! incexpCtrl.canEdit(incexp)">
+                    		data-ng-click="incexpsCtrl.editIncexp(incexp)"
+                    		data-ng-disabled="! incexpsCtrl.canEdit(incexp)">
                         <i class="fa fa-pencil"></i>
                     </button>
  					<button class="btn btn-info btn-xs" 
-                    		data-ng-click="! incexpCtrl.requestForEdit(incexp)"
-                    		data-ng-disabled="! incexpCtrl.canRequestEditAccess(incexp)">
+                    		data-ng-click="! incexpsCtrl.requestForEdit(incexp)"
+                    		data-ng-disabled="! incexpsCtrl.canRequestEditAccess(incexp)">
                         <i class="fa fa-question-circle"></i>
                     </button> 
                 </td>

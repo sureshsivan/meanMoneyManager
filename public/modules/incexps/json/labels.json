@@ -1,5 +1,21 @@
 {
 	"app.incexps.lbl.incexp" : "Income or Expense",
+    "app.incexps.lbl.incexpOf": "Incom and Expenses of ",
+    "app.incexps.lbl.noIncexps": "No Income or Expenses record found",
+    "app.vaults.lbl.noIncecpYet": "Nn Income or Expenses Yet. Why don't you create one..?",
+    "app.incexps.lbl.searchIncexps": "Search Income or Expenses",
+    "app.vaults.lbl.listAllRecords": "All Records",
+    "app.vaults.lbl.listCurrentMonthRecords": "Current Month Records",
+
+    "app.incexps.lbl.slNo" : "#",
+    "app.incexps.lbl.name" : "Name",
+    "app.incexps.lbl.date" : "Date",
+    "app.incexps.lbl.name" : "Amount",
+    "app.incexps.lbl.vault" : "Vault",
+    "app.incexps.lbl.desc" : "Description",
+    "app.incexps.lbl.action" : "Action",
+
+
 	"app.incexps.lbl.newIncexp" : "New Income or Expense",
 	"app.incexps.lbl.name" : "Display Name",
 	"app.incexps.lbl.description" : "Description",

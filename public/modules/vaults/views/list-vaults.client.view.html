@@ -1,4 +1,4 @@
-<section data-ng-controller="VaultsController as vaultsCtrl" data-ng-init="vaultsCtrl.findAll()">
+<section data-ng-controller="VaultsController as vaultsCtrl">
     <div class="page-header">
         <h1 data-ng-if="vaultsCtrl.trackerVaults && vaultsCtrl.trackerVaults.length > 0">
         	{{vaultsCtrl.getLabel('app.vaults.lbl.vaultsOf') + "\"" + vaultsCtrl.trackerVaults[0].tracker.displayName + "\""}}

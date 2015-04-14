@@ -1,25 +1,21 @@
 'use strict';
 
 //Setting up route
-angular.module('incexps').config(['$stateProvider',
-	function($stateProvider) {
+angular.module('incexps').config(['$stateProvider', 'INCEXP_CONST',
+	function($stateProvider, INCEXP_CONST) {
 		// Incexps state routing
 		$stateProvider.
-		state('listTrackerIncexps', {
-			url: '/trackerincexps/:trackerId',
-			templateUrl: 'modules/incexps/views/list-incexps.client.view.html'
+		state(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, {
+			url: INCEXP_CONST.LIST_INCEXPS_STATE_URL,
+			templateUrl: INCEXP_CONST.LIST_INCEXPS_STATE_TEMPLATE_URL
 		}).
-		state('createIncexp', {
-			url: '/trackerincexps/:trackerId/create',
-			templateUrl: 'modules/incexps/views/create-incexp.client.view.html'
-		//}).
-//		state('viewIncexp', {
-//			url: '/incexps/:incexpId',
-//			templateUrl: 'modules/incexps/views/view-incexp.client.view.html'
+		state(INCEXP_CONST.CREATE_INCEXP_STATE_NAME, {
+			url: INCEXP_CONST.CREATE_INCEXP_STATE_URL,
+			templateUrl: INCEXP_CONST.CREATE_INCEXP_STATE_TEMPLATE_URL
 		}).
-		state('editIncexp', {
-			url: '/trackerincexps/:trackerId/:incexpId/edit',
-			templateUrl: 'modules/incexps/views/edit-incexp.client.view.html'
+		state(INCEXP_CONST.EDIT_INCEXP_STATE_NAME, {
+			url: INCEXP_CONST.EDIT_INCEXP_STATE_URL,
+			templateUrl: INCEXP_CONST.EDIT_INCEXP_STATE_TEMPLATE_URL
 		});
 	}
 ]);

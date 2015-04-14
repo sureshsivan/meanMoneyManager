@@ -2,14 +2,16 @@
 
 // Incexps controller
 angular.module('incexps').controller('IncexpsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Incexps',
-        'TrackerIncexps', '$modal', '$log', 'moment', 'AppStatics', 'Notify', 'VaultStatics', '$state', 'IncexpStatics', 'AppMessenger', 'IncexpLocaleMessages', '$q',
+        'TrackerIncexps', '$modal', '$log', 'moment', 'AppStatics', 'Notify', 'VaultStatics', '$state', 'IncexpStatics', 'AppMessenger', 'IncexpLocaleMessages', '$q', 'INCEXP_CONST',
 	function($scope, $stateParams, $location, Authentication, Incexps,
-             TrackerIncexps, $modal, $log, moment, AppStatics, Notify, VaultStatics, $state, IncexpStatics, AppMessenger, IncexpLocaleMessages, $q) {
+             TrackerIncexps, $modal, $log, moment, AppStatics, Notify, VaultStatics, $state, IncexpStatics, AppMessenger, IncexpLocaleMessages, $q, INCEXP_CONST) {
 		var _this = this;
         _this.authentication = Authentication;
 		_this.vaultStatics = VaultStatics;
         _this.appStatics = AppStatics;
         _this.incexpStatics = IncexpStatics;
+        $scope.$stateParams = $stateParams;
+
         //	TODO - bootstrapping the module only if the dependencies are loaded 
         //	Not sure whether this is correct way - but it works.
 
@@ -126,9 +128,9 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 $scope.incexp = TrackerIncexps.get($stateParams);
             };
 
-            _this.createIncExp = function(){
+            _this.createIncexp = function(){
                 _this.incexp = {};
-                $state.go('createIncexp', $stateParams);
+                $state.go(INCEXP_CONST.CREATE_INCEXP_STATE_NAME, $stateParams);
             };
             _this.editIncexp = function(updatedIncexp){
                 $state.go('editIncexp', {

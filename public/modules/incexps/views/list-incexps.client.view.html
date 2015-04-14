@@ -1,28 +1,40 @@
-<section data-ng-controller="IncexpsController as incexpCtrl">
+<section data-ng-controller="IncexpsController as incexpsCtrl">
     <div class="page-header">
-        <h1>Incexps{{ (incexpCtrl.trackerIncexps && incexpCtrl.trackerIncexps.length > 0) ? ' of ' + incexpCtrl.trackerIncexps[0].tracker.displayName : ''}}</h1>
+        <h1 data-ng-if="incexpsCtrl.trackerIncexps && incexpsCtrl.trackerIncexps.length > 0">
+            {{incexpsCtrl.getLabel('app.incexps.lbl.incexpOf') + "\"" + incexpsCtrl.trackerIncexps[0].tracker.displayName + "\""}}
+        </h1>
+        <h1 data-ng-if="incexpsCtrl.trackerIncexps.length === 0">
+            {{incexpsCtrl.getLabel('app.incexps.lbl.noIncexps')}}
+        </h1>
     </div>
     <div class="row">
-        <div class="col-xs-12 col-sm-9">
-            <div class="input-group input-group">
-                <input type="text" ng-model="searchText" class="form-control" placeholder="Search Incexps...">
+        <div class="col-xs-12">
+            <div class="input-group">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default dropdown-toggle" disabled="true"
+                            data-toggle="dropdown" aria-expanded="false">{{incexpsCtrl.getLabel('app.vaults.lbl.listAllRecords')}} <span class="caret"></span></button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                    </ul>
+                </div>
+                <input type="text" data-ng-model="searchText" class="form-control" placeholder="{{incexpsCtrl.getLabel('app.incexps.lbl.searchIncexps')}}" novalidate="true">
                 <span class="input-group-btn">
-                    <button class="btn btn-default" type="button">Go!</button>
+		            <button type="button" class="pull-left btn btn-success text-center" data-ng-click="incexpsCtrl.createIncexp()">
+                        <i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;{{incexpsCtrl.getLabel('app.incexps.lbl.newIncexp')}}
+                    </button>
                 </span>
             </div>
         </div>
-        <div class="col-xs-12 col-sm-3 text-center pull-right">
-            <button type="button" class="btn btn-success text-center" ng-click="incexpCtrl.createIncExp()">
-                <i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;New Income/Expense
-            </button>
-        </div>
     </div>
+    <br/>
+    <incexps-list data-ng-if="incexpsCtrl.trackerIncexps && incexpsCtrl.trackerIncexps.length > 0"></incexps-list>
     <div class="row">
-        <incexps-list></incexps-list>
-    </div>
-    <div class="row">
-        <div class="alert alert-warning text-center" data-ng-hide="!temps.$resolved || temps.length">
-            No Temps yet, why don't you <a href="/#!/trackervaults/create">create one</a>?
+        <div class="alert alert-warning text-center" data-ng-hide="!incexpsCtrl.trackerIncexps.$resolved || incexpsCtrl.trackerIncexps.length">
+            <a data-ui-sref="createIncexp($stateParams)">{{incexpsCtrl.getLabel('app.vaults.lbl.noIncecpYet')}}</a>?
         </div>
     </div>
 </section>

@@ -9,8 +9,13 @@
 	"desc": "Any Items spent for Babycare",
 	"color": "#F4F"
 }, {
-	"label": "Necessary",
+	"label": "Grocery",
 	"id": "NEC",
 	"desc": "Any Items spent Home Making",
 	"color": "#7AA"
+}, {
+  "label": "Other",
+  "id": "OTH",
+  "desc": "Any Items spent Home Making",
+  "color": "#7AA"
 }]
