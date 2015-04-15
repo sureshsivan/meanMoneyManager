@@ -1,79 +1,73 @@
 <section data-ng-controller="IncexpsController as incexpsCtrl">
     <div class="modal-header">
-        <h3 class="modal-title">New {{incexpsCtrl.getLabel('app.incexps.lbl.incexp')}}</h3>
+        <h3 class="modal-title">New {{incexpsCtrl.labelsObj['app.incexps.lbl.incexp']}}</h3>
     </div>
 
 
     <div class="modal-body">
-        <form name="editIncexpForm">
+        <form name="createIncexpForm">
             <fieldset>
                 <div class="row">
-                    <div class="form-group-xs">
-                        <div data-ng-show="error" class="text-center text-danger">
-                            <div class="alert alert-danger" role="alert">
-                                <strong data-ng-bind="error"></strong>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-9">
+                    <div class="col-sm-12">
                         <div class="form-group-sm">
-                            <label class="control-label" for="displayName"> {{incexpsCtrl.getLabel('app.incexps.lbl.name')}}</label>
+                            <label class="control-label" for="displayName"> {{incexpsCtrl.labelsObj['app.incexps.lbl.name']}}</label>
                             <div class="controls">
                                 <input type="text" data-ng-model="incexpsCtrl.displayName" id="displayName" 
-                                	placeholder="{{incexpsCtrl.getLabel('app.incexps.ph.name')}}" class="form-control" required="true">
+                                	placeholder="{{incexpsCtrl.labelsObj['app.incexps.ph.name']}}" class="form-control" required>
                             </div>
                         </div>
                         <div class="form-group-sm">
-                            <label class="control-label" for="description"> {{incexpsCtrl.getLabel('app.incexps.lbl.description')}}</label>
+                            <label class="control-label" for="description"> {{incexpsCtrl.labelsObj['app.incexps.lbl.description']}}</label>
                             <div class="controls">
                                 <input type="text" data-ng-model="incexpsCtrl.description" id="description" 
-                                		placeholder="{{incexpsCtrl.getLabel('app.incexps.ph.description')}}" class="form-control" required>
+                                		placeholder="{{incexpsCtrl.labelsObj['app.incexps.ph.description']}}" class="form-control" required>
                             </div>
                         </div>
                         <div class="form-group-sm">
-                            <label class="control-label" for="type"> {{incexpsCtrl.getLabel('app.incexps.lbl.type')}}</label>
+                            <label class="control-label" for="type"> {{incexpsCtrl.labelsObj['app.incexps.lbl.type']}}</label>
                             <div class="controls">
                                 <select data-ng-model="incexpsCtrl.type" id="type" class="form-control"
-                                        ng-options="incexpType.id as incexpType.label for incexpType in incexpsCtrl.getIncexpType()">
-                                    <option value="" disabled>{{incexpsCtrl.getLabel('app.incexps.ph.type')}}</option>
+                                        data-ng-options="incexpType.id as incexpType.label for incexpType in incexpsCtrl.getIncexpType()">
+                                    <option value="" disabled>{{incexpsCtrl.labelsObj['app.incexps.ph.type']}}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group-sm">
-                            <label class="control-label" for="evDate"> {{incexpsCtrl.getLabel('app.incexps.lbl.date')}}</label>
+                            <label class="control-label" for="evDate"> {{incexpsCtrl.labelsObj['app.incexps.lbl.date']}}</label>
                             <div class="controls">
                                 <p class="input-group">
-                                    <input type="text" id="evDate" class="form-control" datepicker-popup="{{'dd-MMMM-yyyy'}}" ng-model="incexpsCtrl.evDate"
-                                           is-open="datePickerOpened" min-date="2011-06-22" max-date="'2015-06-22'"
-                                           placeholder="{{incexpsCtrl.getLabel('app.incexps.ph.date')}}" close-text="Close" />
+                                    <input readonly="readonly" type="text" id="evDate" class="form-control" data-datepicker-popup="{{'dd-MMMM-yyyy'}}" data-ng-model="incexpsCtrl.evDate"
+                                           data-is-open="datePickerOpened" data-min-date="2011-06-22" data-max-date="'2015-06-22'"
+                                           placeholder="{{incexpsCtrl.labelsObj['app.incexps.ph.date']}}" 
+                                           data-current-text="..Tonight" data-clear-text="..Reset" data-close-text="..Exit" />
                                       <span class="input-group-btn">
-                                        <button type="button" class="btn btn-sm" ng-click="incexpsCtrl.openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                        <button type="button" class="btn btn-sm" data-ng-click="incexpsCtrl.openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                                       </span>
                                 </p>
                             </div>
                         </div>
                         <div class="form-group-sm">
-                            <label class="control-label" for="amount"> {{incexpsCtrl.getLabel('app.incexps.lbl.amount')}}</label>
+                            <label class="control-label" for="amount"> {{incexpsCtrl.labelsObj['app.incexps.lbl.amount']}}</label>
                             <div class="controls">
                                 <input type="number" data-ng-model="incexpsCtrl.amount" id="amount" 
-                                	placeholder="{{incexpsCtrl.getLabel('app.incexps.ph.amount')}}" class="form-control" required>
+                                	placeholder="{{incexpsCtrl.labelsObj['app.incexps.ph.amount']}}" class="form-control" required>
                             </div>
                         </div>
                         <div class="form-group-sm">
-                            <label class="control-label" for="vault"> {{incexpsCtrl.getLabel('app.incexps.lbl.vault')}}</label>
+                            <label class="control-label" for="vault"> {{incexpsCtrl.labelsObj['app.incexps.lbl.vault']}}</label>
                             <div class="controls">
                                 <select data-ng-model="incexpsCtrl.vault" id="vault" class="form-control"
                                         data-ng-options="eachVault._id as eachVault.displayName for eachVault in incexpsCtrl.vaultsResult">
-                                    <option value="" disabled>{{incexpsCtrl.getLabel('app.incexps.ph.vault')}}</option>
+                                    <option value="" disabled>{{incexpsCtrl.labelsObj['app.incexps.ph.vault']}}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group-sm">
-                            <label class="control-label" for="tags"> {{incexpsCtrl.getLabel('app.incexps.lbl.tags')}}</label>
+                            <label class="control-label" for="tags"> {{incexpsCtrl.labelsObj['app.incexps.lbl.tags']}}</label>
                             <div class="controls">
                                 <tags-input ng-model="incexpsCtrl.tags" class="ti-input-sm" 
                                                 display-property="label" 
-								                placeholder="{{incexpsCtrl.getLabel('app.incexps.ph.tags')}}" 
+								                placeholder="{{incexpsCtrl.labelsObj['app.incexps.ph.tags']}}" 
 								                replace-spaces-with-dashes="false"
 								                template="modules/incexps/templates/incexp-tag-input-template.client.html">
 	                                <auto-complete source="incexpsCtrl.incexpStatics.getTagsList()"
@@ -86,19 +80,19 @@
                             </div>
                         </div>
                         <div class="form-group-sm">
-                            <label class="control-label" for="isPending"> {{incexpsCtrl.getLabel('app.incexps.lbl.reqVerification')}}</label>
+                            <label class="control-label" for="isPending"> {{incexpsCtrl.labelsObj['app.incexps.lbl.reqVerification']}}</label>
                             <div class="controls">
                                 <!--TODO - apply proper styling-->
                                 <div class="input-group">
                                   <span class="input-group-addon">
                                     <input class="form-control-md" type="checkbox" 
                                     	   data-ng-disabled="incexpsCtrl.applyDisableForPendingCheckbox()"
-                                    	   placeholder="{{'s' + incexpsCtrl.getLabel('app.incexps.lbl.incexp')}}"
+                                    	   placeholder="{{'s' + incexpsCtrl.labelsObj['app.incexps.lbl.incexp']}}"
                                            data-ng-model="incexpsCtrl.isPending" id="isPending"/>
                                   </span>
                                   <span class="input-group-btn">
                                     <select data-ng-model="incexpsCtrl.pendingType" id="pendingType" class="form-control"
-                                            ng-options="approvalType.id as approvalType.label for approvalType in incexpsCtrl.getApprovalTypes()" 
+                                            data-ng-options="approvalType.id as approvalType.label for approvalType in incexpsCtrl.getApprovalTypes()" 
                                             data-ng-disabled="incexpsCtrl.applyDisablePendingFields(incexpsCtrl.isPending)">
                                         <option value="" disabled>-- Choose Approval Type --</option>
                                     </select>
@@ -109,7 +103,7 @@
                                   </span>
                                 </div>
 								<br/>
-                                <textarea placeholder="{{incexpsCtrl.getLabel('app.incexps.ph.appMsg')}}" class="form-control" 
+                                <textarea placeholder="{{incexpsCtrl.labelsObj['app.incexps.ph.appMsg']}}" class="form-control" 
                                 	data-ng-disabled="incexpsCtrl.applyDisablePendingFields(incexpsCtrl.isPending)" 
                                 	data-ng-model="incexpsCtrl.pendingMsg" 
                                 	id="pendingMsg" class="form-control"></textarea>
@@ -126,7 +120,7 @@
         <!--<button class="btn btn-success btn-sm" ng-click="incexpsCtrl.saveIncexp()" ng-disabled="createIncexpForm.$invalid">Save & Close</button>-->
         <button class="btn btn-success btn-sm" ng-click="incexpsCtrl.saveIncexp()" >Save & Close</button>
          <!-- ng-disabled="createCustomerForm.$invalid -->
-        <button class="btn btn-warning btn-sm" ng-click="cancel()">Cancel</button>
+        <button class="btn btn-warning btn-sm" data-ng-click="cancel()">Cancel</button>
     </div>
 </section>
 

@@ -95,6 +95,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
 
         var bootmodule = function(){
             _this.getLabel = function(key){
+            	console.log(key);
             	return _this.labelsObj[key];
             }; 
             _this.getCurrencies = function(){
@@ -229,10 +230,12 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
     		};        	
         };
         
-        if($state.current.name === 'listTrackerIncexps'){
+        if($state.current.name === INCEXP_CONST.LIST_INCEXPS_STATE_NAME){
         	pullMsgs().then(loadCurrencies).then(pullIncexps).then(loadIncexpAlerts).then(bootmodule);
 //        	pullMsgs().then(bootmodule);
 //        	$q.all([pullMsgs, loadCurrencies, pullIncexps]).then(bootmodule);
+        } else if($state.current.name === INCEXP_CONST.CREATE_INCEXP_STATE_NAME){
+        	pullMsgs().then(loadCurrencies).then(pullIncexps).then(bootmodule);
         }
         
 //        loadmsgs().then(loadvaults).then(bootmodule);
