@@ -25,20 +25,30 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
             });
             return deferred.promise;
         };
-        var loadvaults = function(){
-        	console.log('Load Vaults');
+        var pullVaults = function(){
         	var deferred = $q.defer();
             _this.vaultStatics.queryVaults($stateParams.trackerId).then(function(response){
                 _this.vaultsResult = [];
                 response.data.map(function(item){
-                    _this.loadInfoAlerts(item);
                     _this.vaultsResult.push(item);
                 });
                 deferred.resolve(null);
             });
             return deferred.promise;
         };
-        
+        var pullIncexpTypes = function(){
+            var deferred = $q.defer();
+
+            //_this.getIncexpTypes
+            _this.vaultStatics.queryVaults($stateParams.trackerId).then(function(response){
+                _this.vaultsResult = [];
+                response.data.map(function(item){
+                    _this.vaultsResult.push(item);
+                });
+                deferred.resolve(null);
+            });
+            return deferred.promise;
+        };
         var loadCurrencies = function(){
         	console.log('Load Currencies');
         	return AppStatics.loadCurrencies();
@@ -104,10 +114,6 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
             _this.getApprovalTypes = function(){
                 //_this.pendingType = _this.incexpStatics.getApprovalTypesForCreation()[0];
                 return _this.incexpStatics.getApprovalTypesForCreation();
-            };
-            _this.getIncexpType = function(){
-                //_this.type = _this.incexpStatics.getIncexpType()[0];
-                return _this.incexpStatics.getIncexpType();
             };
             _this.onChangeReqApproval = function(val){
                 if(! val){
@@ -235,7 +241,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
 //        	pullMsgs().then(bootmodule);
 //        	$q.all([pullMsgs, loadCurrencies, pullIncexps]).then(bootmodule);
         } else if($state.current.name === INCEXP_CONST.CREATE_INCEXP_STATE_NAME){
-        	pullMsgs().then(loadCurrencies).then(pullIncexps).then(bootmodule);
+        	pullMsgs().then(pullVaults).then(bootmodule);
         }
         
 //        loadmsgs().then(loadvaults).then(bootmodule);

@@ -3,7 +3,21 @@
 angular.module('incexps').service('IncexpStatics', [ '$http',
 	function($http) {
 		var incexpStatics = {};
-		
+
+
+        incexpStatics.getIncexpTypes = function(){
+            return this.incexpTypes;
+        };
+        incexpStatics.loadIncexpTypes = function(){
+            var deferred = $q.defer();
+            $http.get('modules/incexps/json/incexpTypes.json').then(function(response){
+                incexpStatics.incexpTypes = response;
+                deferred.resolve(null);
+            });
+            return deferred.promise;
+        };
+
+
 		incexpStatics.getListIncexpsTemplatePath = function(){
 			return 'modules/incexps/templates/incexps-list-template.client.html';
 		};

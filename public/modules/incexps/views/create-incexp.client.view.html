@@ -27,7 +27,7 @@
                             <label class="control-label" for="type"> {{incexpsCtrl.labelsObj['app.incexps.lbl.type']}}</label>
                             <div class="controls">
                                 <select data-ng-model="incexpsCtrl.type" id="type" class="form-control"
-                                        data-ng-options="incexpType.id as incexpType.label for incexpType in incexpsCtrl.getIncexpType()">
+                                        data-ng-options="incexpType.id as incexpType.label for incexpType in incexpsCtrl.getIncexpTypes">
                                     <option value="" disabled>{{incexpsCtrl.labelsObj['app.incexps.ph.type']}}</option>
                                 </select>
                             </div>
@@ -63,7 +63,7 @@
                             </div>
                         </div>
                         <div class="form-group-sm">
-                            <label class="control-label" for="tags"> {{incexpsCtrl.labelsObj['app.incexps.lbl.tags']}}</label>
+                            <label class="control-label"> {{incexpsCtrl.labelsObj['app.incexps.lbl.tags']}}</label>
                             <div class="controls">
                                 <tags-input ng-model="incexpsCtrl.tags" class="ti-input-sm" 
                                                 display-property="label" 
