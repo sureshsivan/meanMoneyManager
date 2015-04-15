@@ -10,7 +10,7 @@ angular.module('core').service('AppStatics', [ '$http', '$q',
 		appStatics.loadCurrencies = function(){
 			var deferred = $q.defer();
             $http.get('modules/core/json/currencies.json').then(function(response){
-            	this.currencies = response;
+            	appStatics.currencies = response;
             	deferred.resolve(null);
             });
             return deferred.promise;

@@ -230,9 +230,9 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         };
         
         if($state.current.name === 'listTrackerIncexps'){
-        	pullMsgs().then(pullMsgs).then(pullIncexps).then(loadIncexpAlerts).then(bootmodule);
+        	pullMsgs().then(loadCurrencies).then(pullIncexps).then(loadIncexpAlerts).then(bootmodule);
 //        	pullMsgs().then(bootmodule);
-//        	$q.all([pullMsgs, pullMsgs, pullIncexps]).then(bootmodule);
+//        	$q.all([pullMsgs, loadCurrencies, pullIncexps]).then(bootmodule);
         }
         
 //        loadmsgs().then(loadvaults).then(bootmodule);
