@@ -10,7 +10,6 @@ angular.module('incexps').service('CoreLocaleMessages', [ '$http',
 		incexpLocaleMessageService.get = function(key){
 			if(! this.msgs){
 				this.pullMessages().then(function(response){
-					console.dir(response);
 					this.msgs = response;
 				});
 			} else {

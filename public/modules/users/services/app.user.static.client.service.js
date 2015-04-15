@@ -16,7 +16,6 @@ angular.module('core').service('UserStatics', [ '$http',
 			        nu: users
 			      }
 			    }).then(function(response){
-			    	console.log(response);
 			      return response.data.map(function(item){
 			        return item;
 			      });

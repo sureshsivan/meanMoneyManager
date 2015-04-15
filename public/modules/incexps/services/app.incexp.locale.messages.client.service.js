@@ -4,7 +4,6 @@ angular.module('incexps').service('IncexpLocaleMessages', [ '$http', '$q',
 	function($http, $q) {
 		return {
 			pullMessages: function(){
-				console.log(111);
 				var _this = this;
 				var deferred = $q.defer();
 				if(_this.msgs){

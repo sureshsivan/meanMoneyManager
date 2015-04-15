@@ -16,59 +16,81 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         //	Not sure whether this is correct way - but it works.
 
         var pullMsgs = function(){
-            return IncexpLocaleMessages.pullMessages().then(function(labels){
+        	console.log('Load Currencies');
+			var deferred = $q.defer();
+			IncexpLocaleMessages.pullMessages().then(function(labels){
+            	console.log('Pull messages complete');
     			_this.labelsObj = labels;
+    			deferred.resolve(null);
             });
+            return deferred.promise;
         };
         var loadvaults = function(){
-            return _this.vaultStatics.queryVaults($stateParams.trackerId).then(function(response){
+        	console.log('Load Vaults');
+        	var deferred = $q.defer();
+            _this.vaultStatics.queryVaults($stateParams.trackerId).then(function(response){
                 _this.vaultsResult = [];
                 response.data.map(function(item){
                     _this.loadInfoAlerts(item);
                     _this.vaultsResult.push(item);
                 });
+                deferred.resolve(null);
             });
+            return deferred.promise;
+        };
+        
+        var loadCurrencies = function(){
+        	console.log('Load Currencies');
+        	return AppStatics.loadCurrencies();
         };
         
         var pullIncexps = function () {
-        	return _this.trackerIncexps = TrackerIncexps.listTrackerIncexps($stateParams);
+        	console.log('Load Incexps');
+        	_this.trackerIncexps = TrackerIncexps.listTrackerIncexps($stateParams);
+        	return _this.trackerIncexps.$promise; 
         };
 
         var loadIncexpAlerts = function(response){
+        	console.log('Load INcexp alerts...');
+        	var deferred = $q.defer();
             response.$promise.then(function(incexps){
+            	console.dir(incexps);
                 for(var i=0; i<incexps.length; i++){
-                    console.log(typeof incexps);
                     var incexp = incexps[i];
+                    console.log('>>> : ' + incexps.length);
+                    console.log('>>> : ' + incexp.currency);
                     incexp.infoAlerts = [];
                     if(incexp.isPending && incexp.pendingWith._id === Authentication.user._id){
                         incexp.infoAlerts.push({
                             'clazz': 'fa-warning danger-icon',
-                            'tooltip': _this.getLabel('app.incexps.tt.requireActionFrmMe')
+                            'tooltip': _this.labelsObj['app.incexps.tt.requireActionFrmMe']
                         });
                     }
                     if(incexp.isPending && incexp.pendingWith._id !== Authentication.user._id){
                         incexp.infoAlerts.push({
                             'clazz': 'fa-exclamation-circle warn-icon',
-                            'tooltip': _this.getLabel('app.incexps.tt.requireActionFrm') + incexp.pendingWith.displayName
+                            'tooltip': _this.labelsObj['app.incexps.tt.requireActionFrm'] + incexp.pendingWith.displayName
                         });
                     }
                     if(incexp.infoAlerts.length === 0){
                         if(incexp.owner._id === Authentication.user._id){
                             incexp.infoAlerts.push({
                                 'clazz': 'fa-user info-icon',
-                                'tooltip': _this.getLabel('app.incexps.tt.createdByMe')
+                                'tooltip': _this.labelsObj['app.incexps.tt.createdByMe']
                             });
                         }
                         incexp.infoAlerts.push({
                             'clazz': 'fa-check-circle info-icon',
-                            'tooltip': _this.getLabel('app.incexps.tt.allOk')
+                            'tooltip': _this.labelsObj['app.incexps.tt.allOk']
                         });
                     }
                     incexp.collapsed = true;
-                    incexp.currency = AppStatics.getCurrencyObj(incexp.currency);
-                    console.dir(incexp);
+//                    incexp.currency = AppStatics.getCurrencyObj(incexp.currency);
+                    incexp.currencyObj = AppStatics.getCurrencyObj(incexp.currency);
+                    deferred.resolve(null);
                 }
             });
+            return deferred.promise; 
         };
 
         var bootmodule = function(){
@@ -208,7 +230,9 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         };
         
         if($state.current.name === 'listTrackerIncexps'){
-        	pullMsgs().then(pullIncexps).then(loadIncexpAlerts).then(bootmodule);
+        	pullMsgs().then(pullMsgs).then(pullIncexps).then(loadIncexpAlerts).then(bootmodule);
+//        	pullMsgs().then(bootmodule);
+//        	$q.all([pullMsgs, pullMsgs, pullIncexps]).then(bootmodule);
         }
         
 //        loadmsgs().then(loadvaults).then(bootmodule);

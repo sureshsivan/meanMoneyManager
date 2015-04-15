@@ -1,10 +1,10 @@
 <section data-ng-controller="IncexpsController as incexpsCtrl">
     <div class="page-header">
         <h1 data-ng-if="incexpsCtrl.trackerIncexps && incexpsCtrl.trackerIncexps.length > 0">
-            {{incexpsCtrl.getLabel('app.incexps.lbl.incexpOf') + "\"" + incexpsCtrl.trackerIncexps[0].tracker.displayName + "\""}}
+            {{incexpsCtrl.labelsObj['app.incexps.lbl.incexpOf'] + "\"" + incexpsCtrl.trackerIncexps[0].tracker.displayName + "\""}}
         </h1>
         <h1 data-ng-if="incexpsCtrl.trackerIncexps.length === 0">
-            {{incexpsCtrl.getLabel('app.incexps.lbl.noIncexps')}}
+            {{incexpsCtrl.labelsObj['app.incexps.lbl.noIncexps']}}
         </h1>
     </div>
     <div class="row">
@@ -12,7 +12,7 @@
             <div class="input-group">
                 <div class="input-group-btn">
                     <button type="button" class="btn btn-default dropdown-toggle" disabled="true"
-                            data-toggle="dropdown" aria-expanded="false">{{incexpsCtrl.getLabel('app.vaults.lbl.listAllRecords')}} <span class="caret"></span></button>
+                            data-toggle="dropdown" aria-expanded="false">{{incexpsCtrl.labelsObj['app.vaults.lbl.listAllRecords']}} <span class="caret"></span></button>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="#">Action</a></li>
                         <li><a href="#">Another action</a></li>
@@ -21,10 +21,10 @@
                         <li><a href="#">Separated link</a></li>
                     </ul>
                 </div>
-                <input type="text" data-ng-model="searchText" class="form-control" placeholder="{{incexpsCtrl.getLabel('app.incexps.lbl.searchIncexps')}}" novalidate="true">
+                <input type="text" data-ng-model="searchText" class="form-control" placeholder="{{incexpsCtrl.labelsObj['app.incexps.lbl.searchIncexps']}}" novalidate="true">
                 <span class="input-group-btn">
 		            <button type="button" class="pull-left btn btn-success text-center" data-ng-click="incexpsCtrl.createIncexp()">
-                        <i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;{{incexpsCtrl.getLabel('app.incexps.lbl.newIncexp')}}
+                        <i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;{{incexpsCtrl.labelsObj['app.incexps.lbl.newIncexp']}}
                     </button>
                 </span>
             </div>
@@ -34,7 +34,7 @@
     <incexps-list data-ng-if="incexpsCtrl.trackerIncexps && incexpsCtrl.trackerIncexps.length > 0"></incexps-list>
     <div class="row">
         <div class="alert alert-warning text-center" data-ng-hide="!incexpsCtrl.trackerIncexps.$resolved || incexpsCtrl.trackerIncexps.length">
-            <a data-ui-sref="createIncexp($stateParams)">{{incexpsCtrl.getLabel('app.vaults.lbl.noIncecpYet')}}</a>?
+            <a data-ui-sref="createIncexp($stateParams)">{{incexpsCtrl.labelsObj['app.vaults.lbl.noIncecpYet']}}</a>?
         </div>
     </div>
 </section>

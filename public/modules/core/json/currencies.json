@@ -1,0 +1,17 @@
+[{
+	"id": "INR", 
+	"label": "Indian Rupee", 
+	"faIconCls": "fa-inr"
+},{
+	"id": "USD", 
+	"label": "US Dollor", 
+	"faIconCls": "fa-usd"
+},{
+	"id": "JPY", 
+	"label": "Japanese YEN", 
+	"faIconCls": "fa-jpy"
+},{
+	"id": "EUR", 
+	"label": "Euro", 
+	"faIconCls": "fa-eur"
+}]
