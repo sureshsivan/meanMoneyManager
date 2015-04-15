@@ -14,16 +14,19 @@
     "app.incexps.lbl.vault" : "Vault",
     "app.incexps.lbl.desc" : "Description",
     "app.incexps.lbl.action" : "Action",
+	"app.incexps.lbl.type" : "Type (Income/Expense)",
+	"app.incexps.lbl.tags" : "Tags - add many if necessary",
 
+	"app.incexps.lbl.nameLbl" : "Name : ",
+    "app.incexps.lbl.dateLbl" : "Date : ",
+    "app.incexps.lbl.amountLbl" : "Amount : ",
+    "app.incexps.lbl.vaultLbl" : "Vault : ",
+    "app.incexps.lbl.descLbl" : "Description : ",
+    "app.incexps.lbl.tagsLbl" : "Tags : ",
+    "app.incexps.lbl.pendingWithLbl" : "Pending With : ",
 
 	"app.incexps.lbl.newIncexp" : "New Income or Expense",
-	"app.incexps.lbl.name" : "Display Name",
 	"app.incexps.lbl.description" : "Description",
-	"app.incexps.lbl.type" : "Type (Income/Expense)",
-	"app.incexps.lbl.date" : "Date",
-	"app.incexps.lbl.vault" : "Vault",
-	"app.incexps.lbl.amount" : "Amount",
-	"app.incexps.lbl.tags" : "Tags - add many if necessary",
 	"app.incexps.lbl.reqVerification" : "Does this Entry Require Verification..?",
 
 	"app.incexps.lbl.deleteIncexp" : "Delete Income or Expense",
@@ -48,7 +51,14 @@
     "app.incexps.tt.requireActionFrmMe" : "Requires action from Me",
     "app.incexps.tt.createdByMe" : "Created By Me",
     "app.incexps.tt.allOk" : "All OK",
-    "app.incexps.tt.incexpInfo" : "Details"
+    "app.incexps.tt.incexpInfo" : "Details",
+
+	"app.incexps.err.msg.inputIncexpName" : "Please input a name for the Income/Expense item",
+	"app.incexps.err.msg.minMaxLengthIncexpName" : "income/Expense Name should be between 8 to 20 characters",
+	"app.incexps.err.msg.inputIncexpDesc" : "Please input Description for the Income/Expense item",
+	"app.incexps.err.msg.minMaxLengthIncexpDesc" : "income/Expense Description should be between 8 to 20 characters"
+	
+	
 
 }
 

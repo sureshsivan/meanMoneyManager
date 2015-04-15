@@ -69,26 +69,24 @@
             <tr data-ng-class="(incexp.isPending ? (incexp.pendingWith._id === incexpsCtrl.authentication.user._id ? 'danger' : 'warning') : '')"
                 data-ng-repeat-end style="padding: 0 !important; border: 0 !important">
                 <td colspan="8" style="padding: 0 !important;">
-                    <div data-collapse="incexp.collapsed" class="" style="padding: 10px">
-                        Name : {{incexp.displayName}}
+                    <div data-collapse="incexp.collapsed">
+                    	<br/>
+<!--                         <span class="fa fa-money"> </span> -->
+                        <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.nameLbl']}}</strong>{{incexp.displayName}}
                         <br/>
-                        Date : <span data-am-time-ago="incexp.evDate"></span>    (<span>{{incexp.evDate | amDateFormat:'dddd, MMMM Do YYYY'}}</span>)
+                        <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.descLbl']}}</strong>{{incexp.description}}
                         <br/>
-                        Description : {{incexp.description}}
-                        <br/>
-                        Amount : <span class="fa" data-ng-class="incexp.currencyObj.faIconCls"> {{incexp.amount}}</span>
-                        <br/>
+                        <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.dateLbl']}}</strong><span data-am-time-ago="incexp.evDate"></span>    (<span>{{incexp.evDate | amDateFormat:'dddd, MMMM Do YYYY'}}</span>)
                         Vault : {{incexp.vault.displayName}}
+                        <br/>                        
+                        <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.amountLbl']}}</strong><span class="fa" data-ng-class="incexp.currencyObj.faIconCls"> {{incexp.amount}}</span>
                         <br/>
-                        Tags : {{incexp.vault.displayName}}
+                        <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.vaultLbl']}}</strong>{{incexp.vault.displayName}}
                         <br/>
-                        Approval Request Type : {{incexp.vault.displayName}}
+                        <span data-ng-if="incexp.isPending">
+                        	<strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.pendingWithLbl']}}</strong>{{incexp.pendingWith.displayName}}
+                        </span>
                         <br/>
-                        Approval Requested to : {{incexp.vault.displayName}}
-                        <br/>
-                        Approval Requested By : {{incexp.vault.displayName}}
-                        <br/>
-                        Approval Request Msg : {{incexp.vault.displayName}}
                     </div>
                 </td>
             </tr>
