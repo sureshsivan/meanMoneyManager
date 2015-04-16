@@ -56,9 +56,8 @@
 	"app.incexps.err.msg.inputIncexpName" : "Please input a name for the Income/Expense item",
 	"app.incexps.err.msg.minMaxLengthIncexpName" : "income/Expense Name should be between 8 to 20 characters",
 	"app.incexps.err.msg.inputIncexpDesc" : "Please input Description for the Income/Expense item",
-	"app.incexps.err.msg.minMaxLengthIncexpDesc" : "income/Expense Description should be between 8 to 20 characters"
-	
-	
+	"app.incexps.err.msg.minMaxLengthIncexpDesc" : "income/Expense Description should be between 8 to 20 characters",
+    "app.incexps.err.msg.selectIncexpType" : "Select income/Expense type"
 
 }
 

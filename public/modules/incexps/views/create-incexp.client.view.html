@@ -12,7 +12,7 @@
                         <div class="form-group-sm">
                             <label class="control-label" for="displayName"> {{incexpsCtrl.labelsObj['app.incexps.lbl.name']}}</label>
                             <div class="controls">
-                                <input type="text" data-ng-model="incexpsCtrl.displayName" id="displayName" name="displayName" 
+                                <input type="text" data-ng-model="incexpsCtrl.displayName" id="displayName" name="displayName"
                                 	placeholder="{{incexpsCtrl.labelsObj['app.incexps.ph.name']}}" class="form-control" 
                                 	data-ng-minlength="8" data-ng-maxlength="20" required/>
 	                            <div data-ng-if="createIncexpForm.displayName.$invalid && createIncexpForm.displayName.$dirty"
@@ -50,23 +50,37 @@
                         <div class="form-group-sm">
                             <label class="control-label" for="type"> {{incexpsCtrl.labelsObj['app.incexps.lbl.type']}}</label>
                             <div class="controls">
-                                <select data-ng-model="incexpsCtrl.type" id="type" class="form-control"
-                                        data-ng-options="incexpType.id as incexpType.label for incexpType in incexpsCtrl.incexpTypes">
-                                    <option value="" disabled>{{incexpsCtrl.labelsObj['app.incexps.ph.type']}}</option>
+                                <select data-ng-model="incexpsCtrl.type" id="type" class="form-control" name="type"
+                                        data-ng-options="incexpType.id as incexpType.label for incexpType in incexpsCtrl.incexpTypes" required>
+                                    <option value="">{{incexpsCtrl.labelsObj['app.incexps.ph.type']}}</option>
                                 </select>
+                                <div data-ng-if="createIncexpForm.type.$invalid && createIncexpForm.type.$dirty"
+                                     data-data-ng-messages="createIncexpForm.type.$error">
+                                    <span data-ng-if="createIncexpForm.type.$error.required"
+                                          class="label label-warning" data-ng-message="required">
+                                        {{incexpsCtrl.labelsObj['app.incexps.err.msg.selectIncexpType']}}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group-sm">
                             <label class="control-label" for="evDate"> {{incexpsCtrl.labelsObj['app.incexps.lbl.date']}}</label>
                             <div class="controls">
-                                <p class="input-group">
-                                    <input readonly="readonly" type="text" id="evDate" class="form-control" data-datepicker-popup="{{'dd-MMMM-yyyy'}}" data-ng-model="incexpsCtrl.evDate"
+                                <p class="input-group" style="margin-bottom: 0px !important;">
+                                    <input name="evDate" type="text" id="evDate" class="form-control" data-datepicker-popup="{{'dd-MMMM-yyyy'}}" data-ng-model="incexpsCtrl.evDate"
                                            data-is-open="datePickerOpened" data-min-date="2011-06-22" data-max-date="'2015-06-22'"
                                            placeholder="{{incexpsCtrl.labelsObj['app.incexps.ph.date']}}" 
-                                           data-current-text="..Tonight" data-clear-text="..Reset" data-close-text="..Exit" />
+                                           data-current-text="..Tonight" data-clear-text="..Reset" data-close-text="..Exit" required/>
                                       <span class="input-group-btn">
                                         <button type="button" class="btn btn-sm" data-ng-click="incexpsCtrl.openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                                       </span>
+                                    <div data-ng-if="createIncexpForm.evDate.$invalid && createIncexpForm.evDate.$dirty"
+                                         data-data-ng-messages="createIncexpForm.evDate.$error">
+                                        <span data-ng-if="createIncexpForm.evDate.$error.required"
+                                              class="label label-warning" data-ng-message="required">
+                                            {{incexpsCtrl.labelsObj['app.incexps.err.msg.selectIncexpType']}}
+                                        </span>
+                                    </div>
                                 </p>
                             </div>
                         </div>
