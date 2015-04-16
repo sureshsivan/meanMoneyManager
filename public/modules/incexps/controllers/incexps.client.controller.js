@@ -19,7 +19,6 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         	console.log('Load Currencies');
 			var deferred = $q.defer();
 			IncexpLocaleMessages.pullMessages().then(function(labels){
-            	console.log('Pull messages complete');
     			_this.labelsObj = labels;
     			deferred.resolve(null);
             });
@@ -37,16 +36,22 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
             return deferred.promise;
         };
         var pullIncexpTypes = function(){
-            var deferred = $q.defer();
-
-            //_this.getIncexpTypes
-            _this.vaultStatics.queryVaults($stateParams.trackerId).then(function(response){
-                _this.vaultsResult = [];
-                response.data.map(function(item){
-                    _this.vaultsResult.push(item);
-                });
-                deferred.resolve(null);
-            });
+        	var deferred = $q.defer();
+        	var cachedVal = _this.incexpStatics.getIncexpTypes();
+        	//	If value is already cached by service - then use it otherwise 
+        	if(cachedVal){
+        		_this.incexpTypes = cachedVal;
+        		deferred.resolve(null);
+        	} else {
+        		_this.incexpStatics.loadIncexpTypes().then(function(response){
+                    _this.incexpTypes = [];
+                    response.map(function(item){
+                        _this.incexpTypes.push(item);
+                    });
+                    deferred.resolve(null);
+                });	
+        	}
+        	
             return deferred.promise;
         };
         var loadCurrencies = function(){
@@ -241,11 +246,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
 //        	pullMsgs().then(bootmodule);
 //        	$q.all([pullMsgs, loadCurrencies, pullIncexps]).then(bootmodule);
         } else if($state.current.name === INCEXP_CONST.CREATE_INCEXP_STATE_NAME){
-<<<<<<< HEAD
-        	pullMsgs().then(loadCurrencies).then(pullIncexps).then(bootmodule);
-=======
-        	pullMsgs().then(pullVaults).then(bootmodule);
->>>>>>> branch 'master' of https://github.com/v8-suresh/meanMoneyManager.git
+        	pullMsgs().then(pullVaults).then(pullIncexpTypes).then(bootmodule);
         }
         
 //        loadmsgs().then(loadvaults).then(bootmodule);

@@ -4,8 +4,8 @@
 
 
 angular.module('trackers')
-    .controller('TrackersController', ['$scope', '$state', '$stateParams', 'Authentication', 'Trackers', 'TrackerLocaleMessages', 'TRACKER_CONST', 'VAULT_CONST', 'AppStatics', 'UserStatics', 'AppMessenger', 'moment',
-        function($scope, $state, $stateParams, Authentication, Trackers, TrackerLocaleMessages, TRACKER_CONST, VAULT_CONST, AppStatics, UserStatics, AppMessenger, moment) {
+    .controller('TrackersController', ['$scope', '$state', '$stateParams', 'Authentication', 'Trackers', 'TrackerLocaleMessages', 'TRACKER_CONST', 'VAULT_CONST', 'AppStatics', 'UserStatics', 'AppMessenger', 'moment', '$q',
+        function($scope, $state, $stateParams, Authentication, Trackers, TrackerLocaleMessages, TRACKER_CONST, VAULT_CONST, AppStatics, UserStatics, AppMessenger, moment, $q) {
             var _this = this;
             _this.appStatics = AppStatics;
             _this.userStatics = UserStatics;
@@ -28,6 +28,25 @@ angular.module('trackers')
                 });
             };
             
+            var pullIncexpTypes = function(){
+            	var deferred = $q.defer();
+            	var cachedVal = _this.appStatics.getCurrencies();
+            	//	If value is already cached by service - then use it otherwise 
+            	if(cachedVal){
+            		_this.currencies = cachedVal;
+            		deferred.resolve(null);
+            	} else {
+            		_this.appStatics.loadCurrencies().then(function(response){
+                        _this.currencies = [];
+                        response.map(function(item){
+                            _this.currencies.push(item);
+                        });
+                        deferred.resolve(null);
+                    });	
+            	}
+            	return deferred.promise;
+            };
+            
             var bootmodule = function () {
                 _this.getLabel = function(key){
                 	return _this.labelsObj[key];
@@ -38,9 +57,6 @@ angular.module('trackers')
                 _this.getOwnerTxt = function (tracker) {
                     return (tracker.owner && tracker.owner._id && (tracker.owner._id === Authentication.user._id)) ? 'Me' :
                         ((tracker.owner && tracker.owner.displayName) ? tracker.owner.displayName : 'No Name');
-                };
-                _this.getCurrencies = function () {
-                    return _this.appStatics.getCurrencies();
                 };
                 _this.getUsersTxt = function (tracker) {
                     var users = '';
@@ -132,9 +148,9 @@ angular.module('trackers')
             if($state.current.name === TRACKER_CONST.LIST_TRACKERS_STATE_NAME){
             	pullMsgs().then(pullTrackers).then(bootmodule);
             } else if($state.current.name === TRACKER_CONST.CREATE_TRACKER_STATE_NAME){
-            	pullMsgs().then(bootmodule);
+            	pullMsgs().then(pullIncexpTypes).then(bootmodule);
             } else if($state.current.name === TRACKER_CONST.EDIT_TRACKER_STATE_NAME){
-            	pullMsgs().then(pullTracker).then(bootmodule);
+            	pullMsgs().then(pullIncexpTypes).then(pullTracker).then(bootmodule);
             }
         }
     ])

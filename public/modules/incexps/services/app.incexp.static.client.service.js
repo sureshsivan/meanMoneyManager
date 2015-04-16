@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('incexps').service('IncexpStatics', [ '$http',
-	function($http) {
+angular.module('incexps').service('IncexpStatics', [ '$http', '$q',
+	function($http, $q) {
 		var incexpStatics = {};
 
 
@@ -11,8 +11,8 @@ angular.module('incexps').service('IncexpStatics', [ '$http',
         incexpStatics.loadIncexpTypes = function(){
             var deferred = $q.defer();
             $http.get('modules/incexps/json/incexpTypes.json').then(function(response){
-                incexpStatics.incexpTypes = response;
-                deferred.resolve(null);
+                incexpStatics.incexpTypes = response.data;
+                deferred.resolve(response.data);
             });
             return deferred.promise;
         };

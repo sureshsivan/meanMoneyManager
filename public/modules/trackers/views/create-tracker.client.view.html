@@ -48,7 +48,7 @@
                         <label class="control-label" for="currency"> {{trackersCtrl.getLabel('app.trackers.lbl.trackerCurrency')}}</label>
                         <div class="controls">
                              <select data-ng-model="trackersCtrl.currency" id="currency" class="form-control ng-invalid" name="currency"
-                                     data-ng-options="currencyItem.id as currencyItem.label for currencyItem in trackersCtrl.getCurrencies()" required>
+                                     data-ng-options="currencyItem.id as currencyItem.label for currencyItem in trackersCtrl.currencies" required>
                                 <option value="">{{trackersCtrl.getLabel('app.trackers.ph.trackerCurrency')}}</option>
                             </select>
                             <div data-ng-if="createTrackerForm.currency.$invalid && createTrackerForm.currency.$dirty"
