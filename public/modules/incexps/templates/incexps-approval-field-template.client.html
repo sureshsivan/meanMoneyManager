@@ -1,0 +1,32 @@
+<div class="form-group-sm">
+    <label class="control-label" for="isPending"> {{ctrl.labelsObj['app.incexps.lbl.reqVerification']}}</label>
+
+    <div class="controls">
+        <!--TODO - apply proper styling-->
+        <div class="input-group">
+        <span class="input-group-addon">
+        <input class="form-control-md" type="checkbox"
+               data-ng-disabled="ctrl.applyDisableForPendingCheckbox()"
+               data-ng-model="ctrl.isPending" id="isPending"/>
+        </span>
+        <span class="input-group-btn">
+        <select data-ng-model="ctrl.pendingType" id="pendingType"
+                class="form-control"
+                data-ng-options="approvalType.id as approvalType.label for approvalType in ctrl.getApprovalTypes()"
+                data-ng-disabled="ctrl.applyDisablePendingFields(ctrl.isPending)">
+            <option value="" disabled>-- Choose Approval Type --</option>
+        </select>
+        </span>
+        <span class="input-group-btn">
+        <select-users user="ctrl.pendingWith"
+                      data-ng-disabled="ctrl.applyDisablePendingFields(ctrl.isPending)"></select-users>
+        </span>
+        </div>
+        <br/>
+        <textarea placeholder="{{ctrl.labelsObj['app.incexps.ph.appMsg']}}"
+                  class="form-control"
+                  data-ng-disabled="ctrl.applyDisablePendingFields(ctrl.isPending)"
+                  data-ng-model="ctrl.pendingMsg"
+                  id="pendingMsg" class="form-control"></textarea>
+    </div>
+</div>

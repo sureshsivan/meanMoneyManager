@@ -19,7 +19,6 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         //	Not sure whether this is correct way - but it works.
 
         var pullMsgs = function(){
-        	console.log('Load Currencies');
 			var deferred = $q.defer();
 			IncexpLocaleMessages.pullMessages().then(function(labels){
     			_this.labelsObj = labels;
@@ -63,7 +62,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         };
         
         var pullIncexps = function () {
-        	console.log('Load Incexps');
+        	console.log('Load Incexps.......');
         	_this.trackerIncexps = TrackerIncexps.listTrackerIncexps($stateParams);
         	return _this.trackerIncexps.$promise; 
         };

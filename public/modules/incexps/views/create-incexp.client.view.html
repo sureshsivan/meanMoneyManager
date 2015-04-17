@@ -136,36 +136,38 @@
                                 </tags-input>
                             </div>
                         </div>
-                        <div class="form-group-sm">
-                            <label class="control-label" for="isPending"> {{incexpsCtrl.labelsObj['app.incexps.lbl.reqVerification']}}</label>
-                            <div class="controls">
-                                <!--TODO - apply proper styling-->
-                                <div class="input-group">
-                                  <span class="input-group-addon">
-                                    <input class="form-control-md" type="checkbox" 
-                                    	   data-ng-disabled="incexpsCtrl.applyDisableForPendingCheckbox()"
-                                    	   placeholder="{{'s' + incexpsCtrl.labelsObj['app.incexps.lbl.incexp']}}"
-                                           data-ng-model="incexpsCtrl.isPending" id="isPending"/>
-                                  </span>
-                                  <span class="input-group-btn">
-                                    <select data-ng-model="incexpsCtrl.pendingType" id="pendingType" class="form-control"
-                                            data-ng-options="approvalType.id as approvalType.label for approvalType in incexpsCtrl.getApprovalTypes()" 
-                                            data-ng-disabled="incexpsCtrl.applyDisablePendingFields(incexpsCtrl.isPending)">
-                                        <option value="" disabled>-- Choose Approval Type --</option>
-                                    </select>
-                                  </span>
-                                  <span class="input-group-btn">
-                                    <select-users user="incexpsCtrl.pendingWith" 
-                                    	data-ng-disabled="incexpsCtrl.applyDisablePendingFields(incexpsCtrl.isPending)"></select-users>
-                                  </span>
-                                </div>
-								<br/>
-                                <textarea placeholder="{{incexpsCtrl.labelsObj['app.incexps.ph.appMsg']}}" class="form-control" 
-                                	data-ng-disabled="incexpsCtrl.applyDisablePendingFields(incexpsCtrl.isPending)" 
-                                	data-ng-model="incexpsCtrl.pendingMsg" 
-                                	id="pendingMsg" class="form-control"></textarea>
-                            </div>
-                        </div>
+                        <!--<div class="form-group-sm">-->
+                            <!--<label class="control-label" for="isPending"> {{incexpsCtrl.labelsObj['app.incexps.lbl.reqVerification']}}</label>-->
+                            <!--<div class="controls">-->
+                                <!--&lt;!&ndash;TODO - apply proper styling&ndash;&gt;-->
+                                <!--<div class="input-group">-->
+                                  <!--<span class="input-group-addon">-->
+                                    <!--<input class="form-control-md" type="checkbox" -->
+                                    	   <!--data-ng-disabled="incexpsCtrl.applyDisableForPendingCheckbox()"-->
+                                    	   <!--placeholder="{{'s' + incexpsCtrl.labelsObj['app.incexps.lbl.incexp']}}"-->
+                                           <!--data-ng-model="incexpsCtrl.isPending" id="isPending"/>-->
+                                  <!--</span>-->
+                                  <!--<span class="input-group-btn">-->
+                                    <!--<select data-ng-model="incexpsCtrl.pendingType" id="pendingType" class="form-control"-->
+                                            <!--data-ng-options="approvalType.id as approvalType.label for approvalType in incexpsCtrl.getApprovalTypes()" -->
+                                            <!--data-ng-disabled="incexpsCtrl.applyDisablePendingFields(incexpsCtrl.isPending)">-->
+                                        <!--<option value="" disabled>-- Choose Approval Type --</option>-->
+                                    <!--</select>-->
+                                  <!--</span>-->
+                                  <!--<span class="input-group-btn">-->
+                                    <!--<select-users user="incexpsCtrl.pendingWith" -->
+                                    	<!--data-ng-disabled="incexpsCtrl.applyDisablePendingFields(incexpsCtrl.isPending)"></select-users>-->
+                                  <!--</span>-->
+                                <!--</div>-->
+								<!--<br/>-->
+                                <!--<textarea placeholder="{{incexpsCtrl.labelsObj['app.incexps.ph.appMsg']}}" class="form-control" -->
+                                	<!--data-ng-disabled="incexpsCtrl.applyDisablePendingFields(incexpsCtrl.isPending)" -->
+                                	<!--data-ng-model="incexpsCtrl.pendingMsg" -->
+                                	<!--id="pendingMsg" class="form-control"></textarea>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--TODO - refactor - passing controller reference is not good - for the sake of completion-->
+                        <incexp-approval ctrl="incexpsCtrl"></incexp-approval>
                     </div>
                 </div>
             </fieldset>

@@ -35,4 +35,26 @@ angular.module('incexps')
         };
     }])
 
+    .directive('incexpApproval', ['Authentication', 'UserStatics',
+        function(Authentication, UserStatics) {
+            return {
+                restrict: 'E',
+                transclude: true,
+                templateUrl: 'modules/incexps/templates/incexps-approval-field-template.client.html',
+                link: function(scope, element, attrs) {
+                },
+                scope: {
+                    ctrl: '='
+                //},
+                //controller: function($scope){
+                //    $scope.authentication = Authentication;
+                //    var curUsersArr = [];
+                //    curUsersArr.push(Authentication.user.id);
+                //    $scope.queryUsers = function(query){
+                //        return UserStatics.queryUsers(query, curUsersArr.join());
+                //    };
+                }
+            };
+        }])
+
 ;
