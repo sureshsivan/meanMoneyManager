@@ -57,7 +57,13 @@
 	"app.incexps.err.msg.minMaxLengthIncexpName" : "income/Expense Name should be between 8 to 20 characters",
 	"app.incexps.err.msg.inputIncexpDesc" : "Please input Description for the Income/Expense item",
 	"app.incexps.err.msg.minMaxLengthIncexpDesc" : "income/Expense Description should be between 8 to 20 characters",
-    "app.incexps.err.msg.selectIncexpType" : "Select income/Expense type"
+    "app.incexps.err.msg.selectIncexpType" : "Select income/Expense type",
+    "app.incexps.err.msg.selectDate" : "Choose Date of Income/Expense",
+    "app.incexps.err.msg.inputAmount" : "Please input a number for Amount",
+    "app.incexps.err.msg.minMaxValueAmount" : "Amount should be between 1 to 5_00_000 - 5 lakh",
+    "app.incexps.err.msg.selectIncexpVault" : "Please select a vault"
+    
+    
 
 }
 

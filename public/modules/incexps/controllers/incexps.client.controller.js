@@ -11,7 +11,10 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         _this.appStatics = AppStatics;
         _this.incexpStatics = IncexpStatics;
         $scope.$stateParams = $stateParams;
-
+        var minDate = new Date();
+        minDate.setDate(minDate.getDate() - 60);
+        $scope.minDate = minDate;
+        $scope.maxDate = new Date();
         //	TODO - bootstrapping the module only if the dependencies are loaded 
         //	Not sure whether this is correct way - but it works.
 

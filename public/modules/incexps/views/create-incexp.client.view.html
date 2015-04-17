@@ -67,8 +67,8 @@
                             <label class="control-label" for="evDate"> {{incexpsCtrl.labelsObj['app.incexps.lbl.date']}}</label>
                             <div class="controls">
                                 <p class="input-group" style="margin-bottom: 0px !important;">
-                                    <input name="evDate" type="text" id="evDate" class="form-control" data-datepicker-popup="{{'dd-MMMM-yyyy'}}" data-ng-model="incexpsCtrl.evDate"
-                                           data-is-open="datePickerOpened" data-min-date="2011-06-22" data-max-date="'2015-06-22'"
+                                    <input readonly="readonly" name="evDate" type="text" id="evDate" class="form-control" data-datepicker-popup="{{'dd-MMMM-yyyy'}}" data-ng-model="incexpsCtrl.evDate"
+                                           data-is-open="datePickerOpened" data-min-date="minDate" data-max-date="maxDate"
                                            placeholder="{{incexpsCtrl.labelsObj['app.incexps.ph.date']}}" 
                                            data-current-text="..Tonight" data-clear-text="..Reset" data-close-text="..Exit" required/>
                                       <span class="input-group-btn">
@@ -78,7 +78,7 @@
                                          data-data-ng-messages="createIncexpForm.evDate.$error">
                                         <span data-ng-if="createIncexpForm.evDate.$error.required"
                                               class="label label-warning" data-ng-message="required">
-                                            {{incexpsCtrl.labelsObj['app.incexps.err.msg.selectIncexpType']}}
+                                            {{incexpsCtrl.labelsObj['app.incexps.err.msg.selectDate']}}
                                         </span>
                                     </div>
                                 </p>
@@ -87,17 +87,36 @@
                         <div class="form-group-sm">
                             <label class="control-label" for="amount"> {{incexpsCtrl.labelsObj['app.incexps.lbl.amount']}}</label>
                             <div class="controls">
-                                <input type="number" data-ng-model="incexpsCtrl.amount" id="amount" 
-                                	placeholder="{{incexpsCtrl.labelsObj['app.incexps.ph.amount']}}" class="form-control" required>
+                                <input type="number" data-ng-model="incexpsCtrl.amount" id="amount" name="amount"  
+                                	min="1" max="5" 
+                                	placeholder="{{incexpsCtrl.labelsObj['app.incexps.ph.amount']}}" class="form-control" required/>
+	                            <div data-ng-if="createIncexpForm.amount.$invalid && createIncexpForm.amount.$dirty"
+	                                 data-data-ng-messages="createIncexpForm.amount.$error">
+	                                <span data-ng-if="createIncexpForm.amount.$error.required"
+	                                      class="label label-warning" data-ng-message="required">
+	                                    {{incexpsCtrl.getLabel('app.incexps.err.msg.inputAmount')}}
+	                                </span>
+	                                <span data-ng-if="createIncexpForm.amount.$error.min || createIncexpForm.amount.$error.max"
+	                                      class="label label-warning" data-ng-message="min, max">
+	                                    {{incexpsCtrl.getLabel('app.incexps.err.msg.minMaxValueAmount')}}
+	                                </span>
+	                            </div>
                             </div>
                         </div>
                         <div class="form-group-sm">
                             <label class="control-label" for="vault"> {{incexpsCtrl.labelsObj['app.incexps.lbl.vault']}}</label>
                             <div class="controls">
-                                <select data-ng-model="incexpsCtrl.vault" id="vault" class="form-control"
-                                        data-ng-options="eachVault._id as eachVault.displayName for eachVault in incexpsCtrl.vaultsResult">
-                                    <option value="" disabled>{{incexpsCtrl.labelsObj['app.incexps.ph.vault']}}</option>
+                                <select data-ng-model="incexpsCtrl.vault" id="vault" class="form-control" name="vault" 
+                                        data-ng-options="eachVault._id as eachVault.displayName for eachVault in incexpsCtrl.vaultsResult" required>
+                                    <option value="">{{incexpsCtrl.labelsObj['app.incexps.ph.vault']}}</option>
                                 </select>
+                                <div data-ng-if="createIncexpForm.vault.$invalid && createIncexpForm.vault.$dirty"
+                                     data-data-ng-messages="createIncexpForm.vault.$error">
+                                    <span data-ng-if="createIncexpForm.vault.$error.required"
+                                          class="label label-warning" data-ng-message="required">
+                                        {{incexpsCtrl.labelsObj['app.incexps.err.msg.selectIncexpVault']}}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group-sm">
