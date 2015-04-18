@@ -50,19 +50,29 @@
                 <td>
                     <button class="btn btn-danger btn-xs" 
                     		data-ng-click="incexpsCtrl.remove(incexp)"
-                    		data-ng-disabled="! incexpsCtrl.canDelete(incexp)">
+                    		data-ng-hide="! incexpsCtrl.canDelete(incexp)">
                         <i class="fa fa-trash"></i>
                     </button>
                     <button class="btn btn-warning btn-xs" 
                     		data-ng-click="incexpsCtrl.editIncexp(incexp)"
-                    		data-ng-disabled="! incexpsCtrl.canEdit(incexp)">
+                    		data-ng-hide="! incexpsCtrl.canEdit(incexp)">
                         <i class="fa fa-pencil"></i>
                     </button>
  					<button class="btn btn-info btn-xs" 
                     		data-ng-click="! incexpsCtrl.requestForEdit(incexp)"
-                    		data-ng-disabled="! incexpsCtrl.canRequestEditAccess(incexp)">
+                    		data-ng-hide="! incexpsCtrl.canRequestEditAccess(incexp)">
                         <i class="fa fa-question-circle"></i>
-                    </button> 
+                    </button>
+                    <button class="btn btn-info btn-xs"
+                            data-ng-click=""
+                            data-ng-hide="! incexpsCtrl.canApprove(incexp)">
+                        <i class="fa fa-thumbs-o-up"></i>
+                    </button>
+                    <button class="btn btn-info btn-xs"
+                            data-ng-click=""
+                            data-ng-hide="! incexpsCtrl.canApproveEditRequest(incexp)">
+                        <i class="fa fa-unlock"></i>
+                    </button>
                 </td>
             </tr>
             <tr data-ng-class="(incexp.isPending ? (incexp.pendingWith._id === incexpsCtrl.authentication.user._id ? 'danger' : 'warning') : '')"

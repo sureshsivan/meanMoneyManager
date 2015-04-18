@@ -211,6 +211,13 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
             _this.canRequestEditAccess = function(incexp){
             	return incexp && incexp.owner && (incexp.owner._id !== Authentication.user._id) && (! incexp.pendingWith) ;
             };
+            _this.canApprove = function(incexp){
+                return incexp && incexp.isPending && (incexp.pendingWith._id === Authentication.user._id);
+            };
+            _this.canApproveEditRequest = function(incexp){
+                return incexp && incexp.isPending && (incexp.pendingWith._id === Authentication.user._id)
+                    && (incexp.owner._id === Authentication.user._id);
+            };
             _this.createIncexp = function(){
                 _this.incexp = {};
                 $state.go(INCEXP_CONST.CREATE_INCEXP_STATE_NAME, $stateParams);
