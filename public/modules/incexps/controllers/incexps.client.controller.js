@@ -157,22 +157,22 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
             _this.canRequestEditAccess = function(incexp){
             	return incexp && incexp.owner && (incexp.owner._id !== Authentication.user._id) && (! incexp.pendingWith) ;
             };
-            _this.applyDisablePendingFields = function(isSelected, incexp){
-            	var toDisable = false;
-            	if(typeof incexp === 'undefined'){
-            		toDisable = !isSelected;
-            	} else if(incexp && incexp.owner){
-            		toDisable = (Authentication.user._id !== incexp.owner._id) || (!isSelected);
-            	}
-            	return toDisable;
-            };
-            _this.applyDisableForPendingCheckbox = function(incexp){
-            	if(incexp && incexp.owner){
-            		return Authentication.user._id !== incexp.owner._id;	
-            	} else {
-            		return false;
-            	}
-            };
+            //_this.applyDisablePendingFields = function(isSelected, incexp){
+            //	var toDisable = false;
+            //	if(typeof incexp === 'undefined'){
+            //		toDisable = !isSelected;
+            //	} else if(incexp && incexp.owner){
+            //		toDisable = (Authentication.user._id !== incexp.owner._id) || (!isSelected);
+            //	}
+            //	return toDisable;
+            //};
+            //_this.applyDisableForPendingCheckbox = function(incexp){
+            //	if(incexp && incexp.owner){
+            //		return Authentication.user._id !== incexp.owner._id;
+            //	} else {
+            //		return false;
+            //	}
+            //};
             _this.findAll = function() {
                 _this.trackerIncexps = TrackerIncexps.listTrackerIncexps($stateParams);
             };
@@ -191,6 +191,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 });
             };
             _this.saveIncexp = function() {
+                console.log(_this);
                 var incexp = new TrackerIncexps({
                     displayName: _this.displayName,
                     description: _this.description,
@@ -249,6 +250,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
 //        	$q.all([pullMsgs, loadCurrencies, pullIncexps]).then(bootmodule);
         } else if($state.current.name === INCEXP_CONST.CREATE_INCEXP_STATE_NAME){
         	pullMsgs().then(pullVaults).then(pullIncexpTypes).then(bootmodule);
+            _this.approvalModel = {'isPending': false, 'pendingType': null,'pendingMsg': null};
         }
         
 //        loadmsgs().then(loadvaults).then(bootmodule);

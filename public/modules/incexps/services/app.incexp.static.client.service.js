@@ -47,7 +47,22 @@ angular.module('incexps').service('IncexpStatics', [ '$http', '$q',
         incexpStatics.getTagsList = function(){
             return $http.get('modules/incexps/json/incexpTags.json');
         };
-        
+        incexpStatics.getApprovalModel = function(incexp){
+            if(!incexp){
+                return {
+                    isPending: false,
+                    pendingType: null,
+                    pendingMsg: ''
+                };
+            } else {
+                return {
+                    isPending: incexp.isPending,
+                    pendingType: incexp.pendingType,
+                    pendingMsg: incexp.pendingMsg
+                };
+            }
+            return $http.get('modules/incexps/json/incexpTags.json');
+        };
 		return incexpStatics;
 	}
 ]);

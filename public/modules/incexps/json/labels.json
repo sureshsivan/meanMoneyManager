@@ -45,6 +45,8 @@
     "app.incexps.ph.tags" : "Choose Tags from list",
     "app.incexps.ph.userSelection" : "Type to See users",
     "app.incexps.ph.appMsg" : "Type your Message here...",
+    "app.incexps.ph.selectUser" : "Type to select Users",
+    "app.incexps.ph.pendingType" : "Selection Pending approval Type",
 
 
     "app.incexps.tt.requireActionFrm" : "Requires action from",

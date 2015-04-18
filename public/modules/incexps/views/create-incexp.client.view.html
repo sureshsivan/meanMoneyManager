@@ -167,7 +167,14 @@
                             <!--</div>-->
                         <!--</div>-->
                         <!--TODO - refactor - passing controller reference is not good - for the sake of completion-->
-                        <incexp-approval ctrl="incexpsCtrl"></incexp-approval>
+                        <incexp-approval name="approval"
+                                data-label="incexpsCtrl.labelsObj['app.incexps.lbl.reqVerification']"
+                                data-pending-type-default-label="incexpsCtrl.labelsObj['app.incexps.ph.pendingType']"
+                                data-select-user-placeholder="incexpsCtrl.labelsObj['app.incexps.ph.selectUser']"
+                                data-pending-msg-placeholder="incexpsCtrl.labelsObj['app.incexps.ph.appMsg']"
+                                data-approval-types="incexpsCtrl.getApprovalTypes()"
+                                data-ng-model="incexpsCtrl.approvalModel">
+                        </incexp-approval>
                     </div>
                 </div>
             </fieldset>
@@ -177,7 +184,9 @@
 
     <div class="modal-footer">
         <!--<button class="btn btn-success btn-sm" ng-click="incexpsCtrl.saveIncexp()" ng-disabled="createIncexpForm.$invalid">Save & Close</button>-->
-        <button class="btn btn-success btn-sm" ng-click="incexpsCtrl.saveIncexp()" >Save & Close</button>
+        <button class="btn btn-success btn-sm"
+                data-ng-disabled="createIncexpForm.$invalid"
+                ng-click="incexpsCtrl.saveIncexp()" >Save & Close</button>
          <!-- ng-disabled="createCustomerForm.$invalid -->
         <button class="btn btn-warning btn-sm" data-ng-click="cancel()">Cancel</button>
     </div>
