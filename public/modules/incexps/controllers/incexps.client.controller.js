@@ -124,6 +124,12 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 for(var i=0; i<incexps.length; i++){
                     var incexp = incexps[i];
                     incexp.infoAlerts = [];
+                    if(incexp.owner._id === Authentication.user._id){
+                        incexp.infoAlerts.push({
+                            'clazz': 'fa-user info-icon',
+                            'tooltip': _this.labelsObj['app.incexps.tt.createdByMe']
+                        });
+                    }
                     if(incexp.isPending && incexp.pendingWith._id === Authentication.user._id){
                         incexp.infoAlerts.push({
                             'clazz': 'fa-warning danger-icon',
@@ -137,12 +143,6 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                         });
                     }
                     if(incexp.infoAlerts.length === 0){
-                        if(incexp.owner._id === Authentication.user._id){
-                            incexp.infoAlerts.push({
-                                'clazz': 'fa-user info-icon',
-                                'tooltip': _this.labelsObj['app.incexps.tt.createdByMe']
-                            });
-                        }
                         incexp.infoAlerts.push({
                             'clazz': 'fa-check-circle info-icon',
                             'tooltip': _this.labelsObj['app.incexps.tt.allOk']
@@ -216,7 +216,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 $state.go(INCEXP_CONST.CREATE_INCEXP_STATE_NAME, $stateParams);
             };
             _this.editIncexp = function(updatedIncexp){
-                $state.go('editIncexp', {
+                $state.go(INCEXP_CONST.EDIT_INCEXP_STATE_NAME, {
                     trackerId: $stateParams.trackerId,
                     incexpId: updatedIncexp._id
                 });
@@ -241,14 +241,14 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 }
                 // Redirect after save
                 incexp.$save($stateParams, function(response) {
-                    $state.go('listTrackerIncexps', $stateParams);
+                    $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
                     AppMessenger.sendInfoMsg('Successfully Created New Tracker');
                 }, function(errorResponse) {
                     $scope.error = errorResponse.data.message;
                 });
             };
             _this.cancel = function(){
-                $state.go('listTrackerIncexps', $stateParams);
+                $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
             };
             _this.updateIncexp = function(updatedIncexp){
                 var incexp = updatedIncexp;
@@ -260,7 +260,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 }
                 delete incexp.tracker;
                 incexp.$update($stateParams, function() {
-                  $state.go('listTrackerIncexps', $stateParams);
+                  $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
                   AppMessenger.sendInfoMsg('Successfully Updated the Income/Expense');
                 }, function(errorResponse) {
                     $scope.error = errorResponse.data.message;
@@ -275,7 +275,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
     						incexpId : incexp._id,
     						trackerId: $stateParams.trackerId
     					}, function(res){
-    					$state.go('listTrackerIncexps', $stateParams, {reload: true});
+    					$state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams, {reload: true});
     		            AppMessenger.sendInfoMsg('Successfully Deleted the Income/Expense');
                     });
     			}

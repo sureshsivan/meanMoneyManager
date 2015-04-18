@@ -24,6 +24,8 @@
     "app.incexps.lbl.descLbl" : "Description : ",
     "app.incexps.lbl.tagsLbl" : "Tags : ",
     "app.incexps.lbl.pendingWithLbl" : "Pending With : ",
+    "app.incexps.lbl.pendingMsgLbl" : "Message : ",
+    "app.incexps.lbl.createdBy" : "Created By : ",
 
 	"app.incexps.lbl.newIncexp" : "New Income or Expense",
 	"app.incexps.lbl.description" : "Description",

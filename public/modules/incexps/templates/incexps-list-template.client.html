@@ -86,7 +86,13 @@
                         <span class="fa fa-tags" data-ng-repeat="tag in incexp.tags" style="color:{{tag.color}}">{{tag.label}}</span>
                         <br/>
                         <span data-ng-if="incexp.isPending">
+                        	<strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.createdBy']}}</strong>{{incexp.owner.displayName}}
+                        </span>
+                        <br/>
+                        <span data-ng-if="incexp.isPending">
                         	<strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.pendingWithLbl']}}</strong>{{incexp.pendingWith.displayName}}
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.pendingMsgLbl']}}</strong>{{incexp.pendingMsg}}
                         </span>
                     </div>
                 </td>
