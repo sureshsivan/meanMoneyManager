@@ -34,7 +34,11 @@
 	"app.incexps.lbl.updateIncexp" : "Update Income or Expense",
 	"app.incexps.lbl.approveIncexp" : "Approve Income or Expense",
 	"app.incexps.lbl.reqUpdateAccess" : "Request Access to Update Income/Expense",
-
+    "app.incexps.lbl.cancel" : "Cancel",
+    "app.incexps.lbl.update" : "Update : ",
+    "app.incexps.lbl.today" : "Today",
+    "app.incexps.lbl.clear" : "Clearr",
+    "app.incexps.lbl.close" : "Closee",
 
     "app.incexps.ph.name" : "Type Display Name",
     "app.incexps.ph.description" : "Type Description",
@@ -65,7 +69,7 @@
     "app.incexps.err.msg.minMaxValueAmount" : "Amount should be between 1 to 5_00_000 - 5 lakh",
     "app.incexps.err.msg.selectIncexpVault" : "Please select a vault",
     "app.incexps.err.msg.pendingTypeRequired" : "Select Type of Approval required",
-    "app.incexps.err.msg.pendingWithRequired" : "Choose user to approve"
+    "app.incexps.err.msg.pendingWithRequired" : "Please Choose an user to approve"
     
 
 }

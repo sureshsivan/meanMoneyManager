@@ -1,7 +1,6 @@
 <div class="list-group">
 	<div class="col-xs-12 pad-top">
 
-        <br/><br/>
 
         <table class="table table-striped table-hover table-condensed incexp-row-item">
             <tr>
@@ -83,10 +82,12 @@
                         <br/>
                         <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.vaultLbl']}}</strong>{{incexp.vault.displayName}}
                         <br/>
+                        <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.tagsLbl']}}</strong>
+                        <span class="fa fa-tags" data-ng-repeat="tag in incexp.tags" style="color:{{tag.color}}">{{tag.label}}</span>
+                        <br/>
                         <span data-ng-if="incexp.isPending">
                         	<strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.pendingWithLbl']}}</strong>{{incexp.pendingWith.displayName}}
                         </span>
-                        <br/>
                     </div>
                 </td>
             </tr>

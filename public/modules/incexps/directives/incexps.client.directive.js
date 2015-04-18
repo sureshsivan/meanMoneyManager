@@ -42,15 +42,13 @@ angular.module('incexps')
                 ngModel.$setValidity('pendingTypeRequired', true);
                 ngModel.$setValidity('pendingWithRequired', true);
                 if(isPending){
-                    console.dir(arguments);
                     if(!pendingType){
                         ngModel.$dirty = true;
                         ngModel.$pristine = false;
                         ngModel.$setValidity('pendingTypeRequired', false);
                         form.$dirty = true;
                         form.$pristine = false;
-                    }
-                    if(!pendingWith || !pendingWith._id){
+                    } else  if(!pendingWith || !pendingWith._id){
                         ngModel.$dirty = true;
                         ngModel.$pristine = false;
                         ngModel.$setValidity('pendingWithRequired', false);

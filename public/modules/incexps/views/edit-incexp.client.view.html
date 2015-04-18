@@ -1,76 +1,134 @@
-<section data-ng-controller="IncexpsController as incexpsCtrl" data-ng-init="incexpsCtrl.findOne()">
+<section data-ng-controller="IncexpsController as incexpsCtrl">
     <div class="page-header">
-        <h3>Update: {{incexp.displayName}}</h3>
+        <h3 class="modal-title">{{incexpsCtrl.getLabel('app.incexps.lbl.update')}} {{incexp.displayName}}</h3>
     </div>
     <form name=editIncExpForm>
         <fieldset>
             <div class="row">
-                <div class="form-group-xs">
-                    <div data-ng-show="error" class="text-center text-danger">
-                        <div class="alert alert-danger" role="alert">
-                            <strong data-ng-bind="error"></strong>
+                <div class="col-sm-12">
+                    <div class="form-group-sm">
+                        <label class="control-label" for="displayName"> {{incexpsCtrl.labelsObj['app.incexps.lbl.name']}}</label>
+                        <div class="controls">
+                            <input type="text" data-ng-model="incexp.displayName" id="displayName" name="displayName"
+                                   placeholder="{{incexpsCtrl.labelsObj['app.incexps.ph.name']}}" class="form-control"
+                                   data-ng-minlength="8" data-ng-maxlength="20" required/>
+                            <div data-ng-if="editIncExpForm.displayName.$invalid && editIncExpForm.displayName.$dirty"
+                                 data-data-ng-messages="createIncexpForm.displayName.$error">
+	                                <span data-ng-if="editIncExpForm.displayName.$error.required"
+                                          class="label label-warning" data-ng-message="required">
+	                                    {{incexpsCtrl.getLabel('app.incexps.err.msg.inputIncexpName')}}
+	                                </span>
+	                                <span data-ng-if="editIncExpForm.displayName.$error.minlength || editIncExpForm.displayName.$error.maxlength"
+                                          class="label label-warning" data-ng-message="minlength, maxlength">
+	                                    {{incexpsCtrl.getLabel('app.incexps.err.msg.minMaxLengthIncexpName')}}
+	                                </span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-sm-9">
                     <div class="form-group-sm">
-                        <label class="control-label" for="displayName"> Display Name</label>
+                        <label class="control-label" for="description"> {{incexpsCtrl.labelsObj['app.incexps.lbl.description']}}</label>
                         <div class="controls">
-                            <input type="text" data-ng-model="incexp.displayName" id="displayName" class="form-control" required="true">
+                            <input type="text" data-ng-model="incexp.description" id="description" name="description"
+                                   placeholder="{{incexpsCtrl.labelsObj['app.incexps.ph.description']}}" class="form-control"
+                                   data-ng-minlength="12" data-ng-maxlength="50"  required/>
+                            <div data-ng-if="editIncExpForm.description.$invalid && editIncExpForm.description.$dirty"
+                                 data-data-ng-messages="createIncexpForm.description.$error">
+	                                <span data-ng-if="editIncExpForm.description.$error.required"
+                                          class="label label-warning" data-ng-message="required">
+	                                    {{incexpsCtrl.getLabel('app.incexps.err.msg.inputIncexpDesc')}}
+	                                </span>
+	                                <span data-ng-if="editIncExpForm.description.$error.minlength || editIncExpForm.description.$error.maxlength"
+                                          class="label label-warning" data-ng-message="minlength, maxlength">
+	                                    {{incexpsCtrl.getLabel('app.incexps.err.msg.minMaxLengthIncexpDesc')}}
+	                                </span>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group-sm">
-                        <label class="control-label" for="description"> Description</label>
+                        <label class="control-label" for="type"> {{incexpsCtrl.labelsObj['app.incexps.lbl.type']}}</label>
                         <div class="controls">
-                            <input type="text" data-ng-model="incexp.description" id="description" class="form-control" required>
-                        </div>
-                    </div>
-                    <div class="form-group-sm">
-                        <label class="control-label" for="type"> Type</label>
-                        <div class="controls">
-                            <select data-ng-model="incexp.type" id="type" class="form-control"
-                                    ng-options="incexpType.id as incexpType.label for incexpType in incexpsCtrl.getIncexpType()">
-                                <option value="" disabled>-- Choose Approval Type --</option>
+                            <select data-ng-model="incexp.type" id="type" class="form-control" name="type"
+                                    data-ng-options="incexpType.id as incexpType.label for incexpType in incexpsCtrl.incexpTypes" required>
+                                <option value="">{{incexpsCtrl.labelsObj['app.incexps.ph.type']}}</option>
                             </select>
+                            <div data-ng-if="editIncExpForm.type.$invalid && editIncExpForm.type.$dirty"
+                                 data-data-ng-messages="createIncexpForm.type.$error">
+                                    <span data-ng-if="editIncExpForm.type.$error.required"
+                                          class="label label-warning" data-ng-message="required">
+                                        {{incexpsCtrl.labelsObj['app.incexps.err.msg.selectIncexpType']}}
+                                    </span>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group-sm">
-                        <label class="control-label" for="evDate"> Date</label>
+                        <label class="control-label" for="evDate"> {{incexpsCtrl.labelsObj['app.incexps.lbl.date']}}</label>
                         <div class="controls">
                             <p class="input-group">
-                                <input type="text" id="evDate" class="form-control" datepicker-popup="{{'dd-MMMM-yyyy'}}" ng-model="incexp.evDate"
-                                       is-open="datePickerOpened" min-date="2011-06-22" max-date="'2015-06-22'"
-                                       close-text="Close" />
-                                  <span class="input-group-btn">
-                                    <button type="button" class="btn btn-sm" ng-click="incexpsCtrl.openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                                  </span>
+                                <input readonly="readonly" name="evDate" type="text" id="evDate" class="form-control"
+                                       data-datepicker-popup="{{'dd-MMMM-yyyy'}}" data-ng-model="incexp.evDate"
+                                       data-is-open="datePickerOpened" data-min-date="minDate" data-max-date="maxDate"
+                                       placeholder="{{incexpsCtrl.labelsObj['app.incexps.ph.date']}}"
+                                       data-current-text="{{incexpsCtrl.labelsObj['app.incexps.lbl.today']}}"
+                                       data-clear-text="{{incexpsCtrl.labelsObj['app.incexps.lbl.clear']}}"
+                                       data-close-text="{{incexpsCtrl.labelsObj['app.incexps.lbl.close']}}" required/>
+                                      <span class="input-group-btn">
+                                        <button type="button" class="btn btn-sm" data-ng-click="incexpsCtrl.openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                      </span>
+                                <div data-ng-if="editIncExpForm.evDate.$invalid && editIncExpForm.evDate.$dirty"
+                                     data-data-ng-messages="createIncexpForm.evDate.$error">
+                                    <span data-ng-if="editIncExpForm.evDate.$error.required"
+                                          class="label label-warning" data-ng-message="required">
+                                        {{incexpsCtrl.labelsObj['app.incexps.err.msg.selectDate']}}
+                                    </span>
+                                </div>
+
                             </p>
                         </div>
                     </div>
                     <div class="form-group-sm">
-                        <label class="control-label" for="amount"> Amount</label>
+                        <label class="control-label" for="amount"> {{incexpsCtrl.labelsObj['app.incexps.lbl.amount']}}</label>
                         <div class="controls">
-                            <input type="number" data-ng-model="incexp.amount" id="amount" class="form-control" required>
+                            <input type="number" data-ng-model="incexp.amount" id="amount" name="amount"
+                                   min="1" max="500000"
+                                   placeholder="{{incexpsCtrl.labelsObj['app.incexps.ph.amount']}}" class="form-control" required/>
+                            <div data-ng-if="editIncExpForm.amount.$invalid && editIncExpForm.amount.$dirty"
+                                 data-data-ng-messages="createIncexpForm.amount.$error">
+	                                <span data-ng-if="editIncExpForm.amount.$error.required"
+                                          class="label label-warning" data-ng-message="required">
+	                                    {{incexpsCtrl.getLabel('app.incexps.err.msg.inputAmount')}}
+	                                </span>
+	                                <span data-ng-if="editIncExpForm.amount.$error.min || editIncExpForm.amount.$error.max"
+                                          class="label label-warning" data-ng-message="min, max">
+	                                    {{incexpsCtrl.getLabel('app.incexps.err.msg.minMaxValueAmount')}}
+	                                </span>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group-sm">
-                        <label class="control-label" for="vault"> Vault</label>
+                        <label class="control-label" for="vault"> {{incexpsCtrl.labelsObj['app.incexps.lbl.vault']}}</label>
                         <div class="controls">
-                            <select data-ng-model="incexp.vault" id="vault" class="form-control"
-                                    data-ng-options="eachVault._id as eachVault.displayName for eachVault in incexpsCtrl.vaultsResult">
-                                <option value="" disabled>-- Choose Vault --</option>
+                            <select data-ng-model="incexp.vault" id="vault" class="form-control" name="vault"
+                                    data-ng-options="eachVault._id as eachVault.displayName for eachVault in incexpsCtrl.vaultsResult" required>
+                                <option value="">{{incexpsCtrl.labelsObj['app.incexps.ph.vault']}}</option>
                             </select>
+                            <div data-ng-if="editIncExpForm.vault.$invalid && editIncExpForm.vault.$dirty"
+                                 data-data-ng-messages="createIncexpForm.vault.$error">
+                                    <span data-ng-if="editIncExpForm.vault.$error.required"
+                                          class="label label-warning" data-ng-message="required">
+                                        {{incexpsCtrl.labelsObj['app.incexps.err.msg.selectIncexpVault']}}
+                                    </span>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group-sm">
-                        <label class="control-label" for="tags"> Tags</label>
+                        <label class="control-label" > Tags</label>
                         <div class="controls">
                         <tags-input ng-model="incexp.tags" class="ti-input-sm" 
                                         display-property="label" 
 						                placeholder="Add Tags" 
 						                replace-spaces-with-dashes="false"
 						                template="modules/incexps/templates/incexp-tag-input-template.client.html">
-	                         <auto-complete source="incexpsCtrl.incexpStatics.getTagsList()"
+	                         <auto-complete source="incexpsCtrl.incexpTags"
 							                  min-length="0"
 							                  load-on-focus="true"
 							                  load-on-empty="true"
@@ -80,32 +138,24 @@
                         </div>
                     </div>
                     <div class="form-group-sm">
-                        <label class="control-label" for="isPending"> Require Approval ? </label>
-                        <div class="controls">
-                            <!--TODO - apply proper styling-->
-                            <div class="input-group">
-                              <span class="input-group-addon">
-                                <input class="form-control-md" type="checkbox" 
-                                		data-ng-disabled="incexpsCtrl.applyDisableForPendingCheckbox(incexp)" 
-                                       data-ng-model="incexp.isPending" id="isPending"/>
-                              </span>
-                              <span class="input-group-btn">
-                                <select data-ng-model="incexp.pendingType" id="pendingType" class="form-control"
-                                        ng-options="approvalType.id as approvalType.label for approvalType in incexpsCtrl.getApprovalTypes()" 
-                                        data-ng-disabled="incexpsCtrl.applyDisablePendingFields(incexp.isPending, incexp)">
-                                    <option value="" disabled>-- Choose Approval Type --</option>
-                                </select>
-                              </span>
-                              <span class="input-group-btn">
-                                <select-users user="incexp.pendingWith" 
-                                	data-ng-disabled="incexpsCtrl.applyDisablePendingFields(incexp.isPending, incexp)"></select-users>
-                              </span>
-                            </div>
-								<br/>
-                            <textarea placeholder="Type your message here...." class="form-control" 
-                            				data-ng-disabled="incexpsCtrl.applyDisablePendingFields(incexp.isPending, incexp)"
-                            				data-ng-model="incexp.pendingMsg" 
-                            				id="pendingMsg" class="form-control"></textarea>
+                        <incexp-approval name="approval"
+                                         data-label="incexpsCtrl.labelsObj['app.incexps.lbl.reqVerification']"
+                                         data-pending-type-default-label="incexpsCtrl.labelsObj['app.incexps.ph.pendingType']"
+                                         data-select-user-placeholder="incexpsCtrl.labelsObj['app.incexps.ph.selectUser']"
+                                         data-pending-msg-placeholder="incexpsCtrl.labelsObj['app.incexps.ph.appMsg']"
+                                         data-approval-types="incexpsCtrl.getApprovalTypes()"
+                                         data-ng-model="incexpsCtrl.approvalModel">
+                        </incexp-approval>
+                        <div data-ng-if="editIncExpForm.approval.$invalid && editIncExpForm.approval.$dirty"
+                             data-data-ng-messages="createIncexpForm.approval.$error">
+                                <span data-ng-if="editIncExpForm.approval.$error.pendingTypeRequired"
+                                      class="label label-warning" data-ng-message="pendingTypeRequired">
+                                    {{incexpsCtrl.getLabel('app.incexps.err.msg.pendingTypeRequired')}}
+                                </span>
+                                <span data-ng-if="editIncExpForm.approval.$error.pendingWithRequired"
+                                      class="label label-warning" data-ng-message="pendingWithRequired">
+                                    {{incexpsCtrl.getLabel('app.incexps.err.msg.pendingWithRequired')}}
+                                </span>
                         </div>
                     </div>
                 </div>
@@ -115,6 +165,6 @@
     <div class="modal-footer">
         <button class="btn btn-success btn-sm" ng-click="incexpsCtrl.updateIncexp(incexp)">Update & Close</button>
         <!-- ng-disabled="editIncExpForm.$invalid -->
-        <button class="btn btn-warning btn-sm" ng-click="cancel()">Cancel</button>
+        <button class="btn btn-warning btn-sm" ng-click="incexpsCtrl.cancel()">Cancel</button>
     </div>
 </section>

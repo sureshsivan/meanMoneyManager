@@ -17,10 +17,19 @@ angular.module('incexps').service('IncexpStatics', [ '$http', '$q',
             return deferred.promise;
         };
 
+        incexpStatics.getIncexpTags = function(){
+            return this.incexpTags;
+        };
+        incexpStatics.loadIncexpTags = function(){
+            var deferred = $q.defer();
+            $http.get('modules/incexps/json/incexpTags.json').then(function(response){
+                incexpStatics.incexpTags = response.data;
+                deferred.resolve(response.data);
+            });
+            return deferred.promise;
+        };
 
-		incexpStatics.getListIncexpsTemplatePath = function(){
-			return 'modules/incexps/templates/incexps-list-template.client.html';
-		};
+
         incexpStatics.getApprovalTypesForCreation = function(){
 				if(! this.approvalTypesForCreation){
 					this.approvalTypesForCreation = [{id: 'UPD_REQ', label: 'Request for Update'}];
@@ -36,33 +45,38 @@ angular.module('incexps').service('IncexpStatics', [ '$http', '$q',
             }
             return this.getApprovalTypesForUpdate;
         };
-        incexpStatics.getIncexpType = function(){
-            if(! this.incexpType){
-                this.incexpType = [{id: 'INC', label: 'Income'},
-                    //{id: 'UPD_ACC_REQ', label: 'Request for Update Access'},
-                    {id: 'EXP', label: 'Expense'}];
-            }
-            return this.incexpType;
-        };
-        incexpStatics.getTagsList = function(){
-            return $http.get('modules/incexps/json/incexpTags.json');
-        };
-        incexpStatics.getApprovalModel = function(incexp){
-            if(!incexp){
-                return {
-                    isPending: false,
-                    pendingType: null,
-                    pendingMsg: ''
-                };
-            } else {
-                return {
-                    isPending: incexp.isPending,
-                    pendingType: incexp.pendingType,
-                    pendingMsg: incexp.pendingMsg
-                };
-            }
-            return $http.get('modules/incexps/json/incexpTags.json');
-        };
+
+        //incexpStatics.getListIncexpsTemplatePath = function(){
+        //    return 'modules/incexps/templates/incexps-list-template.client.html';
+        //};
+        //
+        //incexpStatics.getIncexpType = function(){
+        //    if(! this.incexpType){
+        //        this.incexpType = [{id: 'INC', label: 'Income'},
+        //            //{id: 'UPD_ACC_REQ', label: 'Request for Update Access'},
+        //            {id: 'EXP', label: 'Expense'}];
+        //    }
+        //    return this.incexpType;
+        //};
+        //incexpStatics.getTagsList = function(){
+        //    return $http.get('modules/incexps/json/incexpTags.json');
+        //};
+        //incexpStatics.getApprovalModel = function(incexp){
+        //    if(!incexp){
+        //        return {
+        //            isPending: false,
+        //            pendingType: null,
+        //            pendingMsg: ''
+        //        };
+        //    } else {
+        //        return {
+        //            isPending: incexp.isPending,
+        //            pendingType: incexp.pendingType,
+        //            pendingMsg: incexp.pendingMsg
+        //        };
+        //    }
+        //    return $http.get('modules/incexps/json/incexpTags.json');
+        //};
 		return incexpStatics;
 	}
 ]);

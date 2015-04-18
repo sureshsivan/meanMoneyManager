@@ -70,7 +70,9 @@
                                     <input readonly="readonly" name="evDate" type="text" id="evDate" class="form-control" data-datepicker-popup="{{'dd-MMMM-yyyy'}}" data-ng-model="incexpsCtrl.evDate"
                                            data-is-open="datePickerOpened" data-min-date="minDate" data-max-date="maxDate"
                                            placeholder="{{incexpsCtrl.labelsObj['app.incexps.ph.date']}}" 
-                                           data-current-text="..Tonight" data-clear-text="..Reset" data-close-text="..Exit" required/>
+                                           data-current-text="{{incexpsCtrl.labelsObj['app.incexps.lbl.today']}}"
+                                           data-clear-text="{{incexpsCtrl.labelsObj['app.incexps.lbl.clear']}}"
+                                           data-close-text="{{incexpsCtrl.labelsObj['app.incexps.lbl.close']}}" required/>
                                       <span class="input-group-btn">
                                         <button type="button" class="btn btn-sm" data-ng-click="incexpsCtrl.openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                                       </span>
@@ -88,7 +90,7 @@
                             <label class="control-label" for="amount"> {{incexpsCtrl.labelsObj['app.incexps.lbl.amount']}}</label>
                             <div class="controls">
                                 <input type="number" data-ng-model="incexpsCtrl.amount" id="amount" name="amount"  
-                                	min="1" max="5" 
+                                	min="1" max="500000"
                                 	placeholder="{{incexpsCtrl.labelsObj['app.incexps.ph.amount']}}" class="form-control" required/>
 	                            <div data-ng-if="createIncexpForm.amount.$invalid && createIncexpForm.amount.$dirty"
 	                                 data-data-ng-messages="createIncexpForm.amount.$error">
@@ -127,7 +129,7 @@
 								                placeholder="{{incexpsCtrl.labelsObj['app.incexps.ph.tags']}}" 
 								                replace-spaces-with-dashes="false"
 								                template="modules/incexps/templates/incexp-tag-input-template.client.html">
-	                                <auto-complete source="incexpsCtrl.incexpStatics.getTagsList()"
+	                                <auto-complete source="incexpsCtrl.incexpTags"
 					                     min-length="0"
 					                     load-on-focus="true"
 					                     load-on-empty="true"
@@ -136,56 +138,26 @@
                                 </tags-input>
                             </div>
                         </div>
-                        <!--<div class="form-group-sm">-->
-                            <!--<label class="control-label" for="isPending"> {{incexpsCtrl.labelsObj['app.incexps.lbl.reqVerification']}}</label>-->
-                            <!--<div class="controls">-->
-                                <!--&lt;!&ndash;TODO - apply proper styling&ndash;&gt;-->
-                                <!--<div class="input-group">-->
-                                  <!--<span class="input-group-addon">-->
-                                    <!--<input class="form-control-md" type="checkbox" -->
-                                    	   <!--data-ng-disabled="incexpsCtrl.applyDisableForPendingCheckbox()"-->
-                                    	   <!--placeholder="{{'s' + incexpsCtrl.labelsObj['app.incexps.lbl.incexp']}}"-->
-                                           <!--data-ng-model="incexpsCtrl.isPending" id="isPending"/>-->
-                                  <!--</span>-->
-                                  <!--<span class="input-group-btn">-->
-                                    <!--<select data-ng-model="incexpsCtrl.pendingType" id="pendingType" class="form-control"-->
-                                            <!--data-ng-options="approvalType.id as approvalType.label for approvalType in incexpsCtrl.getApprovalTypes()" -->
-                                            <!--data-ng-disabled="incexpsCtrl.applyDisablePendingFields(incexpsCtrl.isPending)">-->
-                                        <!--<option value="" disabled>-- Choose Approval Type --</option>-->
-                                    <!--</select>-->
-                                  <!--</span>-->
-                                  <!--<span class="input-group-btn">-->
-                                    <!--<select-users user="incexpsCtrl.pendingWith" -->
-                                    	<!--data-ng-disabled="incexpsCtrl.applyDisablePendingFields(incexpsCtrl.isPending)"></select-users>-->
-                                  <!--</span>-->
-                                <!--</div>-->
-								<!--<br/>-->
-                                <!--<textarea placeholder="{{incexpsCtrl.labelsObj['app.incexps.ph.appMsg']}}" class="form-control" -->
-                                	<!--data-ng-disabled="incexpsCtrl.applyDisablePendingFields(incexpsCtrl.isPending)" -->
-                                	<!--data-ng-model="incexpsCtrl.pendingMsg" -->
-                                	<!--id="pendingMsg" class="form-control"></textarea>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--TODO - refactor - passing controller reference is not good - for the sake of completion-->
-                        <incexp-approval name="approval"
-                                data-label="incexpsCtrl.labelsObj['app.incexps.lbl.reqVerification']"
-                                data-pending-type-default-label="incexpsCtrl.labelsObj['app.incexps.ph.pendingType']"
-                                data-select-user-placeholder="incexpsCtrl.labelsObj['app.incexps.ph.selectUser']"
-                                data-pending-msg-placeholder="incexpsCtrl.labelsObj['app.incexps.ph.appMsg']"
-                                data-approval-types="incexpsCtrl.getApprovalTypes()"
-                                data-ng-model="incexpsCtrl.approvalModel">
-                        </incexp-approval>
-                        <div data-ng-if="createIncexpForm.approval.$invalid && createIncexpForm.approval.$dirty"
-                             data-data-ng-messages="createIncexpForm.approval.$error">
-	                                <span data-ng-if="createIncexpForm.approval.$error.pendingTypeRequired"
-                                          class="label label-warning" data-ng-message="pendingTypeRequired">
-	                                    {{incexpsCtrl.getLabel('app.incexps.err.msg.pendingTypeRequired')}}
-	                                </span>
-                                    <br/>
-	                                <span data-ng-if="createIncexpForm.approval.$error.pendingWithRequired"
-                                          class="label label-warning" data-ng-message="pendingWithRequired">
-	                                    {{incexpsCtrl.getLabel('app.incexps.err.msg.pendingWithRequired')}}
-	                                </span>
+                        <div class="form-group-sm">
+                            <incexp-approval name="approval"
+                                    data-label="incexpsCtrl.labelsObj['app.incexps.lbl.reqVerification']"
+                                    data-pending-type-default-label="incexpsCtrl.labelsObj['app.incexps.ph.pendingType']"
+                                    data-select-user-placeholder="incexpsCtrl.labelsObj['app.incexps.ph.selectUser']"
+                                    data-pending-msg-placeholder="incexpsCtrl.labelsObj['app.incexps.ph.appMsg']"
+                                    data-approval-types="incexpsCtrl.getApprovalTypes()"
+                                    data-ng-model="incexpsCtrl.approvalModel">
+                            </incexp-approval>
+                            <div data-ng-if="createIncexpForm.approval.$invalid && createIncexpForm.approval.$dirty"
+                                 data-data-ng-messages="createIncexpForm.approval.$error">
+                                <span data-ng-if="createIncexpForm.approval.$error.pendingTypeRequired"
+                                      class="label label-warning" data-ng-message="pendingTypeRequired">
+                                    {{incexpsCtrl.getLabel('app.incexps.err.msg.pendingTypeRequired')}}
+                                </span>
+                                <span data-ng-if="createIncexpForm.approval.$error.pendingWithRequired"
+                                      class="label label-warning" data-ng-message="pendingWithRequired">
+                                    {{incexpsCtrl.getLabel('app.incexps.err.msg.pendingWithRequired')}}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -195,12 +167,10 @@
 
 
     <div class="modal-footer">
-        <!--<button class="btn btn-success btn-sm" ng-click="incexpsCtrl.saveIncexp()" ng-disabled="createIncexpForm.$invalid">Save & Close</button>-->
         <button class="btn btn-success btn-sm"
                 data-ng-disabled="createIncexpForm.$invalid"
-                ng-click="incexpsCtrl.saveIncexp()" >Save & Close</button>
-         <!-- ng-disabled="createCustomerForm.$invalid -->
-        <button class="btn btn-warning btn-sm" data-ng-click="cancel()">Cancel</button>
+                ng-click="incexpsCtrl.saveIncexp()" >{{incexpsCtrl.getLabel('app.incexps.lbl.createIncexp')}}</button>
+        <button class="btn btn-warning btn-sm" data-ng-click="incexpsCtrl.cancel()">{{incexpsCtrl.getLabel('app.incexps.lbl.cancel')}}</button>
     </div>
 </section>
 

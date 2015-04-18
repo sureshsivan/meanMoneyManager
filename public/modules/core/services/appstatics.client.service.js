@@ -25,7 +25,7 @@ angular.module('core').service('AppStatics', [ '$http', '$q',
 //            }
 //        };
         appStatics.getCurrencyObj = function(currencyId){
-        	console.log(currencyId);
+            console.log(currencyId);
             for(var i in this.currencies){
                 var currency = this.currencies[i];
                 if(currency.id === currencyId)  return currency;

@@ -19,25 +19,30 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         //	Not sure whether this is correct way - but it works.
 
         var pullMsgs = function(){
+            console.log('Start Pull Msg');
 			var deferred = $q.defer();
 			IncexpLocaleMessages.pullMessages().then(function(labels){
+                console.log('Complete Pull Msg');
     			_this.labelsObj = labels;
     			deferred.resolve(null);
             });
             return deferred.promise;
         };
         var pullVaults = function(){
+            console.log('Start Pull Vaults');
         	var deferred = $q.defer();
             _this.vaultStatics.queryVaults($stateParams.trackerId).then(function(response){
                 _this.vaultsResult = [];
                 response.data.map(function(item){
                     _this.vaultsResult.push(item);
                 });
+                console.log('Complete Pull Vault');
                 deferred.resolve(null);
             });
             return deferred.promise;
         };
         var pullIncexpTypes = function(){
+            console.log('Start Pull Types');
         	var deferred = $q.defer();
         	var cachedVal = _this.incexpStatics.getIncexpTypes();
         	//	If value is already cached by service - then use it otherwise 
@@ -50,32 +55,67 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     response.map(function(item){
                         _this.incexpTypes.push(item);
                     });
+                    console.log('Complete Pull Types');
                     deferred.resolve(null);
                 });	
         	}
         	
             return deferred.promise;
         };
+        var pullTags = function(){
+            console.log('Start Pull Tags');
+            var deferred = $q.defer();
+            var cachedVal = _this.incexpStatics.getIncexpTags();
+            //	If value is already cached by service - then use it otherwise
+            if(cachedVal){
+                _this.incexpTags = cachedVal;
+                console.log('Complete Pull Tags');
+                deferred.resolve(null);
+            } else {
+                _this.incexpStatics.loadIncexpTags().then(function(response){
+                    _this.incexpTags = [];
+                    response.map(function(item){
+                        _this.incexpTags.push(item);
+                    });
+                    console.log('Complete Pull Tags');
+                    deferred.resolve(null);
+                });
+            }
+
+            return deferred.promise;
+        };
         var loadCurrencies = function(){
-        	console.log('Load Currencies');
+            console.log('Start Pull Currencies');
         	return AppStatics.loadCurrencies();
         };
         
         var pullIncexps = function () {
-        	console.log('Load Incexps.......');
+            console.log('Start pullIncexps');
         	_this.trackerIncexps = TrackerIncexps.listTrackerIncexps($stateParams);
         	return _this.trackerIncexps.$promise; 
         };
-
+        var pullIncexp = function () {
+            console.log('Start Pull Incexp');
+            var deferred = $q.defer();
+            TrackerIncexps.get($stateParams).$promise.then(function(response){
+                $scope.incexp = response;
+                _this.approvalModel = {
+                    'isPending': $scope.incexp.isPending,
+                    'pendingType': $scope.incexp.pendingType,
+                    'pendingWith' : $scope.incexp.pendingWith,
+                    'pendingMsg': $scope.incexp.pendingMsg
+                };
+                console.log('Complete Pull Incexp');
+                deferred.resolve(null);
+            });
+            return deferred.promise;
+        };
         var loadIncexpAlerts = function(response){
-        	console.log('Load INcexp alerts...');
+            console.log('Start Pull loadIncexpAlerts');
         	var deferred = $q.defer();
             response.$promise.then(function(incexps){
-            	console.dir(incexps);
                 for(var i=0; i<incexps.length; i++){
                     var incexp = incexps[i];
-                    console.log('>>> : ' + incexps.length);
-                    console.log('>>> : ' + incexp.currency);
                     incexp.infoAlerts = [];
                     if(incexp.isPending && incexp.pendingWith._id === Authentication.user._id){
                         incexp.infoAlerts.push({
@@ -102,8 +142,8 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                         });
                     }
                     incexp.collapsed = true;
-//                    incexp.currency = AppStatics.getCurrencyObj(incexp.currency);
-                    incexp.currencyObj = AppStatics.getCurrencyObj(incexp.currency);
+                    incexp.currencyObj = AppStatics.getCurrencyObj(incexp.tracker.currency);
+                    console.log('Start Pull loadIncexpAlerts');
                     deferred.resolve(null);
                 }
             });
@@ -111,8 +151,15 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         };
 
         var bootmodule = function(){
+            console.log('Start Boot module');
+              //populate 'approvalModel' for the directive
+            if($scope.incexp){  //  Editing an item
+
+            } else {    //  For New Income Expense Creation
+                console.log('_this.approvalModel');
+                _this.approvalModel = {'isPending': false, 'pendingType': null,'pendingMsg': null};
+            }
             _this.getLabel = function(key){
-            	console.log(key);
             	return _this.labelsObj[key];
             }; 
             _this.getCurrencies = function(){
@@ -157,29 +204,6 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
             _this.canRequestEditAccess = function(incexp){
             	return incexp && incexp.owner && (incexp.owner._id !== Authentication.user._id) && (! incexp.pendingWith) ;
             };
-            //_this.applyDisablePendingFields = function(isSelected, incexp){
-            //	var toDisable = false;
-            //	if(typeof incexp === 'undefined'){
-            //		toDisable = !isSelected;
-            //	} else if(incexp && incexp.owner){
-            //		toDisable = (Authentication.user._id !== incexp.owner._id) || (!isSelected);
-            //	}
-            //	return toDisable;
-            //};
-            //_this.applyDisableForPendingCheckbox = function(incexp){
-            //	if(incexp && incexp.owner){
-            //		return Authentication.user._id !== incexp.owner._id;
-            //	} else {
-            //		return false;
-            //	}
-            //};
-            _this.findAll = function() {
-                _this.trackerIncexps = TrackerIncexps.listTrackerIncexps($stateParams);
-            };
-            _this.findOne = function() {
-                $scope.incexp = TrackerIncexps.get($stateParams);
-            };
-
             _this.createIncexp = function(){
                 _this.incexp = {};
                 $state.go(INCEXP_CONST.CREATE_INCEXP_STATE_NAME, $stateParams);
@@ -191,7 +215,6 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 });
             };
             _this.saveIncexp = function() {
-                console.log(_this);
                 var incexp = new TrackerIncexps({
                     displayName: _this.displayName,
                     description: _this.description,
@@ -203,11 +226,11 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     owner: _this.authentication.user._id,
                     created: _this.created
                 });
-                if(_this.isPending){
-                    incexp.isPending = _this.isPending;
-                    incexp.pendingType = _this.pendingType;
-                    incexp.pendingWith = _this.pendingWith._id;
-                    incexp.pendingMsg = _this.pendingMsg;
+                if(_this.approvalModel && _this.approvalModel.isPending){
+                    incexp.isPending = _this.approvalModel.isPending;
+                    incexp.pendingType = _this.approvalModel.pendingType;
+                    incexp.pendingWith = _this.approvalModel.pendingWith._id;
+                    incexp.pendingMsg = _this.approvalModel.pendingMsg;
                 }
                 // Redirect after save
                 incexp.$save(function(response) {
@@ -217,9 +240,17 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     $scope.error = errorResponse.data.message;
                 });
             };
-            
+            _this.cancel = function(){
+                $state.go('listTrackerIncexps', $stateParams);
+            };
             _this.updateIncexp = function(updatedIncexp){
                 var incexp = updatedIncexp;
+                if(_this.approvalModel && _this.approvalModel.isPending){
+                    incexp.isPending = _this.approvalModel.isPending;
+                    incexp.pendingType = _this.approvalModel.pendingType;
+                    incexp.pendingWith = _this.approvalModel.pendingWith._id;
+                    incexp.pendingMsg = _this.approvalModel.pendingMsg;
+                }
                 delete incexp.tracker;
                 incexp.$update($stateParams, function() {
                   $state.go('listTrackerIncexps', $stateParams);
@@ -246,16 +277,13 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         
         if($state.current.name === INCEXP_CONST.LIST_INCEXPS_STATE_NAME){
         	pullMsgs().then(loadCurrencies).then(pullIncexps).then(loadIncexpAlerts).then(bootmodule);
-//        	pullMsgs().then(bootmodule);
-//        	$q.all([pullMsgs, loadCurrencies, pullIncexps]).then(bootmodule);
         } else if($state.current.name === INCEXP_CONST.CREATE_INCEXP_STATE_NAME){
-        	pullMsgs().then(pullVaults).then(pullIncexpTypes).then(bootmodule);
+        	pullMsgs().then(pullVaults).then(pullIncexpTypes).then(pullTags).then(bootmodule);
+            //TODO - load up this with boot module
             _this.approvalModel = {'isPending': false, 'pendingType': null,'pendingMsg': null};
+        } else if($state.current.name === INCEXP_CONST.EDIT_INCEXP_STATE_NAME){
+            pullMsgs().then(pullVaults).then(pullIncexpTypes).then(pullTags).then(pullIncexp).then(bootmodule);
         }
-        
-//        loadmsgs().then(loadvaults).then(bootmodule);
-        //$q.all([loadmsgs, loadvaults]).then(bootmodule);
-
 	}
 ])
 
