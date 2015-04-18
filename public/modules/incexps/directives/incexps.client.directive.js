@@ -92,10 +92,18 @@ angular.module('incexps')
 
 
                     ngModel.$render = function() {
-                        scope.isPending = ngModel.$viewValue.isPending;
-                        scope.pendingType = ngModel.$viewValue.pendingType;
-                        scope.pendingWith = ngModel.$viewValue.pendingWith;
-                        scope.pendingMsg = ngModel.$viewValue.pendingMsg;
+                        if(ngModel && ngModel.$viewValue && ngModel.$viewValue.isPending){
+                            scope.isPending = ngModel.$viewValue.isPending;
+                            scope.pendingType = ngModel.$viewValue.pendingType;
+                            scope.pendingWith = ngModel.$viewValue.pendingWith;
+                            scope.pendingMsg = ngModel.$viewValue.pendingMsg;
+                        } else {
+                            scope.isPending = !1;
+                            scope.pendingType = null;
+                            scope.pendingWith = null;
+                            scope.pendingMsg = null;
+                        }
+
                     };
 
                     scope.$watch("isPending", function(newVal, oldVal) {

@@ -99,12 +99,19 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
             var deferred = $q.defer();
             TrackerIncexps.get($stateParams).$promise.then(function(response){
                 $scope.incexp = response;
-                _this.approvalModel = {
-                    'isPending': $scope.incexp.isPending,
-                    'pendingType': $scope.incexp.pendingType,
-                    'pendingWith' : $scope.incexp.pendingWith,
-                    'pendingMsg': $scope.incexp.pendingMsg
-                };
+                if($scope.incexp.isPending){
+                    console.log(44);
+                    _this.approvalModel = {
+                        'isPending': $scope.incexp.isPending,
+                        'pendingType': $scope.incexp.pendingType,
+                        'pendingWith' : $scope.incexp.pendingWith,
+                        'pendingMsg': $scope.incexp.pendingMsg
+                    };
+                } else {
+                    console.log(55);
+                    _this.approvalModel = {'isPending': false};
+                }
+
                 console.log('Complete Pull Incexp');
                 deferred.resolve(null);
             });
@@ -233,7 +240,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     incexp.pendingMsg = _this.approvalModel.pendingMsg;
                 }
                 // Redirect after save
-                incexp.$save(function(response) {
+                incexp.$save($stateParams, function(response) {
                     $state.go('listTrackerIncexps', $stateParams);
                     AppMessenger.sendInfoMsg('Successfully Created New Tracker');
                 }, function(errorResponse) {
