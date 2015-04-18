@@ -63,8 +63,9 @@
     "app.incexps.err.msg.selectDate" : "Choose Date of Income/Expense",
     "app.incexps.err.msg.inputAmount" : "Please input a number for Amount",
     "app.incexps.err.msg.minMaxValueAmount" : "Amount should be between 1 to 5_00_000 - 5 lakh",
-    "app.incexps.err.msg.selectIncexpVault" : "Please select a vault"
-    
+    "app.incexps.err.msg.selectIncexpVault" : "Please select a vault",
+    "app.incexps.err.msg.pendingTypeRequired" : "Select Type of Approval required",
+    "app.incexps.err.msg.pendingWithRequired" : "Choose user to approve"
     
 
 }

@@ -175,6 +175,18 @@
                                 data-approval-types="incexpsCtrl.getApprovalTypes()"
                                 data-ng-model="incexpsCtrl.approvalModel">
                         </incexp-approval>
+                        <div data-ng-if="createIncexpForm.approval.$invalid && createIncexpForm.approval.$dirty"
+                             data-data-ng-messages="createIncexpForm.approval.$error">
+	                                <span data-ng-if="createIncexpForm.approval.$error.pendingTypeRequired"
+                                          class="label label-warning" data-ng-message="pendingTypeRequired">
+	                                    {{incexpsCtrl.getLabel('app.incexps.err.msg.pendingTypeRequired')}}
+	                                </span>
+                                    <br/>
+	                                <span data-ng-if="createIncexpForm.approval.$error.pendingWithRequired"
+                                          class="label label-warning" data-ng-message="pendingWithRequired">
+	                                    {{incexpsCtrl.getLabel('app.incexps.err.msg.pendingWithRequired')}}
+	                                </span>
+                        </div>
                     </div>
                 </div>
             </fieldset>

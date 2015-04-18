@@ -37,48 +37,89 @@ angular.module('incexps')
 
     .directive('incexpApproval', ['Authentication', 'UserStatics',
         function(Authentication, UserStatics) {
+            var ID = 0;
+            function validateApproval(isPending, pendingType, pendingWith, pendingMsg, ngModel, form){
+                ngModel.$setValidity('pendingTypeRequired', true);
+                ngModel.$setValidity('pendingWithRequired', true);
+                if(isPending){
+                    console.dir(arguments);
+                    if(!pendingType){
+                        ngModel.$dirty = true;
+                        ngModel.$pristine = false;
+                        ngModel.$setValidity('pendingTypeRequired', false);
+                        form.$dirty = true;
+                        form.$pristine = false;
+                    }
+                    if(!pendingWith || !pendingWith._id){
+                        ngModel.$dirty = true;
+                        ngModel.$pristine = false;
+                        ngModel.$setValidity('pendingWithRequired', false);
+                        form.$dirty = true;
+                        form.$pristine = false;
+                    }
+                }
+            }
+            function buildModel(isPending, pendingType, pendingWith, pendingMsg, ngModel){
+                ngModel.$viewValue = ngModel.$viewValue || {};
+                ngModel.$viewValue.isPending = isPending;
+                ngModel.$viewValue.pendingType = pendingType;
+                ngModel.$viewValue.pendingWith = pendingWith;
+                ngModel.$viewValue.pendingMsg = pendingMsg;
+                //ngModel.$setViewValue(obj);
+            }
             return {
                 restrict: 'E',
-                require: ['ngModel'],
+                require: ['ngModel', '^form'],
                 transclude: true,
+                replace: true,
+                scope: {
+                    name: "@",
+                    label: '=',
+                    pendingTypeDefaultLabel: '=',
+                    selectUserPlaceholder: '=',
+                    pendingMsgPlaceholder: '=',
+                    approvalTypes: '='
+                },
                 templateUrl: 'modules/incexps/templates/incexps-approval-field-template.client.html',
                 link: function(scope, element, attrs, ctrl) {
-                    //console.dir(ctrl);
-                    //scope.$watch(scope.ngModel, function(){
-                    //    console.log('Listener 1');
-                    //});
-                    //scope.$watch(attrs.ngModel, function(){
-                    //    console.log('Listener 2');
-                    //});
-                    //scope.$watch(ctrl.$viewValue, function(){
-                    //    console.log('Listener 3');
-                    //});
-                    //var xx = function(){
-                    //    console.log('Ayyooooo');
-                    //}
-                    //ctrl[0].$parsers.unshift(xx);
-                    //ctrl[0].$formatters.push(xx);
-                    //ctrl[0].$viewChangeListeners.unshift(xx);
-                    //console.dir(ctrl);
-                    ////scope.$watch(attrs.ngModel, function(){
-                    ////    console.log('Listener 4');
-                    ////});
-                    scope.validateApproval = function(model){
-                        console.log('Validating Fiels');
-                        //if(model.isPending){
-                        //    ctrl[0].$dirty = true;
-                        //    ctrl[0].$pristine = false;
-                        //    if(!model.pendingType){
-                        //        ctrl[0].$setValidity('pendingTypeNotFound', false);
-                        //        console.dir(ctrl[0]);
-                        //    }else if(!model.pendingWith){
-                        //        ctrl[0].$setValidity('pendingWithNotFound', false);
-                        //        console.dir(ctrl[0]);
-                        //    }
-                        //} else {
-                        //    console.log('Clear the entire model');
-                        //}
+                    var ngModel = ctrl[0];
+                    var form = ctrl[1];
+                    if( scope.name ) {
+                        scope.subFormName = scope.name;
+                    }
+                    else {
+                        scope.subFormName = "_range" + ID;
+                        ID++;
+                    }
+
+
+                    ngModel.$render = function() {
+                        scope.isPending = ngModel.$viewValue.isPending;
+                        scope.pendingType = ngModel.$viewValue.pendingType;
+                        scope.pendingWith = ngModel.$viewValue.pendingWith;
+                        scope.pendingMsg = ngModel.$viewValue.pendingMsg;
                     };
+
+                    scope.$watch("isPending", function(newVal, oldVal) {
+                        if(newVal === oldVal)   return;
+                        validateApproval(newVal, scope.pendingType, scope.pendingWith, scope.pendingMsg, ngModel, form);
+                        buildModel(newVal, scope.pendingType, scope.pendingWith, scope.pendingMsg, ngModel);
+                    });
+                    scope.$watch("pendingType", function(newVal, oldVal) {
+                        if(newVal === oldVal)   return;
+                        validateApproval(scope.isPending, newVal, scope.pendingWith, scope.pendingMsg, ngModel, form);
+                        buildModel(scope.isPending, newVal, scope.pendingWith, scope.pendingMsg, ngModel);
+                    });
+                    scope.$watch("pendingWith", function(newVal, oldVal) {
+                        if(newVal === oldVal)   return;
+                        validateApproval(scope.isPending, scope.pendingType, newVal, scope.pendingMsg, ngModel, form);
+                        buildModel(scope.isPending, scope.pendingType, newVal, scope.pendingMsg, ngModel);
+                    });
+                    scope.$watch("pendingMsg", function(newVal, oldVal) {
+                        if(newVal === oldVal)   return;
+                        validateApproval(scope.isPending, scope.pendingType, scope.pendingWith, newVal, ngModel, form);
+                        buildModel(scope.isPending, scope.pendingType, scope.pendingWith, newVal, ngModel);
+                    });
                     scope.applyDisableForPendingCheckbox = function(incexp){
                         if(incexp && incexp.owner){
                             return Authentication.user._id !== incexp.owner._id;
@@ -95,32 +136,7 @@ angular.module('incexps')
                         }
                         return toDisable;
                     };
-                },
-                scope: {
-                    label: '=',
-                    pendingTypeDefaultLabel: '=',
-                    selectUserPlaceholder: '=',
-                    pendingMsgPlaceholder: '=',
-                    approvalTypes: '='
                 }
-                //controller: function($scope){
-                //    $scope.applyDisableForPendingCheckbox = function(incexp){
-                //        if(incexp && incexp.owner){
-                //            return Authentication.user._id !== incexp.owner._id;
-                //        } else {
-                //            return false;
-                //        }
-                //    };
-                //    $scope.applyDisablePendingFields = function(isSelected, incexp){
-                //        var toDisable = false;
-                //        if(typeof incexp === 'undefined'){
-                //            toDisable = !isSelected;
-                //        } else if(incexp && incexp.owner){
-                //            toDisable = (Authentication.user._id !== incexp.owner._id) || (!isSelected);
-                //        }
-                //        return toDisable;
-                //    };
-                //}
             };
         }])
 
