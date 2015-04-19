@@ -71,7 +71,7 @@ angular.module('incexps')
                 transclude: true,
                 replace: true,
                 scope: {
-                    name: "@",
+                    name: '@',
                     label: '=',
                     pendingTypeDefaultLabel: '=',
                     selectUserPlaceholder: '=',
@@ -86,7 +86,7 @@ angular.module('incexps')
                         scope.subFormName = scope.name;
                     }
                     else {
-                        scope.subFormName = "_range" + ID;
+                        scope.subFormName = '_range' + ID;
                         ID++;
                     }
 
@@ -106,22 +106,22 @@ angular.module('incexps')
 
                     };
 
-                    scope.$watch("isPending", function(newVal, oldVal) {
+                    scope.$watch('isPending', function(newVal, oldVal) {
                         if(newVal === oldVal)   return;
                         validateApproval(newVal, scope.pendingType, scope.pendingWith, scope.pendingMsg, ngModel, form);
                         buildModel(newVal, scope.pendingType, scope.pendingWith, scope.pendingMsg, ngModel);
                     });
-                    scope.$watch("pendingType", function(newVal, oldVal) {
+                    scope.$watch('pendingType', function(newVal, oldVal) {
                         if(newVal === oldVal)   return;
                         validateApproval(scope.isPending, newVal, scope.pendingWith, scope.pendingMsg, ngModel, form);
                         buildModel(scope.isPending, newVal, scope.pendingWith, scope.pendingMsg, ngModel);
                     });
-                    scope.$watch("pendingWith", function(newVal, oldVal) {
+                    scope.$watch('pendingWith', function(newVal, oldVal) {
                         if(newVal === oldVal)   return;
                         validateApproval(scope.isPending, scope.pendingType, newVal, scope.pendingMsg, ngModel, form);
                         buildModel(scope.isPending, scope.pendingType, newVal, scope.pendingMsg, ngModel);
                     });
-                    scope.$watch("pendingMsg", function(newVal, oldVal) {
+                    scope.$watch('pendingMsg', function(newVal, oldVal) {
                         if(newVal === oldVal)   return;
                         validateApproval(scope.isPending, scope.pendingType, scope.pendingWith, newVal, ngModel, form);
                         buildModel(scope.isPending, scope.pendingType, scope.pendingWith, newVal, ngModel);

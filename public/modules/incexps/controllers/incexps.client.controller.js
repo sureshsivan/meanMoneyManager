@@ -84,6 +84,49 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
 
             return deferred.promise;
         };
+
+
+        var pullApprovalTypes = function(){
+            var displayMode = 'CREATE';
+            console.log('Start Pull App Types');
+            var deferred = $q.defer();
+            var cachedVal = _this.incexpStatics.getApprovalTypes();
+            //	If value is already cached by service - then use it otherwise
+            if(cachedVal){
+                _this.approvalTypes = cachedVal;
+                _this.approvalTypes.map(function(item){
+                    if(displayMode){
+                        if(item && item.displayMode &&
+                            (item.displayMode.indexOf(displayMode) > -1 || item.displayMode.indexOf('ALL') > -1)){
+                            _this.approvalTypes.push(item);
+                        }
+                    } else {
+                        _this.approvalTypes.push(item);
+                    }
+                });
+                console.log('Complete Pull App Types');
+                deferred.resolve(null);
+            } else {
+                _this.incexpStatics.loadApprovalTypes().then(function(response){
+                    _this.approvalTypes = [];
+                    response.map(function(item){
+                        if(displayMode){
+                            if(item && item.displayMode &&
+                                (item.displayMode.indexOf(displayMode) > -1 || item.displayMode.indexOf('ALL') > -1)){
+                                _this.approvalTypes.push(item);
+                            }
+                        } else {
+                            _this.approvalTypes.push(item);
+                        }
+                    });
+                    console.log('Complete Pull App Types');
+                    deferred.resolve(null);
+                });
+            }
+
+            return deferred.promise;
+        };
+
         var loadCurrencies = function(){
             console.log('Start Pull Currencies');
         	return AppStatics.loadCurrencies();
@@ -161,7 +204,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
             console.log('Start Boot module');
               //populate 'approvalModel' for the directive
             if($scope.incexp){  //  Editing an item
-
+                console.log('Empty block');
             } else {    //  For New Income Expense Creation
                 console.log('_this.approvalModel');
                 _this.approvalModel = {'isPending': false, 'pendingType': null,'pendingMsg': null};
@@ -201,7 +244,6 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     }
                 }
             };
-            //_this
             _this.canEdit = function(incexp){
             	return incexp && incexp.owner && ((incexp.owner._id === Authentication.user._id) || 
     						(incexp.pendingWith && (incexp.pendingWith._id === Authentication.user._id)));
@@ -216,8 +258,8 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 return incexp && incexp.isPending && (incexp.pendingWith._id === Authentication.user._id);
             };
             _this.canApproveEditRequest = function(incexp){
-                return incexp && incexp.isPending && (incexp.pendingWith._id === Authentication.user._id)
-                    && (incexp.owner._id === Authentication.user._id);
+                return incexp && incexp.isPending && (incexp.pendingWith._id === Authentication.user._id) &&
+                    (incexp.owner._id === Authentication.user._id);
             };
             _this.createIncexp = function(){
                 _this.incexp = {};
@@ -275,6 +317,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 });
             };
             _this.requestForEdit = function(incexp){
+
             	alert('Requesting _this for edit access...');
             };
     		_this.remove = function(incexp) {
@@ -293,11 +336,11 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         if($state.current.name === INCEXP_CONST.LIST_INCEXPS_STATE_NAME){
         	pullMsgs().then(loadCurrencies).then(pullIncexps).then(loadIncexpAlerts).then(bootmodule);
         } else if($state.current.name === INCEXP_CONST.CREATE_INCEXP_STATE_NAME){
-        	pullMsgs().then(pullVaults).then(pullIncexpTypes).then(pullTags).then(bootmodule);
+        	pullMsgs().then(pullVaults).then(pullIncexpTypes).then(pullTags).then(pullApprovalTypes).then(bootmodule);
             //TODO - load up this with boot module
             _this.approvalModel = {'isPending': false, 'pendingType': null,'pendingMsg': null};
         } else if($state.current.name === INCEXP_CONST.EDIT_INCEXP_STATE_NAME){
-            pullMsgs().then(pullVaults).then(pullIncexpTypes).then(pullTags).then(pullIncexp).then(bootmodule);
+            pullMsgs().then(pullVaults).then(pullIncexpTypes).then(pullTags).then(pullApprovalTypes).then(pullIncexp).then(bootmodule);
         }
 	}
 ])

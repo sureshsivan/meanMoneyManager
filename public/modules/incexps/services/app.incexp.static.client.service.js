@@ -30,6 +30,18 @@ angular.module('incexps').service('IncexpStatics', [ '$http', '$q',
         };
 
 
+        incexpStatics.getApprovalTypes = function(){
+            return this.approvalTypes;
+        };
+        incexpStatics.loadApprovalTypes = function(){
+            var deferred = $q.defer();
+            $http.get('modules/incexps/json/incexpApprovalTypes.json').then(function(response){
+                incexpStatics.approvalTypes = response.data;
+                deferred.resolve(response.data);
+            });
+            return deferred.promise;
+        };
+
         incexpStatics.getApprovalTypesForCreation = function(){
 				if(! this.approvalTypesForCreation){
 					this.approvalTypesForCreation = [{id: 'UPD_REQ', label: 'Request for Update'}];

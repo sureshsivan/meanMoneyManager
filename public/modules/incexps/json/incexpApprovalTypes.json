@@ -1,0 +1,22 @@
+[
+  {
+    "id": "DEL_REQ",
+    "label": "Request for Deletion",
+    "displayMode": "NONE"
+  },
+  {
+    "id": "UPD_REQ",
+    "label": "Request for Update",
+    "displayMode": "ALL"
+  },
+  {
+    "id": "UPD_ACC_REQ",
+    "label": "Request for Update Access",
+    "displayMode": "NONE"
+  },
+  {
+    "id": "UPD_ACC_APP",
+    "label": "Approve Update Access Request",
+    "displayMode": "NONE"
+  }
+]
