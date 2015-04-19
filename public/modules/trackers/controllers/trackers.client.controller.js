@@ -135,7 +135,7 @@ angular.module('trackers')
                     if (tracker) {
                         tracker.$remove(function () {
                             $state.go(TRACKER_CONST.LIST_TRACKERS_STATE_NAME, $stateParams, {reload: true});
-                            AppMessenger.sendInfoMsg('Successfully Deleted the Tracker');
+                            AppMessenger.sendErrMsg('Successfully Deleted the Tracker');
                         }, function (errorResponse) {
                             $scope.error = errorResponse.data.message;
                         });

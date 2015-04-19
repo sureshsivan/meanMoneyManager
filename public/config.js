@@ -5,7 +5,8 @@ var ApplicationConfiguration = (function() {
 	// Init module configuration options
 	var applicationModuleName = 'meanmoneymanager';
 	var applicationModuleVendorDependencies = ['ngResource', 'ngCookies',  'ngAnimate',  'ngTouch',  'ngSanitize',
-	                                           'ui.router', 'ui.bootstrap', 'ui.utils', 'angularMoment', 'ngTagsInput'];
+	                                           'ui.router', 'ui.bootstrap', 'ui.utils', 'angularMoment', 'ngTagsInput']
+                                                //'mgcrea.ngStrap.alert', 'mgcrea.ngStrap.modal', 'mgcrea.ngStrap.helpers.dimensions'];
 
 	// Add a new vertical module
 	var registerModule = function(moduleName, dependencies) {
