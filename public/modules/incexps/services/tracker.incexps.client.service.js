@@ -7,11 +7,27 @@ angular.module('incexps').factory('TrackerIncexps', ['$resource',
 			update: {
 				method: 'PUT'
 			},
-              listTrackerIncexps: {
+            listTrackerIncexps: {
                 method: 'GET',
-                  params: {trackerId : 'trackerId'},
+                params: {trackerId : 'trackerId'},
                 isArray: true
-          }
+            },
+            requestEditAccess: {
+                url: 'incexps/requestEditAccess/:incexpId',
+                method: 'PUT'
+            },
+            approveEditAccessRequest: {
+                url: 'incexps/approveEditAccessRequest/:incexpId',
+                method: 'PUT'
+            },
+            rejectEditAccessRequest: {
+                url: 'incexps/rejectEditAccessRequest/:incexpId',
+                method: 'PUT'
+            },
+            approveIncexpChanges: {
+                url: 'incexps/approveChanges/:incexpId',
+                method: 'PUT'
+            }
 		});
 	}
 ]);

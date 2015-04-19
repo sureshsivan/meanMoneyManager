@@ -15,6 +15,18 @@ module.exports = function(app) {
         .put(users.requiresLogin, incexps.hasAuthorization, incexps.update)
         .delete(users.requiresLogin, incexps.hasAuthorization, incexps.delete);
 
+    app.route('/incexps/requestEditAccess/:incexpId')
+        .put(users.requiresLogin, incexps.hasAuthToEditRequest, incexps.requestEditIncexpAccess);
+
+    app.route('/incexps/approveEditAccessRequest/:incexpId')
+        .put(users.requiresLogin, incexps.hasAuthToApproveEditRequest, incexps.approveEditIncexpAccess);
+
+    app.route('/incexps/rejectEditAccessRequest/:incexpId')
+        .put(users.requiresLogin, incexps.hasAuthToApproveEditRequest, incexps.rejectEditIncexpAccess);
+
+    app.route('/incexps/approveChanges/:incexpId')
+        .put(users.requiresLogin, incexps.hasAuthToApproveChanges, incexps.approveIncexpChanges);
+
 	// Finish by binding the Incexp middleware
 	app.param('incexpId', incexps.incexpByID);
     app.param('trackerId', trackers.trackerByID);

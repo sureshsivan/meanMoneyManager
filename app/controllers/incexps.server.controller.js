@@ -317,6 +317,92 @@ exports.findVaultIncexpCounts = function(req){
     return deferred.promise;
 };
 
+exports.requestEditIncexpAccess = function(req, res) {
+    var incexp = req.incexp ;
+
+    //incexp = _.extend(incexp , req.body);
+
+    incexp.isPending = true;
+    incexp.pendingType = 'UPD_ACC_REQ';
+    incexp.pendingWith = mongoose.Types.ObjectId(incexp.owner._id);
+    incexp.pendingMsg = 'Need Edit Income/Expense Access';
+    incexp.requestedBy = mongoose.Types.ObjectId(req.user._id);
+
+    incexp.save(function(err) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.jsonp(incexp);
+        }
+    });
+};
+
+
+exports.approveEditIncexpAccess = function(req, res) {
+    var incexp = req.incexp ;
+
+    //incexp = _.extend(incexp , req.body);
+    incexp.isPending = true;
+    incexp.pendingType = 'UPD_REQ';
+    incexp.pendingWith = mongoose.Types.ObjectId(incexp.requestedBy);
+    incexp.pendingMsg = 'Approved Edit Income/Expense Access';
+    incexp.requestedBy = null;
+
+    incexp.save(function(err) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.jsonp(incexp);
+        }
+    });
+};
+
+exports.rejectEditIncexpAccess = function(req, res) {
+    var incexp = req.incexp ;
+
+    //incexp = _.extend(incexp , req.body);
+    incexp.isPending = false;
+    incexp.pendingType = null;
+    incexp.pendingWith = null;
+    incexp.pendingMsg = null;
+    incexp.requestedBy = null;
+
+    incexp.save(function(err) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.jsonp(incexp);
+        }
+    });
+};
+
+exports.approveIncexpChanges = function(req, res) {
+    var incexp = req.incexp ;
+
+    incexp = _.extend(incexp , req.body);
+
+    incexp.isPending = false;
+    incexp.pendingType = null;
+    incexp.pendingWith = null;
+    incexp.pendingMsg = null;
+
+    incexp.save(function(err) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.jsonp(incexp);
+        }
+    });
+};
+
 /**
  * Incexp authorization middleware
  */
@@ -337,4 +423,36 @@ exports.hasAuthorization = function(req, res, next) {
             req.incexp = incexp;
             next();
         });
+};
+
+exports.hasAuthToEditRequest = function(req, res, next) {
+    var incexp = req.incexp;
+    //var user = req.user;
+    if(!incexp.isPending){
+        next();
+    } else {
+        return res.status(403).send('Already in Pending Status');
+    }
+};
+
+exports.hasAuthToApproveChanges = function(req, res, next) {
+    var incexp = req.incexp;
+    var user = req.user;
+    if(incexp.isPending && incexp.pendingType === 'UPD_REQ' && incexp.pendingWith._id.toString() === user._id.toString()){
+        next();
+    } else {
+        return res.status(403).send('No Authorization to Approve Changes');
+    }
+};
+
+exports.hasAuthToApproveEditRequest = function(req, res, next) {
+    var incexp = req.incexp;
+    var user = req.user;
+    console.log(incexp);
+    console.log(user);
+    if(incexp.isPending && incexp.owner._id.toString() === user._id.toString()  && incexp.pendingType === 'UPD_ACC_REQ'){
+        next();
+    } else {
+        return res.status(403).send('Cannot Approve Edit Request - not authorised');
+    }
 };

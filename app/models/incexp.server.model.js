@@ -60,10 +60,10 @@ var IncexpSchema = new Schema({
     //pendingSince: {
     //    type: Date
     //},
-    //requestedBy: {
-    //    type: Schema.ObjectId,
-    //    ref: 'User'
-    //},
+    requestedBy: {
+        type: Schema.ObjectId,
+        ref: 'User'
+    },
 	created: {
 		type: Date,
 		default: Date.now

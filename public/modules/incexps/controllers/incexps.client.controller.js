@@ -1,9 +1,9 @@
 'use strict';
 
 // Incexps controller
-angular.module('incexps').controller('IncexpsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Incexps',
+angular.module('incexps').controller('IncexpsController', ['$scope', '$stateParams', '$location', 'Authentication',
         'TrackerIncexps', '$modal', '$log', 'moment', 'AppStatics', 'Notify', 'VaultStatics', '$state', 'IncexpStatics', 'AppMessenger', 'IncexpLocaleMessages', '$q', 'INCEXP_CONST',
-	function($scope, $stateParams, $location, Authentication, Incexps,
+	function($scope, $stateParams, $location, Authentication,
              TrackerIncexps, $modal, $log, moment, AppStatics, Notify, VaultStatics, $state, IncexpStatics, AppMessenger, IncexpLocaleMessages, $q, INCEXP_CONST) {
 		var _this = this;
         _this.authentication = Authentication;
@@ -19,30 +19,25 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         //	Not sure whether this is correct way - but it works.
 
         var pullMsgs = function(){
-            console.log('Start Pull Msg');
 			var deferred = $q.defer();
 			IncexpLocaleMessages.pullMessages().then(function(labels){
-                console.log('Complete Pull Msg');
     			_this.labelsObj = labels;
     			deferred.resolve(null);
             });
             return deferred.promise;
         };
         var pullVaults = function(){
-            console.log('Start Pull Vaults');
         	var deferred = $q.defer();
             _this.vaultStatics.queryVaults($stateParams.trackerId).then(function(response){
                 _this.vaultsResult = [];
                 response.data.map(function(item){
                     _this.vaultsResult.push(item);
                 });
-                console.log('Complete Pull Vault');
                 deferred.resolve(null);
             });
             return deferred.promise;
         };
         var pullIncexpTypes = function(){
-            console.log('Start Pull Types');
         	var deferred = $q.defer();
         	var cachedVal = _this.incexpStatics.getIncexpTypes();
         	//	If value is already cached by service - then use it otherwise 
@@ -55,7 +50,6 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     response.map(function(item){
                         _this.incexpTypes.push(item);
                     });
-                    console.log('Complete Pull Types');
                     deferred.resolve(null);
                 });	
         	}
@@ -63,13 +57,11 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
             return deferred.promise;
         };
         var pullTags = function(){
-            console.log('Start Pull Tags');
             var deferred = $q.defer();
             var cachedVal = _this.incexpStatics.getIncexpTags();
             //	If value is already cached by service - then use it otherwise
             if(cachedVal){
                 _this.incexpTags = cachedVal;
-                console.log('Complete Pull Tags');
                 deferred.resolve(null);
             } else {
                 _this.incexpStatics.loadIncexpTags().then(function(response){
@@ -77,7 +69,6 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     response.map(function(item){
                         _this.incexpTags.push(item);
                     });
-                    console.log('Complete Pull Tags');
                     deferred.resolve(null);
                 });
             }
@@ -88,7 +79,6 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
 
         var pullApprovalTypes = function(){
             var displayMode = 'CREATE';
-            console.log('Start Pull App Types');
             var deferred = $q.defer();
             var cachedVal = _this.incexpStatics.getApprovalTypes();
             //	If value is already cached by service - then use it otherwise
@@ -104,7 +94,6 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                         _this.approvalTypes.push(item);
                     }
                 });
-                console.log('Complete Pull App Types');
                 deferred.resolve(null);
             } else {
                 _this.incexpStatics.loadApprovalTypes().then(function(response){
@@ -119,7 +108,6 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                             _this.approvalTypes.push(item);
                         }
                     });
-                    console.log('Complete Pull App Types');
                     deferred.resolve(null);
                 });
             }
@@ -128,22 +116,18 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         };
 
         var loadCurrencies = function(){
-            console.log('Start Pull Currencies');
         	return AppStatics.loadCurrencies();
         };
         
         var pullIncexps = function () {
-            console.log('Start pullIncexps');
         	_this.trackerIncexps = TrackerIncexps.listTrackerIncexps($stateParams);
         	return _this.trackerIncexps.$promise; 
         };
         var pullIncexp = function () {
-            console.log('Start Pull Incexp');
             var deferred = $q.defer();
             TrackerIncexps.get($stateParams).$promise.then(function(response){
                 $scope.incexp = response;
                 if($scope.incexp.isPending){
-                    console.log(44);
                     _this.approvalModel = {
                         'isPending': $scope.incexp.isPending,
                         'pendingType': $scope.incexp.pendingType,
@@ -151,49 +135,50 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                         'pendingMsg': $scope.incexp.pendingMsg
                     };
                 } else {
-                    console.log(55);
                     _this.approvalModel = {'isPending': false};
                 }
 
-                console.log('Complete Pull Incexp');
                 deferred.resolve(null);
             });
             return deferred.promise;
         };
         var loadIncexpAlerts = function(response){
-            console.log('Start Pull loadIncexpAlerts');
         	var deferred = $q.defer();
             response.$promise.then(function(incexps){
                 for(var i=0; i<incexps.length; i++){
                     var incexp = incexps[i];
                     incexp.infoAlerts = [];
+                    if(!incexp.isPending){
+                        incexp.infoAlerts.push({
+                            'clazz': 'fa-check-circle info-icon',
+                            'tooltip': _this.labelsObj['app.incexps.tt.allOk']
+                        });
+                    } else {
+                        if(incexp.pendingWith._id === Authentication.user._id){
+                            incexp.infoAlerts.push({
+                                'clazz': 'fa-exclamation-circle danger-icon',
+                                'tooltip': _this.labelsObj['app.incexps.tt.requireActionFrmMe']
+                            });
+                        }else {
+                            incexp.infoAlerts.push({
+                                'clazz': 'fa-exclamation-circle warn-icon',
+                                'tooltip': _this.labelsObj['app.incexps.tt.requireActionFrm'] + incexp.pendingWith.displayName
+                            });
+                        }
+                    }
                     if(incexp.owner._id === Authentication.user._id){
                         incexp.infoAlerts.push({
                             'clazz': 'fa-user info-icon',
                             'tooltip': _this.labelsObj['app.incexps.tt.createdByMe']
                         });
-                    }
-                    if(incexp.isPending && incexp.pendingWith._id === Authentication.user._id){
+                    } else {
                         incexp.infoAlerts.push({
-                            'clazz': 'fa-warning danger-icon',
-                            'tooltip': _this.labelsObj['app.incexps.tt.requireActionFrmMe']
-                        });
-                    }
-                    if(incexp.isPending && incexp.pendingWith._id !== Authentication.user._id){
-                        incexp.infoAlerts.push({
-                            'clazz': 'fa-exclamation-circle warn-icon',
-                            'tooltip': _this.labelsObj['app.incexps.tt.requireActionFrm'] + incexp.pendingWith.displayName
-                        });
-                    }
-                    if(incexp.infoAlerts.length === 0){
-                        incexp.infoAlerts.push({
-                            'clazz': 'fa-check-circle info-icon',
-                            'tooltip': _this.labelsObj['app.incexps.tt.allOk']
+                            'clazz': 'fa-user-secret info-icon',
+                            'tooltip': _this.labelsObj['app.incexps.tt.createdByOther']
                         });
                     }
                     incexp.collapsed = true;
                     incexp.currencyObj = AppStatics.getCurrencyObj(incexp.tracker.currency);
-                    console.log('Start Pull loadIncexpAlerts');
                     deferred.resolve(null);
                 }
             });
@@ -201,12 +186,9 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         };
 
         var bootmodule = function(){
-            console.log('Start Boot module');
               //populate 'approvalModel' for the directive
             if($scope.incexp){  //  Editing an item
-                console.log('Empty block');
             } else {    //  For New Income Expense Creation
-                console.log('_this.approvalModel');
                 _this.approvalModel = {'isPending': false, 'pendingType': null,'pendingMsg': null};
             }
             _this.getLabel = function(key){
@@ -246,20 +228,19 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
             };
             _this.canEdit = function(incexp){
             	return incexp && incexp.owner && ((incexp.owner._id === Authentication.user._id) || 
-    						(incexp.pendingWith && (incexp.pendingWith._id === Authentication.user._id)));
+    						(incexp.pendingWith && incexp.pendingType === 'UPD_REQ' && incexp.pendingWith._id === Authentication.user._id)) &&
+                    (! (incexp.isPending && incexp.pendingType === 'UPD_ACC_REQ'));
             };
             _this.canDelete = function(incexp){
-            	return incexp && incexp.owner && incexp.owner._id === Authentication.user._id;
+            	return incexp && incexp.owner && incexp.owner._id === Authentication.user._id &&
+                    (! (incexp.isPending && incexp.pendingType === 'UPD_ACC_REQ'));
             };
             _this.canRequestEditAccess = function(incexp){
             	return incexp && incexp.owner && (incexp.owner._id !== Authentication.user._id) && (! incexp.pendingWith) ;
             };
-            _this.canApprove = function(incexp){
-                return incexp && incexp.isPending && (incexp.pendingWith._id === Authentication.user._id);
-            };
             _this.canApproveEditRequest = function(incexp){
                 return incexp && incexp.isPending && (incexp.pendingWith._id === Authentication.user._id) &&
-                    (incexp.owner._id === Authentication.user._id);
+                    (incexp.owner._id === Authentication.user._id) && (incexp.pendingType === 'UPD_ACC_REQ');
             };
             _this.createIncexp = function(){
                 _this.incexp = {};
@@ -316,9 +297,44 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     $scope.error = errorResponse.data.message;
                 });
             };
-            _this.requestForEdit = function(incexp){
+            _this.approveIncexpChanges = function(updatedIncexp){
+                var incexp = updatedIncexp;
+                delete incexp.isPending;
+                delete incexp.pendingType;
+                delete incexp.pendingWith;
+                delete incexp.pendingMsg;
+                delete incexp.tracker;
+                incexp.$approveIncexpChanges($stateParams, function() {
+                    $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
+                    AppMessenger.sendInfoMsg('Successfully Approved the Income/Expense Changes');
+                }, function(errorResponse) {
+                    $scope.error = errorResponse.data.message;
+                });
+            };
 
-            	alert('Requesting _this for edit access...');
+
+
+
+            _this.requestForEdit = function(incexp){
+                incexp.$requestEditAccess({
+                    incexpId : incexp._id
+                }, function(response){
+                    $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams, {reload: true});
+                });
+            };
+            _this.approveEditAccessRequest = function(incexp){
+                incexp.$approveEditAccessRequest({
+                    incexpId : incexp._id
+                }, function(response){
+                    $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams, {reload: true});
+                });
+            };
+            _this.rejectEditAccessRequest = function(incexp){
+                incexp.$rejectEditAccessRequest({
+                    incexpId : incexp._id
+                }, function(response){
+                    $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams, {reload: true});
+                });
             };
     		_this.remove = function(incexp) {
     			if ( incexp ) {

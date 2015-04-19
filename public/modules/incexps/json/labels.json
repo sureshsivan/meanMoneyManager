@@ -34,6 +34,9 @@
 	"app.incexps.lbl.deleteIncexp" : "Delete Income or Expense",
 	"app.incexps.lbl.createIncexp" : "Create Income or Expense",
 	"app.incexps.lbl.updateIncexp" : "Update Income or Expense",
+    "app.incexps.lbl.reqEditAccess" : "Request to Edit Income or Expense",
+    "app.incexps.lbl.approveEditAccess" : "Approve Edit Income or Expense Request",
+    "app.incexps.lbl.rejectEditAccess" : "Reject Edit Income or Expense Request",
 	"app.incexps.lbl.approveIncexp" : "Approve Income or Expense",
 	"app.incexps.lbl.reqUpdateAccess" : "Request Access to Update Income/Expense",
     "app.incexps.lbl.cancel" : "Cancel",
@@ -58,6 +61,7 @@
     "app.incexps.tt.requireActionFrm" : "Requires action from",
     "app.incexps.tt.requireActionFrmMe" : "Requires action from Me",
     "app.incexps.tt.createdByMe" : "Created By Me",
+    "app.incexps.tt.createdByOther" : "Created By Other User",
     "app.incexps.tt.allOk" : "All OK",
     "app.incexps.tt.incexpInfo" : "Details",
 
