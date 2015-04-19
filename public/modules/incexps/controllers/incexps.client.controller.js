@@ -201,6 +201,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     }
                 }
             };
+            //_this
             _this.canEdit = function(incexp){
             	return incexp && incexp.owner && ((incexp.owner._id === Authentication.user._id) || 
     						(incexp.pendingWith && (incexp.pendingWith._id === Authentication.user._id)));
