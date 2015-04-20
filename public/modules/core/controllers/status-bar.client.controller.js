@@ -6,7 +6,7 @@ angular.module('core').controller('StatusBarController', ['$scope', 'Authenticat
             $timeout(function(){
                 $scope.alert = null;
             }, 2000);
-        }
+        };
         $scope.closeAlert = function(){
             $scope.alert = null;
         };

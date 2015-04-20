@@ -5,7 +5,8 @@ var ApplicationConfiguration = (function() {
 	// Init module configuration options
 	var applicationModuleName = 'meanmoneymanager';
 	var applicationModuleVendorDependencies = ['ngResource', 'ngCookies',  'ngAnimate',  'ngTouch',  'ngSanitize',
-	                                           'ui.router', 'ui.bootstrap', 'ui.utils', 'angularMoment'];
+	                                           'ui.router', 'ui.bootstrap', 'ui.utils', 'angularMoment', 'ngTagsInput']
+                                                //'mgcrea.ngStrap.alert', 'mgcrea.ngStrap.modal', 'mgcrea.ngStrap.helpers.dimensions'];
 
 	// Add a new vertical module
 	var registerModule = function(moduleName, dependencies) {
@@ -59,7 +60,8 @@ ApplicationConfiguration.registerModule('incexps');
 'use strict';
 
 // Use applicaion configuration module to register a new module
-ApplicationConfiguration.registerModule('trackers');
+ApplicationConfiguration.registerModule('trackers', ['angular-loading-bar', 'ngAnimate']);
+
 'use strict';
 
 // Use Applicaion configuration module to register a new module
@@ -175,36 +177,70 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 ]);
 'use strict';
 
-angular.module('core').service('AppLocaleMessages', [ '$http',
+
+angular.module('core').controller('InfoController', ['$scope', 'Authentication',
+    function($scope, Authentication) {
+        // This provides Authentication context.
+        $scope.authentication = Authentication;
+
+    }
+]);
+
+'use strict';
+
+angular.module('core').controller('StatusBarController', ['$scope', 'Authentication', 'AppMessenger', '$timeout',
+	function($scope, Authentication, AppMessenger, $timeout) {
+        var autoClose = function(){
+            $timeout(function(){
+                $scope.alert = null;
+            }, 2000);
+        };
+        $scope.closeAlert = function(){
+            $scope.alert = null;
+        };
+        AppMessenger.getInfoMsg(function(e, data){
+            $scope.alert = {
+                type: 'info',
+                msg : data
+            };
+            autoClose();
+        });
+        AppMessenger.getWarnMsg(function(e, data){
+            $scope.alert = {
+                type: 'warning',
+                msg : data
+            };
+            autoClose();
+        });
+        AppMessenger.getErrMsg(function(e, data){
+            $scope.alert = {
+                type: 'danger',
+                msg : data
+            };
+            autoClose();
+        });
+	}
+]);
+
+'use strict';
+
+angular.module('incexps').service('CoreLocaleMessages', [ '$http',
 	function($http) {
-		var appLocaleMessages = {};
+		var incexpLocaleMessageService = {};
 		
-		appLocaleMessages.localeMessages = {
-				'app.err.msg.XX' : 'App Error Message',
-				'app.warn.msg.XX' : 'App Warn Message',
-				'app.info.msg.XX' : 'App Info Message'
+		incexpLocaleMessageService.pullMessages = function(){
+			return $http.get('modules/incexps/json/labels.json', {cached: true});
 		};
-		appLocaleMessages.getMsg = function(key){
-			//	TODO - check for better logic
-			if(Object.getOwnPropertyNames(appLocaleMessages.localeMessages).length === 0){
-				return $http.get('/users/search', {
-				      params: {
-				    	  locale: 'en'
-				      }
-				    }).then(function(response){
-				    	// build props
-				    	return appLocaleMessages[key];
-				    }, function(response) {
-	                    // something went wrong
-//				    	console.log(response);
-//	                    return $q.reject(response.data);
-	            	});
+		incexpLocaleMessageService.get = function(key){
+			if(! this.msgs){
+				this.pullMessages().then(function(response){
+					this.msgs = response;
+				});
 			} else {
-				return appLocaleMessages[key];	
+				return this.msgs[key];
 			}
-			
 		};
-		return appLocaleMessages;
+		return incexpLocaleMessageService;
 	}
 ]);
 
@@ -232,18 +268,38 @@ angular.module('core')
 
 'use strict';
 
-angular.module('core').service('AppStatics', [ '$http',
-	function($http) {
+angular.module('core').service('AppStatics', [ '$http', '$q', 
+	function($http, $q) {
 		var appStatics = {};
 		appStatics.getCurrencies = function(){
-				if(! this.currencies){
-					this.currencies = [{id: 'INR', label: 'Indian Rupee'},
-					    		            {id: 'USD', label: 'US Dollor'},
-					    		            {id: 'JPY', label: 'Japanese YEN'},
-					    		            {id: 'EUR', label: 'Euro'}];
-				}
-				return this.currencies;
-			};
+//            this.loadCurrencies();
+            return this.currencies;
+		};
+		appStatics.loadCurrencies = function(){
+			var deferred = $q.defer();
+            $http.get('modules/core/json/currencies.json').then(function(response){
+            	appStatics.currencies = response.data;
+            	deferred.resolve(response.data);
+            });
+            return deferred.promise;
+        };
+		
+//        appStatics.loadCurrencies = function(){
+//            if(! this.currencies){
+//                this.currencies = [{id: 'INR', label: 'Indian Rupee', faIconCls: 'fa-inr'},
+//                    {id: 'USD', label: 'US Dollor', faIconCls: 'fa-usd'},
+//                    {id: 'JPY', label: 'Japanese YEN', faIconCls: 'fa-jpy'},
+//                    {id: 'EUR', label: 'Euro', faIconCls: 'fa-eur'}];
+//            }
+//        };
+        appStatics.getCurrencyObj = function(currencyId){
+            console.log(currencyId);
+            for(var i in this.currencies){
+                var currency = this.currencies[i];
+                if(currency.id === currencyId)  return currency;
+            }
+        };
+
 		return appStatics;
 	}
 ]);
@@ -255,43 +311,52 @@ angular.module('core').service('AppMessenger', [ '$rootScope',
     var appMessenger = {};
     appMessenger.sendInfoMsg = function(data) {
         data = data || {};
-        console.log('info message sent!');
-        console.dir(data);
         $rootScope.$emit('INFO', data);
     };
     appMessenger.sendWarnMsg = function(data) {
         data = data || {};
-        console.log('warn message sent!');
-        console.dir(data);
         $rootScope.$emit('WARN', data);
     };
     appMessenger.sendErrMsg = function(data) {
         data = data || {};
-        console.log('error message sent!');
-        console.dir(data);
         $rootScope.$emit('ERR', data);
     };
 
-    // TODO - assigned vars might required in case of unbinding later
-    var infoMsg = $rootScope.$on('INFO', function(e, data){
-      console.log('Info Message Received');
-      console.dir(data);
-    });
-    var warnMsg = $rootScope.$on('WARN', function(e, data){
-      console.log('Warn Message Received');
-      console.dir(data);
-    });
-    var errMsg = $rootScope.$on('ERR', function(e, data){
-      console.log('Err Message Received');
-      console.dir(data);
-    });
-    // notify.getMsg = function(msg, func, scope) {
-    //     var unbind = $rootScope.$on(msg, func);
+      appMessenger.getInfoMsg = function(func, scope) {
+          var unbind = $rootScope.$on('INFO', func);
+          if (scope) {
+              scope.$on('destroy', unbind);
+          }
+      };
 
-    //     if (scope) {
-    //         scope.$on('destroy', unbind);
-    //     }
-    // };
+      appMessenger.getWarnMsg = function(func, scope) {
+          var unbind = $rootScope.$on('WARN', func);
+          if (scope) {
+              scope.$on('destroy', unbind);
+          }
+      };
+
+      appMessenger.getErrMsg = function(func, scope) {
+          var unbind = $rootScope.$on('ERR', func);
+          if (scope) {
+              scope.$on('destroy', unbind);
+          }
+      };
+
+    //// TODO - assigned vars might required in case of unbinding later
+    //var infoMsg = $rootScope.$on('INFO', function(e, data){
+    //  console.log('Info Message Received');
+    //  console.dir(data);alert(data);
+    //});
+    //var warnMsg = $rootScope.$on('WARN', function(e, data){
+    //  console.log('Warn Message Received');
+    //  console.dir(data);alert(data);
+    //});
+    //var errMsg = $rootScope.$on('ERR', function(e, data){
+    //  console.log('Err Message Received');
+    //  console.dir(data);alert(data);
+    //});
+
     return appMessenger;
   }
 ]);
@@ -464,6 +529,25 @@ angular.module('core').service('Menus', [
 ]);
 'use strict';
 
+angular.module('incexps').constant('INCEXP_CONST', {
+	'INCEXP_LIST_TEMPLATE_URL': 'modules/incexps/templates/incexps-list-template.client.html',
+	
+	'LIST_INCEXPS_STATE_NAME': 'listTrackerIncexps',
+	'LIST_INCEXPS_STATE_URL': '/trackerincexps/:trackerId',
+	'LIST_INCEXPS_STATE_TEMPLATE_URL': 'modules/incexps/views/list-incexps.client.view.html',
+
+	'CREATE_INCEXP_STATE_NAME': 'createIncexp',
+	'CREATE_INCEXP_STATE_URL': '/trackerincexps/:trackerId/create',
+	'CREATE_INCEXP_STATE_TEMPLATE_URL': 'modules/incexps/views/create-incexp.client.view.html',
+	
+	'EDIT_INCEXP_STATE_NAME': 'editIncexp',
+	'EDIT_INCEXP_STATE_URL': '/trackerincexps/:trackerId/:incexpId/edit',
+	'EDIT_INCEXP_STATE_TEMPLATE_URL': 'modules/incexps/views/edit-incexp.client.view.html'
+	
+});
+
+'use strict';
+
 // Configuring the Articles module
 angular.module('incexps').run(['Menus',
 	function(Menus) {
@@ -476,192 +560,429 @@ angular.module('incexps').run(['Menus',
 'use strict';
 
 //Setting up route
-angular.module('incexps').config(['$stateProvider',
-	function($stateProvider) {
+angular.module('incexps').config(['$stateProvider', 'INCEXP_CONST',
+	function($stateProvider, INCEXP_CONST) {
 		// Incexps state routing
 		$stateProvider.
-		state('listTrackerIncexps', {
-			url: '/trackerincexps/:trackerId',
-			templateUrl: 'modules/incexps/views/list-incexps.client.view.html'
-//		}).
-//		state('createIncexp', {
-//			url: '/incexps/create',
-//			templateUrl: 'modules/incexps/views/create-incexp.client.view.html'
-//		}).
-//		state('viewIncexp', {
-//			url: '/incexps/:incexpId',
-//			templateUrl: 'modules/incexps/views/view-incexp.client.view.html'
-//		}).
-//		state('editIncexp', {
-//			url: '/incexps/:incexpId/edit',
-//			templateUrl: 'modules/incexps/views/edit-incexp.client.view.html'
+		state(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, {
+			url: INCEXP_CONST.LIST_INCEXPS_STATE_URL,
+			templateUrl: INCEXP_CONST.LIST_INCEXPS_STATE_TEMPLATE_URL
+		}).
+		state(INCEXP_CONST.CREATE_INCEXP_STATE_NAME, {
+			url: INCEXP_CONST.CREATE_INCEXP_STATE_URL,
+			templateUrl: INCEXP_CONST.CREATE_INCEXP_STATE_TEMPLATE_URL
+		}).
+		state(INCEXP_CONST.EDIT_INCEXP_STATE_NAME, {
+			url: INCEXP_CONST.EDIT_INCEXP_STATE_URL,
+			templateUrl: INCEXP_CONST.EDIT_INCEXP_STATE_TEMPLATE_URL
 		});
 	}
 ]);
+
 'use strict';
 
 // Incexps controller
-angular.module('incexps').controller('IncexpsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Incexps', 'TrackerIncexps', '$modal', '$log', 'moment', 'AppStatics', 'Notify', 'VaultStatics',
-	function($scope, $stateParams, $location, Authentication, Incexps, TrackerIncexps, $modal, $log, moment, AppStatics, Notify, VaultStatics) {
-        this.authentication = Authentication;
-		this.trackerIncexps = TrackerIncexps.listTrackerIncexps($stateParams);
-		this.vaultStatics = VaultStatics;
-        this.trackerId = $stateParams.trackerId;
-        this.incexpId = $stateParams.incexpId;
+angular.module('incexps').controller('IncexpsController', ['$scope', '$stateParams', '$location', 'Authentication',
+        'TrackerIncexps', '$modal', '$log', 'moment', 'AppStatics', 'Notify', 'VaultStatics', '$state', 'IncexpStatics', 'AppMessenger', 'IncexpLocaleMessages', '$q', 'INCEXP_CONST',
+	function($scope, $stateParams, $location, Authentication,
+             TrackerIncexps, $modal, $log, moment, AppStatics, Notify, VaultStatics, $state, IncexpStatics, AppMessenger, IncexpLocaleMessages, $q, INCEXP_CONST) {
+		var _this = this;
+        _this.authentication = Authentication;
+		_this.vaultStatics = VaultStatics;
+        _this.appStatics = AppStatics;
+        _this.incexpStatics = IncexpStatics;
+        $scope.$stateParams = $stateParams;
+        var minDate = new Date();
+        minDate.setDate(minDate.getDate() - 60);
+        $scope.minDate = minDate;
+        $scope.maxDate = new Date();
+        //	TODO - bootstrapping the module only if the dependencies are loaded 
+        //	Not sure whether this is correct way - but it works.
 
-		this.modalCreate = function(size) {
-		    var modalInstance = $modal.open({
-		        templateUrl: 'modules/incexps/views/create-incexp.client.view.html',
-		        controller: ["$scope", "$modalInstance", function($scope, $modalInstance) {
-		            $scope.ok = function() {
-		                // if (createCustomerForm.$valid){
-		                $modalInstance.close();
-		                // }
-		            };
-		            $scope.cancel = function() {
-		                $modalInstance.dismiss('cancel');
-		            };
-		        }],
-		        size: size
-		    });
-		    modalInstance.result.then(function(selectedItem) {
-
-		    	}, function() {
-		          $log.info('Modal dismissed at: ' + new Date());
-		    });
-		};
-		this.modalUpdate = function(size, selectedIncexp) {
-		    var modalInstance = $modal.open({
-		        templateUrl: 'modules/incexps/views/edit-incexp.client.view.html',
-		        controller: ["$scope", "$modalInstance", "incexp", function($scope, $modalInstance, incexp) {
-		            $scope.incexp = incexp;
-		            $scope.ok = function() {
-		                // if (updateCustomerForm.$valid){
-		                $modalInstance.close($scope.incexp);
-		                // }
-		            };
-		            $scope.cancel = function() {
-		                $modalInstance.dismiss('cancel');
-		            };
-		        }],
-		        size: size,
-		        resolve: {
-		            incexp: function() {
-		                return selectedIncexp;
-		            }
-		        }
-		    });
-
-		    modalInstance.result.then(function(selectedItem) {
-		        $scope.selected = selectedItem;
-		    }, function() {
-		        $log.info('Modal dismissed at: ' + new Date());
-		    });
-		};
-		// Remove existing Incexp
-		this.remove = function(incexp) {
-			console.log(incexp);
-			if ( incexp ) {
-				incexp.$remove({incexpId : incexp._id}, function(res){
-                    console.log(res);
-                    Notify.sendMsg('RefreshIncexps', $stateParams);
+        var pullMsgs = function(){
+			var deferred = $q.defer();
+			IncexpLocaleMessages.pullMessages().then(function(labels){
+    			_this.labelsObj = labels;
+    			deferred.resolve(null);
+            });
+            return deferred.promise;
+        };
+        var pullVaults = function(){
+        	var deferred = $q.defer();
+            _this.vaultStatics.queryVaults($stateParams.trackerId).then(function(response){
+                _this.vaultsResult = [];
+                response.data.map(function(item){
+                    _this.vaultsResult.push(item);
                 });
-			}
-		};
-
-	}
-])
-
-
-	.controller('IncexpsCreateController', ['$scope', '$stateParams', 'Incexps', 'TrackerIncexps', 'Notify', 'AppStatics', 'Authentication', 'AppMessenger', 'VaultStatics',
-	    function($scope, $stateParams, Incexps, TrackerIncexps, Notify, AppStatics, Authentication, AppMessenger, VaultStatics) {
-	    	this.appStatics = AppStatics;
-	    	this.authentication = Authentication;
-			this.vaultStatics = VaultStatics;
-            this.getCurrencies = function(){
-                return this.appStatics.getCurrencies();
-            };
-            this.queryVaults = function(){
-            	return this.vaultStatics.queryVaults('1', '2');
-            };
-            this.create = function() {
-                var incexp = new TrackerIncexps({
-                    displayName: this.displayName,
-                    description: this.description,
-                    tracker: $stateParams.trackerId,
-                    tags: this.tags,
-                    amount: this.amount,
-                    vault: this.vault,
-                    isPending: this.isPending,
-                    pendingType: this.pendingType,
-                    pendingWith: this.pendingWith,
-                    owner: this.authentication.user._id,
-                    created: this.created
-                });
-                // Redirect after save
-                incexp.$save(function(response) {
-                    Notify.sendMsg('RefreshIncexps', {
-                        'trackerId': response.tracker
+                deferred.resolve(null);
+            });
+            return deferred.promise;
+        };
+        var pullIncexpTypes = function(){
+        	var deferred = $q.defer();
+        	var cachedVal = _this.incexpStatics.getIncexpTypes();
+        	//	If value is already cached by service - then use it otherwise 
+        	if(cachedVal){
+        		_this.incexpTypes = cachedVal;
+        		deferred.resolve(null);
+        	} else {
+        		_this.incexpStatics.loadIncexpTypes().then(function(response){
+                    _this.incexpTypes = [];
+                    response.map(function(item){
+                        _this.incexpTypes.push(item);
                     });
-                    AppMessenger.sendInfoMsg(response);
+                    deferred.resolve(null);
+                });	
+        	}
+        	
+            return deferred.promise;
+        };
+        var pullTags = function(){
+            var deferred = $q.defer();
+            var cachedVal = _this.incexpStatics.getIncexpTags();
+            //	If value is already cached by service - then use it otherwise
+            if(cachedVal){
+                _this.incexpTags = cachedVal;
+                deferred.resolve(null);
+            } else {
+                _this.incexpStatics.loadIncexpTags().then(function(response){
+                    _this.incexpTags = [];
+                    response.map(function(item){
+                        _this.incexpTags.push(item);
+                    });
+                    deferred.resolve(null);
+                });
+            }
+
+            return deferred.promise;
+        };
+
+
+        var pullApprovalTypes = function(){
+            var displayMode = 'CREATE';
+            var deferred = $q.defer();
+            var cachedVal = _this.incexpStatics.getApprovalTypes();
+            //	If value is already cached by service - then use it otherwise
+            if(cachedVal){
+                _this.approvalTypes = [];
+                cachedVal.map(function(item){
+                    if(displayMode){
+                        if(item && item.displayMode &&
+                            (item.displayMode.indexOf(displayMode) > -1 || item.displayMode.indexOf('ALL') > -1)){
+                            _this.approvalTypes.push(item);
+                        }
+                    } else {
+                        _this.approvalTypes.push(item);
+                    }
+                });
+                deferred.resolve(null);
+            } else {
+                _this.incexpStatics.loadApprovalTypes().then(function(response){
+                    _this.approvalTypes = [];
+                    response.map(function(item){
+                        if(displayMode){
+                            if(item && item.displayMode &&
+                                (item.displayMode.indexOf(displayMode) > -1 || item.displayMode.indexOf('ALL') > -1)){
+                                _this.approvalTypes.push(item);
+                            }
+                        } else {
+                            _this.approvalTypes.push(item);
+                        }
+                    });
+                    deferred.resolve(null);
+                });
+            }
+
+            return deferred.promise;
+        };
+
+        var loadCurrencies = function(){
+        	return AppStatics.loadCurrencies();
+        };
+        
+        var pullIncexps = function () {
+        	_this.trackerIncexps = TrackerIncexps.listTrackerIncexps($stateParams);
+        	return _this.trackerIncexps.$promise; 
+        };
+        var pullIncexp = function () {
+            var deferred = $q.defer();
+            TrackerIncexps.get($stateParams).$promise.then(function(response){
+                $scope.incexp = response;
+                if($scope.incexp.isPending){
+                    _this.approvalModel = {
+                        'isPending': $scope.incexp.isPending,
+                        'pendingType': $scope.incexp.pendingType,
+                        'pendingWith' : $scope.incexp.pendingWith,
+                        'pendingMsg': $scope.incexp.pendingMsg
+                    };
+                } else {
+                    _this.approvalModel = {'isPending': false};
+                }
+
+                deferred.resolve(null);
+            });
+            return deferred.promise;
+        };
+        var loadIncexpAlerts = function(response){
+        	var deferred = $q.defer();
+            response.$promise.then(function(incexps){
+                for(var i=0; i<incexps.length; i++){
+                    var incexp = incexps[i];
+                    incexp.infoAlerts = [];
+                    if(!incexp.isPending){
+                        incexp.infoAlerts.push({
+                            'clazz': 'fa-check-circle info-icon',
+                            'tooltip': _this.labelsObj['app.incexps.tt.allOk']
+                        });
+                    } else {
+                        if(incexp.pendingWith._id === Authentication.user._id){
+                            incexp.infoAlerts.push({
+                                'clazz': 'fa-exclamation-circle danger-icon',
+                                'tooltip': _this.labelsObj['app.incexps.tt.requireActionFrmMe']
+                            });
+                        }else {
+                            incexp.infoAlerts.push({
+                                'clazz': 'fa-exclamation-circle warn-icon',
+                                'tooltip': _this.labelsObj['app.incexps.tt.requireActionFrm'] + incexp.pendingWith.displayName
+                            });
+                        }
+                    }
+                    if(incexp.owner._id === Authentication.user._id){
+                        incexp.infoAlerts.push({
+                            'clazz': 'fa-user info-icon',
+                            'tooltip': _this.labelsObj['app.incexps.tt.createdByMe']
+                        });
+                    } else {
+                        incexp.infoAlerts.push({
+                            'clazz': 'fa-user-secret info-icon',
+                            'tooltip': _this.labelsObj['app.incexps.tt.createdByOther']
+                        });
+                    }
+                    incexp.collapsed = true;
+                    incexp.currencyObj = AppStatics.getCurrencyObj(incexp.tracker.currency);
+                    deferred.resolve(null);
+                }
+            });
+            return deferred.promise; 
+        };
+
+        var bootmodule = function(){
+              //populate 'approvalModel' for the directive
+            if($scope.incexp){  //  Editing an item
+            	console.log('Sample Log');
+            } else {    //  For New Income Expense Creation
+                _this.approvalModel = {'isPending': false, 'pendingType': null,'pendingMsg': null};
+            }
+            _this.getLabel = function(key){
+            	return _this.labelsObj[key];
+            }; 
+            _this.getCurrencies = function(){
+                return _this.appStatics.getCurrencies();
+            };
+            _this.getApprovalTypes = function(){
+                //_this.pendingType = _this.incexpStatics.getApprovalTypesForCreation()[0];
+                return _this.incexpStatics.getApprovalTypesForCreation();
+            };
+            _this.onChangeReqApproval = function(val){
+                if(! val){
+                    _this.pendingType = null;
+                    _this.pendingWith = null;
+                }
+            };
+            _this.openDatePicker = function($event) {
+                $event.preventDefault();
+                $event.stopPropagation();
+                $scope.datePickerOpened = true;
+            };
+            _this.expandRow = function(incexpArg){
+                if(!incexpArg.collapsed){
+                    incexpArg.collapsed = true;
+                    return;
+                }
+                for(var i=0; i<_this.trackerIncexps.length; i++){
+                    var incexp = _this.trackerIncexps[i];
+                    if(incexp._id === incexpArg._id){
+                        incexp.collapsed = false;
+                    } else {
+                        incexp.collapsed = true;
+                    }
+                }
+            };
+            _this.canEdit = function(incexp){
+            	return incexp && incexp.owner && ((incexp.owner._id === Authentication.user._id) || 
+    						(incexp.pendingWith && incexp.pendingType === 'UPD_REQ' && incexp.pendingWith._id === Authentication.user._id)) &&
+                    (! (incexp.isPending && incexp.pendingType === 'UPD_ACC_REQ'));
+            };
+            _this.canDelete = function(incexp){
+            	return incexp && incexp.owner && incexp.owner._id === Authentication.user._id &&
+                    (! (incexp.isPending && incexp.pendingType === 'UPD_ACC_REQ'));
+            };
+            _this.canRequestEditAccess = function(incexp){
+            	return incexp && incexp.owner && (incexp.owner._id !== Authentication.user._id) && (! incexp.pendingWith) ;
+            };
+            _this.canApproveEditRequest = function(incexp){
+                return incexp && incexp.isPending && (incexp.pendingWith._id === Authentication.user._id) &&
+                    (incexp.owner._id === Authentication.user._id) && (incexp.pendingType === 'UPD_ACC_REQ');
+            };
+            _this.createIncexp = function(){
+                _this.incexp = {};
+                $state.go(INCEXP_CONST.CREATE_INCEXP_STATE_NAME, $stateParams);
+            };
+            _this.editIncexp = function(updatedIncexp){
+                $state.go(INCEXP_CONST.EDIT_INCEXP_STATE_NAME, {
+                    trackerId: $stateParams.trackerId,
+                    incexpId: updatedIncexp._id
+                });
+            };
+            _this.saveIncexp = function() {
+                var incexp = new TrackerIncexps({
+                    displayName: _this.displayName,
+                    description: _this.description,
+                    type: _this.type,
+                    tracker: $stateParams.trackerId,
+                    tags: _this.tags,
+                    amount: _this.amount,
+                    vault: _this.vault,
+                    owner: _this.authentication.user._id,
+                    created: _this.created
+                });
+                if(_this.approvalModel && _this.approvalModel.isPending){
+                    incexp.isPending = _this.approvalModel.isPending;
+                    incexp.pendingType = _this.approvalModel.pendingType;
+                    incexp.pendingWith = _this.approvalModel.pendingWith._id;
+                    incexp.pendingMsg = _this.approvalModel.pendingMsg;
+                }
+                // Redirect after save
+                incexp.$save($stateParams, function(response) {
+                    $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
+                    AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.createdIncexp']);
                 }, function(errorResponse) {
                     $scope.error = errorResponse.data.message;
                 });
             };
-	    }
-	])
-	.controller('IncexpsUpdateController', ['$scope', '$stateParams', 'Incexps', 'TrackerIncexps', 'AppStatics', 'Authentication', 'Notify',
-	    function($scope, $stateParams, Incexps, TrackerIncexps, AppStatics, Authentication, Notify) {
-	    	this.appStatics = AppStatics;
-	    	this.authentication = Authentication;
-			 this.update = function(updatedIncexp) {
-			     var incexp = updatedIncexp;
+            _this.cancel = function(){
+                $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
+            };
+            _this.updateIncexp = function(updatedIncexp){
+                var incexp = updatedIncexp;
+                if(_this.approvalModel && _this.approvalModel.isPending){
+                    incexp.isPending = _this.approvalModel.isPending;
+                    incexp.pendingType = _this.approvalModel.pendingType;
+                    incexp.pendingWith = _this.approvalModel.pendingWith._id;
+                    incexp.pendingMsg = _this.approvalModel.pendingMsg;
+                } else {
+                	incexp.isPending = false;
+                    incexp.pendingType = null;
+                    incexp.pendingWith = null;
+                    incexp.pendingMsg = null;
+                }
+                delete incexp.tracker;
+                incexp.$update($stateParams, function() {
+                  $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
+                  AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.updatedIncexp']);
+                }, function(errorResponse) {
+                    $scope.error = errorResponse.data.message;
+                });
+            };
+            _this.approveIncexpChanges = function(updatedIncexp){
+                var incexp = updatedIncexp;
+                delete incexp.isPending;
+                delete incexp.pendingType;
+                delete incexp.pendingWith;
+                delete incexp.pendingMsg;
+                delete incexp.tracker;
+                incexp.$approveIncexpChanges($stateParams, function() {
+                    $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
+                    AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.approveIncexpChanges']);
+                }, function(errorResponse) {
+                    $scope.error = errorResponse.data.message;
+                });
+            };
 
-			     delete incexp.tracker;
 
-			     incexp.$update({
-			    	 trackerId: $stateParams.trackerId,
-                     incexpId: incexp._id
-			     }, function() {
-			       Notify.sendMsg('RefreshIncexps', {});
-			     }, function(errorResponse) {
-			         $scope.error = errorResponse.data.message;
-			     });
-			 };
 
-	    }
-	])
 
-	.directive('incexpsList', ['Incexps', 'TrackerIncexps', 'Notify', function(Incexps, TrackerIncexps, Notify) {
+            _this.requestForEdit = function(incexp){
+                incexp.$requestEditAccess({
+                    incexpId : incexp._id
+                }, function(response){
+                    $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams, {reload: true});
+                    AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.reqEditAccess']);
+                });
+            };
+            _this.approveEditAccessRequest = function(incexp){
+                incexp.$approveEditAccessRequest({
+                    incexpId : incexp._id
+                }, function(response){
+                    $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams, {reload: true});
+                    AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.approveIncexpEditAccReq']);
+                });
+            };
+            _this.rejectEditAccessRequest = function(incexp){
+                incexp.$rejectEditAccessRequest({
+                    incexpId : incexp._id
+                }, function(response){
+                    $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams, {reload: true});
+                    AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.rejectIncexpEditAccReq']);
+                });
+            };
+    		_this.remove = function(incexp) {
+    			if ( incexp ) {
+    				incexp.$remove({
+    						incexpId : incexp._id,
+    						trackerId: $stateParams.trackerId
+    					}, function(res){
+    					$state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams, {reload: true});
+    		            AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.deleteIncexp']);
+                    });
+    			}
+    		};        	
+        };
+        
+        if($state.current.name === INCEXP_CONST.LIST_INCEXPS_STATE_NAME){
+        	pullMsgs().then(loadCurrencies).then(pullIncexps).then(loadIncexpAlerts).then(bootmodule);
+        } else if($state.current.name === INCEXP_CONST.CREATE_INCEXP_STATE_NAME){
+        	pullMsgs().then(pullVaults).then(pullIncexpTypes).then(pullTags).then(pullApprovalTypes).then(bootmodule);
+            //TODO - load up this with boot module
+            _this.approvalModel = {'isPending': false, 'pendingType': null,'pendingMsg': null};
+        } else if($state.current.name === INCEXP_CONST.EDIT_INCEXP_STATE_NAME){
+            pullMsgs().then(pullVaults).then(pullIncexpTypes).then(pullTags).then(pullApprovalTypes).then(pullIncexp).then(bootmodule);
+        }
+	}
+])
+
+;
+
+'use strict';
+
+angular.module('incexps')
+
+	.directive('incexpsList', ['INCEXP_CONST', function(INCEXP_CONST) {
 	    return {
 	        restrict: 'E',
 	        transclude: true,
-	        templateUrl: 'modules/incexps/templates/incexps-list-template.html',
+	        templateUrl: INCEXP_CONST.INCEXP_LIST_TEMPLATE_URL,
 	        link: function(scope, element, attrs) {
-	            //when a new customer is added, update the customer list
-	            Notify.getMsg('RefreshIncexps', function(event, data) {
-                    scope.incexpCtrl.trackerIncexps = TrackerIncexps.listTrackerIncexps(data);
-	            });
 	        }
 	    };
 	}])
 
-    .directive('selectUsers', ['Incexps', 'TrackerIncexps', 'AppStatics', 'Authentication', 'UserStatics', 
-                               function(Incexps, TrackerIncexps, AppStatics, Authentication, UserStatics) {
+    .directive('selectUsers', ['Authentication', 'UserStatics',
+                               function(Authentication, UserStatics) {
         return {
             restrict: 'E',
             transclude: true,
-//            templateUrl: 'modules/core/views/list-users-combo-template.html',
             templateUrl: UserStatics.getListUsersComboTmpl(),
             link: function(scope, element, attrs) {
             },
             scope: {
-                currentUser: '=user'
+                currentUser: '=user',
+                ngDisabled: '='
             },
             controller: ["$scope", function($scope){
                 $scope.authentication = Authentication;
                 var curUsersArr = [];
-                curUsersArr.push(Authentication.user.id);
+                curUsersArr.push(Authentication.user._id);
                 $scope.queryUsers = function(query){
                     return UserStatics.queryUsers(query, curUsersArr.join());
                 };
@@ -669,7 +990,153 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         };
     }])
 
+    .directive('incexpApproval', ['Authentication', 'UserStatics',
+        function(Authentication, UserStatics) {
+            var ID = 0;
+            function validateApproval(isPending, pendingType, pendingWith, pendingMsg, ngModel, form){
+                ngModel.$setValidity('pendingTypeRequired', true);
+                ngModel.$setValidity('pendingWithRequired', true);
+                if(isPending){
+                    if(!pendingType){
+                        ngModel.$dirty = true;
+                        ngModel.$pristine = false;
+                        ngModel.$setValidity('pendingTypeRequired', false);
+                        form.$dirty = true;
+                        form.$pristine = false;
+                    } else  if(!pendingWith || !pendingWith._id){
+                        ngModel.$dirty = true;
+                        ngModel.$pristine = false;
+                        ngModel.$setValidity('pendingWithRequired', false);
+                        form.$dirty = true;
+                        form.$pristine = false;
+                    }
+                }
+            }
+            function buildModel(isPending, pendingType, pendingWith, pendingMsg, ngModel){
+                ngModel.$viewValue = ngModel.$viewValue || {};
+                ngModel.$viewValue.isPending = isPending;
+                ngModel.$viewValue.pendingType = pendingType;
+                ngModel.$viewValue.pendingWith = pendingWith;
+                ngModel.$viewValue.pendingMsg = pendingMsg;
+                //ngModel.$setViewValue(obj);
+            }
+            return {
+                restrict: 'E',
+                require: ['ngModel', '^form'],
+                transclude: true,
+                replace: true,
+                scope: {
+                    name: '@',
+                    label: '=',
+                    pendingTypeDefaultLabel: '=',
+                    selectUserPlaceholder: '=',
+                    pendingMsgPlaceholder: '=',
+                    approvalTypes: '='
+                },
+                templateUrl: 'modules/incexps/templates/incexps-approval-field-template.client.html',
+                link: function(scope, element, attrs, ctrl) {
+                    var ngModel = ctrl[0];
+                    var form = ctrl[1];
+                    if( scope.name ) {
+                        scope.subFormName = scope.name;
+                    }
+                    else {
+                        scope.subFormName = '_range' + ID;
+                        ID++;
+                    }
+
+
+                    ngModel.$render = function() {
+                        if(ngModel && ngModel.$viewValue && ngModel.$viewValue.isPending){
+                            scope.isPending = ngModel.$viewValue.isPending;
+                            scope.pendingType = ngModel.$viewValue.pendingType;
+                            scope.pendingWith = ngModel.$viewValue.pendingWith;
+                            scope.pendingMsg = ngModel.$viewValue.pendingMsg;
+                        } else {
+                            scope.isPending = !1;
+                            scope.pendingType = null;
+                            scope.pendingWith = null;
+                            scope.pendingMsg = null;
+                        }
+
+                    };
+
+                    scope.$watch('isPending', function(newVal, oldVal) {
+                        if(newVal === oldVal)   return;
+                        validateApproval(newVal, scope.pendingType, scope.pendingWith, scope.pendingMsg, ngModel, form);
+                        buildModel(newVal, scope.pendingType, scope.pendingWith, scope.pendingMsg, ngModel);
+                    });
+                    scope.$watch('pendingType', function(newVal, oldVal) {
+                        if(newVal === oldVal)   return;
+                        validateApproval(scope.isPending, newVal, scope.pendingWith, scope.pendingMsg, ngModel, form);
+                        buildModel(scope.isPending, newVal, scope.pendingWith, scope.pendingMsg, ngModel);
+                    });
+                    scope.$watch('pendingWith', function(newVal, oldVal) {
+                        if(newVal === oldVal)   return;
+                        validateApproval(scope.isPending, scope.pendingType, newVal, scope.pendingMsg, ngModel, form);
+                        buildModel(scope.isPending, scope.pendingType, newVal, scope.pendingMsg, ngModel);
+                    });
+                    scope.$watch('pendingMsg', function(newVal, oldVal) {
+                        if(newVal === oldVal)   return;
+                        validateApproval(scope.isPending, scope.pendingType, scope.pendingWith, newVal, ngModel, form);
+                        buildModel(scope.isPending, scope.pendingType, scope.pendingWith, newVal, ngModel);
+                    });
+                    scope.applyDisableForPendingCheckbox = function(incexp){
+                        if(incexp && incexp.owner){
+                            return Authentication.user._id !== incexp.owner._id;
+                        } else {
+                            return false;
+                        }
+                    };
+                    scope.applyDisablePendingFields = function(isSelected, incexp){
+                        var toDisable = false;
+                        if(typeof incexp === 'undefined'){
+                            toDisable = !isSelected;
+                        } else if(incexp && incexp.owner){
+                            toDisable = (Authentication.user._id !== incexp.owner._id) || (!isSelected);
+                        }
+                        return toDisable;
+                    };
+                }
+            };
+        }])
+
 ;
+
+'use strict';
+
+angular.module('core').service('AppLocaleMessages', [ '$http',
+	function($http) {
+		var appLocaleMessages = {};
+		
+		appLocaleMessages.localeMessages = {
+				'app.err.msg.XX' : 'App Error Message',
+				'app.warn.msg.XX' : 'App Warn Message',
+				'app.info.msg.XX' : 'App Info Message'
+		};
+		appLocaleMessages.getMsg = function(key){
+			//	TODO - check for better logic
+			if(Object.getOwnPropertyNames(appLocaleMessages.localeMessages).length === 0){
+				return $http.get('/users/search', {
+				      params: {
+				    	  locale: 'en'
+				      }
+				    }).then(function(response){
+				    	// build props
+				    	return appLocaleMessages[key];
+				    }, function(response) {
+	                    // something went wrong
+//				    	console.log(response);
+//	                    return $q.reject(response.data);
+	            	});
+			} else {
+				return appLocaleMessages[key];	
+			}
+			
+		};
+		return appLocaleMessages;
+	}
+]);
 
 'use strict';
 
@@ -686,289 +1153,448 @@ angular.module('incexps').factory('Incexps', ['$resource',
 ]);
 'use strict';
 
+angular.module('incexps').service('IncexpLocaleMessages', [ '$http', '$q',
+	function($http, $q) {
+		return {
+			pullMessages: function(){
+				var _this = this;
+				var deferred = $q.defer();
+				if(_this.msgs){
+					deferred.resolve(_this.msgs);
+				} else {
+					$http.get('modules/incexps/json/labels.json').success(function(response){
+						_this.msgs = response;
+						deferred.resolve(_this.msgs);
+					});
+				}
+				return deferred.promise;
+			}
+		};
+	}
+]);
+
+'use strict';
+
+angular.module('incexps').service('IncexpStatics', [ '$http', '$q',
+	function($http, $q) {
+		var incexpStatics = {};
+
+
+        incexpStatics.getIncexpTypes = function(){
+            return this.incexpTypes;
+        };
+        incexpStatics.loadIncexpTypes = function(){
+            var deferred = $q.defer();
+            $http.get('modules/incexps/json/incexpTypes.json').then(function(response){
+                incexpStatics.incexpTypes = response.data;
+                deferred.resolve(response.data);
+            });
+            return deferred.promise;
+        };
+
+        incexpStatics.getIncexpTags = function(){
+            return this.incexpTags;
+        };
+        incexpStatics.loadIncexpTags = function(){
+            var deferred = $q.defer();
+            $http.get('modules/incexps/json/incexpTags.json').then(function(response){
+                incexpStatics.incexpTags = response.data;
+                deferred.resolve(response.data);
+            });
+            return deferred.promise;
+        };
+
+
+        incexpStatics.getApprovalTypes = function(){
+            return this.approvalTypes;
+        };
+        incexpStatics.loadApprovalTypes = function(){
+            var deferred = $q.defer();
+            $http.get('modules/incexps/json/incexpApprovalTypes.json').then(function(response){
+                incexpStatics.approvalTypes = response.data;
+                deferred.resolve(response.data);
+            });
+            return deferred.promise;
+        };
+
+        //incexpStatics.getApprovalTypesForCreation = function(){
+			//	if(! this.approvalTypesForCreation){
+			//		this.approvalTypesForCreation = [{id: 'UPD_REQ', label: 'Request for Update'}];
+			//	}
+			//	return this.approvalTypesForCreation;
+			//};
+        //incexpStatics.getApprovalTypesForUpdate = function(){
+        //    if(! this.getApprovalTypesForUpdate){
+        //        this.getApprovalTypesForUpdate = [{id: 'DEL_REQ', label: 'Request for Deletion'},
+        //            {id: 'UPD_REQ', label: 'Request for Update'},
+        //            {id: 'UPD_ACC_REQ', label: 'Request for Update Access'},
+        //            {id: 'UPD_ACC_APP', label: 'Approve Update Access Request'}];
+        //    }
+        //    return this.getApprovalTypesForUpdate;
+        //};
+        //
+        //incexpStatics.getListIncexpsTemplatePath = function(){
+        //    return 'modules/incexps/templates/incexps-list-template.client.html';
+        //};
+        //
+        //incexpStatics.getIncexpType = function(){
+        //    if(! this.incexpType){
+        //        this.incexpType = [{id: 'INC', label: 'Income'},
+        //            //{id: 'UPD_ACC_REQ', label: 'Request for Update Access'},
+        //            {id: 'EXP', label: 'Expense'}];
+        //    }
+        //    return this.incexpType;
+        //};
+        //incexpStatics.getTagsList = function(){
+        //    return $http.get('modules/incexps/json/incexpTags.json');
+        //};
+        //incexpStatics.getApprovalModel = function(incexp){
+        //    if(!incexp){
+        //        return {
+        //            isPending: false,
+        //            pendingType: null,
+        //            pendingMsg: ''
+        //        };
+        //    } else {
+        //        return {
+        //            isPending: incexp.isPending,
+        //            pendingType: incexp.pendingType,
+        //            pendingMsg: incexp.pendingMsg
+        //        };
+        //    }
+        //    return $http.get('modules/incexps/json/incexpTags.json');
+        //};
+		return incexpStatics;
+	}
+]);
+
+'use strict';
+
 //Vaults service used to communicate Vaults REST endpoints
 angular.module('incexps').factory('TrackerIncexps', ['$resource',
 	function($resource) {
-		return $resource('trackerincexps', null, {
+		return $resource('trackerincexps/:trackerId/:incexpId', null, {
 			update: {
-				method: 'PUT',
-                params: {incexpId : 'incexpId'}
+				method: 'PUT'
 			},
-              listTrackerIncexps: {
+            listTrackerIncexps: {
                 method: 'GET',
-                  params: {trackerId : 'trackerId'},
+                params: {trackerId : 'trackerId'},
                 isArray: true
-          }
+            },
+            requestEditAccess: {
+                url: 'incexps/requestEditAccess/:incexpId',
+                method: 'PUT'
+            },
+            approveEditAccessRequest: {
+                url: 'incexps/approveEditAccessRequest/:incexpId',
+                method: 'PUT'
+            },
+            rejectEditAccessRequest: {
+                url: 'incexps/rejectEditAccessRequest/:incexpId',
+                method: 'PUT'
+            },
+            approveIncexpChanges: {
+                url: 'incexps/approveChanges/:incexpId',
+                method: 'PUT'
+            }
 		});
 	}
 ]);
+
+'use strict';
+
+angular.module('trackers').constant('TRACKER_CONST', {
+	'TRACKER_LIST_TEMPLATE_URL': 'modules/trackers/templates/trackers-list-template.client.html',
+	
+	'LIST_TRACKERS_STATE_NAME': 'listTrackers',
+	'LIST_TRACKERS_STATE_URL': '/trackers',
+	'LIST_TRACKERS_STATE_TEMPLATE_URL': 'modules/trackers/views/list-trackers.client.view.html',
+
+	'CREATE_TRACKER_STATE_NAME': 'createTracker',
+	'CREATE_TRACKER_STATE_URL': '/trackers/create',
+	'CREATE_TRACKER_STATE_TEMPLATE_URL': 'modules/trackers/views/create-tracker.client.view.html',
+	
+	'EDIT_TRACKER_STATE_NAME': 'editTracker',
+	'EDIT_TRACKER_STATE_URL': '/trackers/:trackerId/edit',
+	'EDIT_TRACKER_STATE_TEMPLATE_URL': 'modules/trackers/views/edit-tracker.client.view.html'
+	
+});
 
 'use strict';
 
 // Configuring the Articles module
-angular.module('trackers').run(['Menus',
-	function(Menus) {
-		// Set top bar menu items
-		Menus.addMenuItem('topbar', 'Trackers', 'trackers');
-//		Menus.addSubMenuItem('topbar', 'trackers', 'List Trackers', 'trackers');
-//		Menus.addSubMenuItem('topbar', 'trackers', 'New Tracker', 'trackers/create');
-	}
-]);
+angular.module('trackers')
+    .run(['Menus',
+        function(Menus) {
+            // Set top bar menu items
+            Menus.addMenuItem('topbar', 'Trackers', 'trackers');
+    //		Menus.addSubMenuItem('topbar', 'trackers', 'List Trackers', 'trackers');
+    //		Menus.addSubMenuItem('topbar', 'trackers', 'New Tracker', 'trackers/create');
+        }
+    ])
+    .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+        cfpLoadingBarProvider.latencyThreshold = 10;
+    }])
+;
+
 'use strict';
 
 //Setting up route
-angular.module('trackers').config(['$stateProvider',
-	function($stateProvider) {
+angular.module('trackers').config(['$stateProvider', 'TRACKER_CONST',
+	function($stateProvider, TRACKER_CONST) {
 		// Trackers state routing
 		$stateProvider.
-		state('listTrackers', {
-			url: '/trackers',
-			templateUrl: 'modules/trackers/views/list-trackers.client.view.html'
-//		}).
-//		state('createTracker', {
-//			url: '/trackers/create',
-//			templateUrl: 'modules/trackers/views/create-tracker.client.view.html'
-//		}).
-//		state('viewTracker', {
-//			url: '/trackers/:trackerId',
-//			templateUrl: 'modules/trackers/views/view-tracker.client.view.html'
-//		}).
-//		state('editTracker', {
-//			url: '/trackers/:trackerId/edit',
-//			templateUrl: 'modules/trackers/views/edit-tracker.client.view.html'
+		state(TRACKER_CONST.LIST_TRACKERS_STATE_NAME, {
+			url: TRACKER_CONST.LIST_TRACKERS_STATE_URL,
+			templateUrl: TRACKER_CONST.LIST_TRACKERS_STATE_TEMPLATE_URL
+		}).
+		state(TRACKER_CONST.CREATE_TRACKER_STATE_NAME, {
+			url: TRACKER_CONST.CREATE_TRACKER_STATE_URL,
+			templateUrl: TRACKER_CONST.CREATE_TRACKER_STATE_TEMPLATE_URL
+		}).
+		state(TRACKER_CONST.EDIT_TRACKER_STATE_NAME, {
+			url: TRACKER_CONST.EDIT_TRACKER_STATE_URL,
+			templateUrl: TRACKER_CONST.EDIT_TRACKER_STATE_TEMPLATE_URL
 		});
 	}
 ]);
+
+'use strict';
+
+// Trackers controller
+
+
+angular.module('trackers')
+    .controller('TrackersController', ['$scope', '$state', '$stateParams', 'Authentication', 'Trackers', 'TrackerLocaleMessages', 'TRACKER_CONST', 'VAULT_CONST', 'INCEXP_CONST', 'AppStatics', 'UserStatics', 'AppMessenger', 'moment', '$q',
+        function($scope, $state, $stateParams, Authentication, Trackers, TrackerLocaleMessages, TRACKER_CONST, VAULT_CONST, INCEXP_CONST, AppStatics, UserStatics, AppMessenger, moment, $q) {
+            var _this = this;
+            _this.appStatics = AppStatics;
+            _this.userStatics = UserStatics;
+            _this.authentication = Authentication;
+            _this.assignedUsers = [];
+            _this.assignedUsers.push(Authentication.user);
+            var pullMsgs = function(){
+            	var deferred = $q.defer();
+            	TrackerLocaleMessages.pullMessages().then(function(labels){
+        			_this.labelsObj = labels;
+        			deferred.resolve(null);
+                });
+                return deferred.promise;
+            };
+
+            var pullTrackers = function () {
+                _this.trackers = Trackers.query();
+                return _this.trackers.$promise;
+            };
+            
+            var pullTracker = function () {
+                $scope.tracker = Trackers.get({
+                    trackerId: $stateParams.trackerId
+                });
+                return $scope.tracker.$promise;
+            };
+            
+            var pullCurrencies = function(){
+            	var deferred = $q.defer();
+            	var cachedVal = _this.appStatics.getCurrencies();
+            	//	If value is already cached by service - then use it otherwise 
+            	if(cachedVal){
+            		_this.currencies = cachedVal;
+            		deferred.resolve(null);
+            	} else {
+            		_this.appStatics.loadCurrencies().then(function(response){
+                        _this.currencies = [];
+                        response.map(function(item){
+                            _this.currencies.push(item);
+                        });
+                        deferred.resolve(null);
+                    });	
+            	}
+            	return deferred.promise;
+            };
+            
+            var bootmodule = function () {
+//                _this.getLabel = function(key){
+//                	return _this.labelsObj[key];
+//                };
+                _this.getLocalTime = function (time) {
+                    return moment(time).toString();
+                };
+                _this.getOwnerTxt = function (tracker) {
+                    return (tracker.owner && tracker.owner._id && (tracker.owner._id === Authentication.user._id)) ? 'Me' :
+                        ((tracker.owner && tracker.owner.displayName) ? tracker.owner.displayName : 'No Name');
+                };
+                _this.getUsersTxt = function (tracker) {
+                    var users = '';
+                    //TODO - splice owner name from this
+                    if (tracker.users && tracker.users.length > 1) {
+                        for (var i = 0; i < tracker.users.length; i++) {
+                            if(tracker.owner._id === tracker.users[i]._id)	continue;
+                            if (users !== '') {
+                                users = users + ((i === tracker.users.length - 2) ? ' , ' : ' and ') + 
+                                	((tracker.users[i]._id === Authentication.user._id) ? 'Me' : tracker.users[i].displayName);
+                            } else {
+                                users = tracker.users[i].displayName;
+                            }
+                        }
+                    } else if (tracker.users && tracker.users.length === 1) {
+                        users = 'No one else - this is my private tracker';
+                    }
+                    return users;
+                };
+                _this.loadVaults = function (trackerId) {
+                    $state.go(VAULT_CONST.LIST_VAULTS_STATE_NAME, {trackerId: trackerId});
+                };
+                _this.loadIncexps = function (trackerId) {
+                    $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, {trackerId: trackerId});
+                };
+                _this.createTracker = function (size) {
+                    _this.tracker = {};
+                    $state.go(TRACKER_CONST.CREATE_TRACKER_STATE_NAME);
+                };
+                _this.editTracker = function (tracker) {
+                    $state.go(TRACKER_CONST.EDIT_TRACKER_STATE_NAME, {trackerId: tracker._id});
+                };
+                _this.cancel = function (tracker) {
+                    $state.go(TRACKER_CONST.LIST_TRACKERS_STATE_NAME);
+                };
+                _this.saveTracker = function (size) {
+                    var tracker = new Trackers({
+                        displayName: _this.displayName,
+                        description: _this.description,
+                        currency: _this.currency,
+                        owner: _this.owner,
+                        // users: _this.users,
+                        created: _this.created
+                    });
+                    tracker.users = [];
+                    angular.forEach(_this.assignedUsers, function (value, key) {
+                        tracker.users.push(value._id);
+                    });
+                    tracker.$save(function (response) {
+                        $state.go(TRACKER_CONST.LIST_TRACKERS_STATE_NAME);
+                        AppMessenger.sendInfoMsg(_this.labelsObj['app.trackers.info.msg.createdTracker']);
+                    }, function (errorResponse) {
+                        $scope.error = errorResponse.data.message;
+                    });
+                };
+                _this.updateTracker = function (updatedTracker) {
+                    var tracker = updatedTracker;
+                    var users = [];
+                    var owner = tracker.owner._id;
+                    angular.forEach(tracker.users, function (value, key) {
+                        users.push(value._id);
+                    });
+                    tracker.owner = owner;
+                    tracker.users = users;
+                    tracker.$update(function () {
+                        $state.go(TRACKER_CONST.LIST_TRACKERS_STATE_NAME);
+                        AppMessenger.sendInfoMsg(_this.labelsObj['app.trackers.info.msg.updatedTracker']);
+                    }, function (errorResponse) {
+                        $scope.error = errorResponse.data.message;
+                    });
+                };
+
+
+                _this.remove = function (tracker) {
+                    if (tracker) {
+                        tracker.$remove(function () {
+                            $state.go(TRACKER_CONST.LIST_TRACKERS_STATE_NAME, $stateParams, {reload: true});
+                            AppMessenger.sendInfoMsg(_this.labelsObj['app.trackers.info.msg.deletedTracker']);
+                        }, function (errorResponse) {
+                            $scope.error = errorResponse.data.message;
+                        });
+                    }
+                };
+
+            };
+            
+            	//Bootstrapping based on application state
+            if($state.current.name === TRACKER_CONST.LIST_TRACKERS_STATE_NAME){
+            	pullMsgs().then(pullTrackers).then(bootmodule);
+            } else if($state.current.name === TRACKER_CONST.CREATE_TRACKER_STATE_NAME){
+            	pullMsgs().then(pullCurrencies).then(bootmodule);
+            } else if($state.current.name === TRACKER_CONST.EDIT_TRACKER_STATE_NAME){
+            	pullMsgs().then(pullCurrencies).then(pullTracker).then(bootmodule);
+            }
+        }
+    ])
+;
+
 'use strict';
 
 // Trackers controller
 
 angular.module('trackers')
-	.controller('TrackersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Trackers', '$modal', '$log', 'moment', 'AppStatics', '$state',  'UserStatics', //'angularMoment',
-		function($scope, $stateParams, $location, Authentication, Trackers, $modal, $log, moment, AppStatics, $state, UserStatics) {
-			this.authentication = Authentication;
-			this.trackers = Trackers.query();
-			// this.appStatics = AppStatics;
-			// this.getCurrencies = function(){
-			// 	return this.appStatics.getCurrencies()
-			// };
-			//open a modal window to create a single customer record
-	        this.modalCreate = function(size) {
-	            var modalInstance = $modal.open({
-	                templateUrl: 'modules/trackers/views/create-tracker.client.view.html',
-	                controller: ["$scope", "$modalInstance", function($scope, $modalInstance) {
-	                    $scope.ok = function() {
-	                        // if (createCustomerForm.$valid){
-	                        $modalInstance.close();
-	                        // }
-	                    };
-	                    $scope.cancel = function() {
-	                        $modalInstance.dismiss('cancel');
-	                    };
-	                }],
-	                size: size
-	            });
-	            modalInstance.result.then(function(selectedItem) {
-
-	            	}, function() {
-		                $log.info('Modal dismissed at: ' + new Date());
-	            });
-	        };
-	        this.getLocalTime = function(time){
-	        	return moment(time).toString();
-	        };
-					this.getOwnerTxt = function(tracker){
-						return (tracker.owner && tracker.owner._id && (tracker.owner._id.toString() === Authentication.user._id.toString()))	? 'Me - This is my Awesome tracker' :
-													((tracker.owner && tracker.owner.displayName) ? tracker.owner.displayName : 'No Name');
-					};
-					this.getUsersTxt = function(tracker){
-						var users = '';
-						//TODO - splice owner name from this
-						if(tracker.users && tracker.users.length > 1){
-							for(var i = 0; i < tracker.users.length; i++){
-								if(i !== 0){
-									users = users + ((i===tracker.users.length-2) ? ' , ' : ' and ') + tracker.users[i].displayName;
-								} else {
-									users = tracker.users[i].displayName;
-								}
-							}
-						} else if(tracker.users){
-							users = tracker.users[0].displayName;
-						} else {
-							// TODO - remove it later
-							users = 'Something wrong';
-						}
-						return users;
-					};
-					this.loadVaults = function(trackerId){
-						$state.go('listTrackerVaults', {trackerId: trackerId});
-					};
-					this.loadIncexps = function(trackerId){
-						$state.go('listTrackerIncexps', {trackerId: trackerId});
-					};
-					
-	        //pasted in from angular-ui bootstrap modal example
-	        //open a modal window to update a single customer record
-	        this.modalUpdate = function(size, selectedTracker) {
-
-	            var modalInstance = $modal.open({
-	                templateUrl: 'modules/trackers/views/edit-tracker.client.view.html',
-	                controller: ["$scope", "$modalInstance", "tracker", function($scope, $modalInstance, tracker) {
-	                    $scope.tracker = tracker;
-	                    $scope.ok = function() {
-	                        // if (updateCustomerForm.$valid){
-	                        $modalInstance.close($scope.tracker);
-	                        // }
-	                    };
-	                    $scope.cancel = function() {
-	                        $modalInstance.dismiss('cancel');
-	                    };
-	                }],
-	                size: size,
-	                resolve: {
-	                    tracker: function() {
-	                        return selectedTracker;
-	                    }
-	                }
-	            });
-
-	            modalInstance.result.then(function(selectedItem) {
-	                $scope.selected = selectedItem;
-	            }, function() {
-	                $log.info('Modal dismissed at: ' + new Date());
-	            });
-	        };
-
-
-	        // Remove existing Customer
-	        this.remove = function(tracker) {
-	            if (tracker) {
-	            	tracker.$remove();
-
-	                for (var i in this.trackers) {
-	                    if (this.trackers[i] === tracker) {
-	                        this.trackers.splice(i, 1);
-	                    }
-	                }
-	            } else {
-	                this.tracker.$remove(function() {});
-	            }
-	        };
-
-		}
-	])
-
-
-	.controller('TrackersCreateController', ['$scope', 'Trackers', 'Notify', 'AppStatics', 'Authentication', 'AppMessenger', 'UserStatics',
-	    function($scope, Trackers, Notify, AppStatics, Authentication, AppMessenger, UserStatics) {
-	    	this.appStatics = AppStatics;
-	    	this.userStatics = UserStatics;
-	    	this.authentication = Authentication;
-	    	this.assignedUsers = [];
-	    	this.assignedUsers.push(Authentication.user);
-	    	this.getCurrencies = function(){
-					return this.appStatics.getCurrencies();
-				};
-        this.create = function() {
-            var tracker = new Trackers({
-                displayName: this.displayName,
-                description: this.description,
-                currency: this.currency,
-                owner: this.owner,
-                // users: this.users,
-                created: this.created
-            });
-            tracker.users = [];
-            angular.forEach(this.assignedUsers, function(value, key) {
-						  tracker.users.push(value._id);
-						});
-            // Redirect after save
-            tracker.$save(function(response) {
-                Notify.sendMsg('RefreshTrackers', {
-                    'id': response._id
-                });
-                AppMessenger.sendInfoMsg(response);
-                // Notify.sendMsg('TrackerSaved', {
-                // });
-            }, function(errorResponse) {
-                $scope.error = errorResponse.data.message;
-            });
-        };
-	    }
-	])
-	.controller('TrackersUpdateController', ['$scope', 'Trackers', 'AppStatics', 'Authentication', 'Notify', 'UserStatics',
-	    function($scope, Trackers, AppStatics, Authentication, Notify, UserStatics) {
-	    	this.appStatics = AppStatics;
-	    	this.userStatics = UserStatics;
-	    	this.authentication = Authentication;
-	    	this.getCurrencies = function(){
-					return this.appStatics.getCurrencies();
-				};
-        this.update = function(updatedTracker) {
-            var tracker = updatedTracker;
-            var users = [];
-            var owner = tracker.owner._id;
-            angular.forEach(tracker.users, function(value, key) {
-						  users.push(value._id);
-						});
-						tracker.owner = owner;
-						tracker.users = users;
-            tracker.$update(function() {
-              Notify.sendMsg('RefreshTrackers', {});
-            }, function(errorResponse) {
-                $scope.error = errorResponse.data.message;
-            });
-        };
-
-	    }
-	])
-
-	.directive('trackersList', ['Trackers', 'Notify', function(Trackers, Notify) {
+	.directive('trackersList', ['TRACKER_CONST', function(TRACKER_CONST) {
 	    return {
 	        restrict: 'E',
 	        transclude: true,
-	        templateUrl: 'modules/trackers/views/trackers-list-template.html',
+	        templateUrl: TRACKER_CONST.TRACKER_LIST_TEMPLATE_URL,
 	        link: function(scope, element, attrs) {
-	            //when a new customer is added, update the customer list
-	            Notify.getMsg('RefreshTrackers', function(event, data) {
-	                scope.trackersCtrl.trackers = Trackers.query();
-	            });
 	        }
 	    };
 	}])
 
-	.directive('addUsers', ['Trackers', 'AppStatics', 'Authentication', 'UserStatics', function(Trackers, AppStatics, Authentication, UserStatics) {
+	.directive('addUsers', ['Authentication', 'UserStatics', function(Authentication, UserStatics) {
 	    return {
 	        restrict: 'E',
 	        transclude: true,
-//	        templateUrl: 'modules/core/views/add-users-template.html',
 	        templateUrl: UserStatics.getAddUsersTmpl(),
 	        link: function(scope, element, attrs) {
 	        },
 	        scope: {
-	        	assignedUsers: '=users'
+	        	assignedUsers: '=users',
+				placeholder: '=',
+				btntext: '=',
+				ttOwner: '=',
+				ttUser: '=',
+				ownerTxt: '='
 	        },
 	        controller: ["$scope", function($scope){
 	        	$scope.authentication = Authentication;
-						$scope.queryUsers = function(query){
-							var curUsersArr = [];
-							  angular.forEach($scope.assignedUsers, function(value, key) {
-								  curUsersArr.push(value._id);
-								});
-							return UserStatics.queryUsers(query, curUsersArr.join());
-						};
-						$scope.assignNewUser = function(user){
-							$scope.currentUser = null;
-							$scope.assignedUsers.push(user);
-			    	};
-			    	$scope.removeUser = function(index){
-			    		$scope.assignedUsers.splice(index, 1);
-			    	};
+				$scope.queryUsers = function(query){
+					var curUsersArr = [];
+					  angular.forEach($scope.assignedUsers, function(value, key) {
+						  curUsersArr.push(value._id);
+						});
+					return UserStatics.queryUsers(query, curUsersArr.join());
+				};
+				$scope.assignNewUser = function(user){
+					$scope.currentUser = null;
+					$scope.assignedUsers.push(user);
+		    	};
+		    	$scope.removeUser = function(index){
+		    		$scope.assignedUsers.splice(index, 1);
+		    	};
 	        }]
 	    };
 	}])
 
-	;
+;
+
+'use strict';
+
+angular.module('incexps').service('TrackerLocaleMessages', [ '$http', '$q',
+	function($http, $q) {
+		return {
+			pullMessages: function(){
+				var _this = this;
+				var deferred = $q.defer();
+				if(_this.msgs){
+					deferred.resolve(_this.msgs);
+				} else {
+					$http.get('modules/trackers/json/labels.json').success(function(response){
+						_this.msgs = response;
+						deferred.resolve(_this.msgs);
+					});
+				}
+				return deferred.promise;
+			}
+		};
+	}
+]);
 
 'use strict';
 
@@ -1227,7 +1853,6 @@ angular.module('core').service('UserStatics', [ '$http',
 			        nu: users
 			      }
 			    }).then(function(response){
-			    	console.log(response);
 			      return response.data.map(function(item){
 			        return item;
 			      });
@@ -1265,6 +1890,25 @@ angular.module('users').factory('Users', ['$resource',
 ]);
 'use strict';
 
+angular.module('vaults').constant('VAULT_CONST', {
+	'VAULT_LIST_TEMPLATE_URL': 'modules/vaults/templates/vaults-list-template.client.html',
+	
+	'LIST_VAULTS_STATE_NAME': 'listTrackerVaults',
+	'LIST_VAULTS_STATE_URL': '/trackervaults/:trackerId',
+	'LIST_VAULTS_STATE_TEMPLATE_URL': 'modules/vaults/views/list-vaults.client.view.html',
+
+	'CREATE_VAULT_STATE_NAME': 'createVault',
+	'CREATE_VAULT_STATE_URL': '/trackervaults/:trackerId/create',
+	'CREATE_VAULT_STATE_TEMPLATE_URL': 'modules/vaults/views/create-vault.client.view.html',
+	
+	'EDIT_VAULT_STATE_NAME': 'editVault',
+	'EDIT_VAULT_STATE_URL': '/trackervaults/:trackerId/:vaultId/edit',
+	'EDIT_VAULT_STATE_TEMPLATE_URL': 'modules/vaults/views/edit-vault.client.view.html'
+	
+});
+
+'use strict';
+
 // Configuring the Articles module
 angular.module('vaults').run(['Menus',
 	function(Menus) {
@@ -1278,30 +1922,20 @@ angular.module('vaults').run(['Menus',
 'use strict';
 
 //Setting up route
-angular.module('vaults').config(['$stateProvider',
-	function($stateProvider) {
-		// '$stateProvider', '$urlRouterProvider'
-		// Vaults state routing
+angular.module('vaults').config(['$stateProvider', 'VAULT_CONST',
+	function($stateProvider, VAULT_CONST) {
 		$stateProvider.
-		state('listTrackerVaults', {
-			url: '/trackervaults/:trackerId',
-			templateUrl: 'modules/vaults/views/list-vaults.client.view.html'
-		// }).
-		// state('listVaults', {
-		// 	url: '/vaults',
-		// 	templateUrl: 'modules/vaults/views/list-vaults.client.view.html'
-		// }).
-		// state('createVault', {
-		// 	url: '/vaults/create',
-		// 	templateUrl: 'modules/vaults/views/create-vault.client.view.html'
-		// }).
-		// state('viewVault', {
-		// 	url: '/vaults/:vaultId',
-		// 	templateUrl: 'modules/vaults/views/view-vault.client.view.html'
-		// }).
-		// state('editVault', {
-		// 	url: '/vaults/:vaultId/edit',
-		// 	templateUrl: 'modules/vaults/views/edit-vault.client.view.html'
+		state(VAULT_CONST.LIST_VAULTS_STATE_NAME, {
+			url: VAULT_CONST.LIST_VAULTS_STATE_URL,
+			templateUrl: VAULT_CONST.LIST_VAULTS_STATE_TEMPLATE_URL
+		}).
+		state(VAULT_CONST.CREATE_VAULT_STATE_NAME, {
+			url: VAULT_CONST.CREATE_VAULT_STATE_URL,
+			templateUrl: VAULT_CONST.CREATE_VAULT_STATE_TEMPLATE_URL
+		}).
+		state(VAULT_CONST.EDIT_VAULT_STATE_NAME, {
+			url: VAULT_CONST.EDIT_VAULT_STATE_URL,
+			templateUrl: VAULT_CONST.EDIT_VAULT_STATE_TEMPLATE_URL
 		});
 	}
 ]);
@@ -1309,177 +1943,127 @@ angular.module('vaults').config(['$stateProvider',
 'use strict';
 
 // Vaults controller
-angular.module('vaults').controller('VaultsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Vaults', 'TrackerVaults', '$modal', '$log', 'moment', 'AppStatics', 'Notify',
-	function($scope, $stateParams, $location, Authentication, Vaults, TrackerVaults, $modal, $log, moment, AppStatics, Notify) {
-        this.authentication = Authentication;
-		this.trackerVaults = TrackerVaults.listTrackerVaults($stateParams);
-        this.trackerId = $stateParams.trackerId;
-        this.vaultId = $stateParams.vaultId;
-		this.modalCreate = function(size) {
-		    var modalInstance = $modal.open({
-		        templateUrl: 'modules/vaults/views/create-vault.client.view.html',
-		        controller: ["$scope", "$modalInstance", function($scope, $modalInstance) {
-		            $scope.ok = function() {
-		                // if (createCustomerForm.$valid){
-		                $modalInstance.close();
-		                // }
-		            };
-		            $scope.cancel = function() {
-		                $modalInstance.dismiss('cancel');
-		            };
-		        }],
-		        size: size
-		    });
-		    modalInstance.result.then(function(selectedItem) {
+angular.module('vaults')
 
-		    	}, function() {
-		          $log.info('Modal dismissed at: ' + new Date());
-		    });
-		};
-		this.modalUpdate = function(size, selectedVault) {
-		    var modalInstance = $modal.open({
-		        templateUrl: 'modules/vaults/views/edit-vault.client.view.html',
-		        controller: ["$scope", "$modalInstance", "vault", function($scope, $modalInstance, vault) {
-		            $scope.vault = vault;
-		            $scope.ok = function() {
-		                // if (updateCustomerForm.$valid){
-		                $modalInstance.close($scope.vault);
-		                // }
-		            };
-		            $scope.cancel = function() {
-		                $modalInstance.dismiss('cancel');
-		            };
-		        }],
-		        size: size,
-		        resolve: {
-		            vault: function() {
-		                return selectedVault;
-		            }
-		        }
-		    });
 
-		    modalInstance.result.then(function(selectedItem) {
-		        $scope.selected = selectedItem;
-		    }, function() {
-		        $log.info('Modal dismissed at: ' + new Date());
-		    });
-		};
-		// Remove existing Vault
-		this.remove = function(vault) {
-			console.log(vault);
-			if ( vault ) {
-				vault.$remove({vaultId : vault._id}, function(res){
-                    console.log(res);
-                    Notify.sendMsg('RefreshVaults', $stateParams);
+
+    .controller('VaultsController', ['$scope', '$stateParams', 'Authentication', '$state', 'VAULT_CONST',
+                'TrackerVaults', 'moment', 'AppStatics', 'AppMessenger', 'VaultLocaleMessages', '$q',
+        function($scope, $stateParams, Authentication, $state, VAULT_CONST, 
+                    TrackerVaults, moment, AppStatics, AppMessenger, VaultLocaleMessages, $q) {
+            var _this = this;
+            _this.authentication = Authentication;
+            _this.appStatics = AppStatics;
+            $scope.$stateParams = $stateParams;
+            var pullMsgs = function(){
+            	var deferred = $q.defer();
+            	VaultLocaleMessages.pullMessages().then(function(labels){
+                    _this.labelsObj = labels;
+                    deferred.resolve(null);
                 });
-			}
-		};
-
-	}
-])
-
-
-	.controller('VaultsCreateController', ['$scope', '$stateParams', 'Vaults', 'TrackerVaults', 'Notify', 'AppStatics', 'Authentication', 'AppMessenger',
-	    function($scope, $stateParams, Vaults, TrackerVaults, Notify, AppStatics, Authentication, AppMessenger) {
-	    	this.appStatics = AppStatics;
-	    	this.authentication = Authentication;
-            this.create = function() {
-                var vault = new TrackerVaults({
-                    displayName: this.displayName,
-                    description: this.description,
-                    tracker: $stateParams.trackerId,
-                    owner: this.authentication.user._id,
-                    created: this.created
-                });
-                // Redirect after save
-                vault.$save(function(response) {
-                    Notify.sendMsg('RefreshVaults', {
-                        'trackerId': response.tracker
-                    });
-                    AppMessenger.sendInfoMsg(response);
-                }, function(errorResponse) {
-                    $scope.error = errorResponse.data.message;
-                });
+                return deferred.promise;
             };
-	    }
-	])
-	.controller('VaultsUpdateController', ['$scope', '$stateParams', 'Vaults', 'TrackerVaults', 'AppStatics', 'Authentication', 'Notify',
-	    function($scope, $stateParams, Vaults, TrackerVaults, AppStatics, Authentication, Notify) {
-	    	this.appStatics = AppStatics;
-	    	this.authentication = Authentication;
-			 this.update = function(updatedVault) {
-			     var vault = updatedVault;
+            
+            var pullVaults = function () {
+            	_this.trackerVaults = TrackerVaults.listTrackerVaults($stateParams);
+            	return _this.trackerVaults.$promise;
+            };
+            
+            var pullVault = function () {
+                $scope.vault = TrackerVaults.get($stateParams);
+                return $scope.vault.$promise;
+            };
 
-			     delete vault.tracker;
+            var bootmodule = function(){
+                _this.getOwnerTxt = function (vault) {
+                    return (vault.owner && vault.owner._id && (vault.owner._id === Authentication.user._id)) ? 'Me' :
+                        ((vault.owner && vault.owner.displayName) ? vault.owner.displayName : 'No Name');
+                };
+                _this.createVault = function() {
+                    _this.vault = {};
+                    $state.go(VAULT_CONST.CREATE_VAULT_STATE_NAME, $stateParams);
+                };
+                _this.editVault = function(vault) {
+                    $state.go(VAULT_CONST.EDIT_VAULT_STATE_NAME, {
+                    	trackerId : $stateParams.trackerId,
+                    	vaultId: vault._id
+                    });
+                };
+                _this.cancel = function(){
+                	$state.go(VAULT_CONST.LIST_VAULTS_STATE_NAME, $stateParams);
+                };
+                _this.saveVault = function() {
+                    var vault = new TrackerVaults({
+                        displayName: _this.displayName,
+                        description: _this.description,
+                        tracker: $stateParams.trackerId,
+                        owner: _this.authentication.user._id,
+                        created: _this.created
+                    });
+                    // Redirect after save
+                    vault.$save($stateParams,function(response) {
+                        $state.go(VAULT_CONST.LIST_VAULTS_STATE_NAME, $stateParams);
+                        AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.createdVault']);
+                    }, function(errorResponse) {
+                        $scope.error = errorResponse.data.message;
+                    });
+                };
+                _this.updateVault = function(updatedVault){
+                    var vault = updatedVault;
+                    var trackerId = vault.tracker._id;
+                    delete vault.tracker;
+                    vault.$update($stateParams, function() {
+                    	$state.go(VAULT_CONST.LIST_VAULTS_STATE_NAME, $stateParams);
+                        AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.updatedVault']);
+                    }, function(errorResponse) {
+                        $scope.error = errorResponse.data.message;
+                    });
+                };
 
-			     vault.$update({
-			    	 trackerId: $stateParams.trackerId,
-                     vaultId: vault._id
-			     }, function() {
-			       Notify.sendMsg('RefreshVaults', {});
-			     }, function(errorResponse) {
-			         $scope.error = errorResponse.data.message;
-			     });
-			 };
+                _this.deleteVault = function(vault) {
+                    if (vault) {
+                        vault.$remove({
+                        	trackerId : $stateParams.trackerId,
+                        	vaultId: vault._id
+                        }, function(res){
+                        	$state.go(VAULT_CONST.LIST_VAULTS_STATE_NAME, $stateParams, {reload: true});
+                            AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.deletedVault']);
+                        });
+                    }
+                };	
+            };
 
-	    }
-	])
+            
+        	//Bootstrapping based on application state
+            if($state.current.name === VAULT_CONST.LIST_VAULTS_STATE_NAME){
+            	pullMsgs().then(pullVaults).then(bootmodule);
+            } else if($state.current.name === VAULT_CONST.CREATE_VAULT_STATE_NAME){
+            	pullMsgs().then(bootmodule);
+            } else if($state.current.name === VAULT_CONST.EDIT_VAULT_STATE_NAME){
+            	pullMsgs().then(pullVault).then(bootmodule);
+            }
 
-	.directive('vaultsList', ['Vaults', 'TrackerVaults', 'Notify', function(Vaults, TrackerVaults, Notify) {
-	    return {
-	        restrict: 'E',
-	        transclude: true,
-	        templateUrl: 'modules/vaults/views/vaults-list-template.html',
-	        link: function(scope, element, attrs) {
-	            //when a new customer is added, update the customer list
-	            Notify.getMsg('RefreshVaults', function(event, data) {
-                    scope.vaultCtrl.trackerVaults = TrackerVaults.listTrackerVaults(data);
-	            });
-	        }
-	    };
-	}])
+
+        }
+    ])
 
 ;
 
 'use strict';
 
-angular.module('vaults').service('VaultStatics', [ '$http',
-	function($http) {
-		var vaultStatics = {};
-		vaultStatics.queryVaults = function(trackerId, excludeVaults){
-			return $http.get('/vaults/queryByTracker', {
-			      params: {
-			    	tId: trackerId,
-			        exv: excludeVaults
-			      }
-			    }).then(function(response){
-			      return response.data.map(function(item){
-			        return item;
-			      });
-			    });
-		};
-		return vaultStatics;
-	}
-]);
+// Vaults controller
+angular.module('vaults')
+	.directive('vaultsList', ['VAULT_CONST', function(VAULT_CONST) {
+	    return {
+	        restrict: 'E',
+	        transclude: true,
+	        templateUrl: VAULT_CONST.VAULT_LIST_TEMPLATE_URL,
+	        link: function(scope, element, attrs) {
+	        }
+	    };
+	}])
 
-'use strict';
-
-//Vaults service used to communicate Vaults REST endpoints
-angular.module('vaults').factory('TrackerVaults', ['$resource',
-	function($resource) {
-		return $resource('trackervaults', null, {
-			update: {
-				method: 'PUT',
-                params: {vaultId : 'vaultId'}
-			},
-              listTrackerVaults: {
-                method: 'GET',
-                  params: {trackerId : 'trackerId'},
-                isArray: true
-          }
-		});
-	}
-]);
+;
 
 'use strict';
 
@@ -1491,6 +2075,65 @@ angular.module('vaults').factory('Vaults', ['$resource',
 			update: {
 				method: 'PUT'
 			}
+		});
+	}
+]);
+'use strict';
+
+angular.module('vaults').service('VaultLocaleMessages', [ '$http', '$q',
+	function($http, $q) {
+		return {
+			pullMessages: function(){
+				var _this = this;
+				var deferred = $q.defer();
+				if(_this.msgs){
+					deferred.resolve(_this.msgs);
+				} else {
+					$http.get('modules/vaults/json/labels.json').success(function(response){
+						_this.msgs = response;
+						deferred.resolve(_this.msgs);
+					});
+				}
+				return deferred.promise;
+			}
+		};
+	}
+]);
+
+'use strict';
+
+angular.module('vaults').service('VaultStatics', [ '$http', '$q',
+	function($http, $q) {
+		var vaultStatics = {};
+         //TODO - refactor it with promises
+        vaultStatics.queryVaults = function(trackerId, excludeVaults){
+            //http://stackoverflow.com/questions/19405548/default-angularjs-ng-option-when-data-is-returned-from-a-service
+            return $http.get('/queryvaults/queryByTracker', {
+                params: {
+                    tId: trackerId,
+                    exv: excludeVaults
+                }
+            });
+        };
+		return vaultStatics;
+	}
+]);
+
+'use strict';
+
+//Vaults service used to communicate Vaults REST endpoints
+angular.module('vaults').factory('TrackerVaults', ['$resource',
+	function($resource) {
+		return $resource('trackervaults/:trackerId/:vaultId', null, {
+			update: {
+				method: 'PUT',
+                params: {vaultId : 'vaultId'}
+			},
+              listTrackerVaults: {
+                method: 'GET',
+                  params: {trackerId : 'trackerId'},
+                isArray: true
+          }
 		});
 	}
 ]);
