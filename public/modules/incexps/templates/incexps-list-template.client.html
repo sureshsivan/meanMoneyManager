@@ -2,7 +2,7 @@
 	<div class="col-xs-12 pad-top">
 
 
-        <table class="table table-striped table-hover table-condensed incexp-row-item">
+        <table class="table table-hover table-condensed incexp-row-item">
             <tr>
                 <th>{{incexpsCtrl.labelsObj['app.incexps.lbl.slNo']}}</th>
                 <th><i class="fa fa-cogs" data-tooltip="{{incexpsCtrl.labelsObj['app.incexps.tt.incexpInfo']}}"></i></th>
@@ -15,7 +15,7 @@
             </tr>
             <tr data-ng-repeat-start="incexp in incexpsCtrl.trackerIncexps | filter:searchText"
                 data-ng-click="incexpsCtrl.expandRow(incexp)"
-                    data-ng-class="(incexp.isPending ? (incexp.pendingWith._id === incexpsCtrl.authentication.user._id ? 'danger' : 'warning') : '')">
+                    data-ng-class="(incexp.isPending ? (incexp.pendingWith._id === incexpsCtrl.authentication.user._id ? 'danger' : 'warning') : 'info')">
                 <td scope="row">{{$index+1}}</td>
                 <td>
                     <span class="fa" data-ng-class="item.clazz" data-tooltip="{{item.tooltip}}"
@@ -80,36 +80,42 @@
                     </button>
                 </td>
             </tr>
-            <tr data-ng-class="(incexp.isPending ? (incexp.pendingWith._id === incexpsCtrl.authentication.user._id ? 'danger' : 'warning') : '')"
+            <tr data-ng-class="(incexp.isPending ? (incexp.pendingWith._id === incexpsCtrl.authentication.user._id ? 'danger' : 'warning') : 'info')"
                 data-ng-repeat-end style="padding: 0 !important; border: 0 !important">
                 <td colspan="8" style="padding: 0 !important;">
-                    <div data-collapse="incexp.collapsed">
-                    	<br/>
-<!--                         <span class="fa fa-money"> </span> -->
-                        <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.nameLbl']}}</strong>{{incexp.displayName}}
-                        <br/>
-                        <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.descLbl']}}</strong>{{incexp.description}}
-                        <br/>
-                        <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.dateLbl']}}</strong><span data-am-time-ago="incexp.evDate"></span>    (<span>{{incexp.evDate | amDateFormat:'dddd, MMMM Do YYYY'}}</span>)
-                        Vault : {{incexp.vault.displayName}}
-                        <br/>                        
-                        <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.amountLbl']}}</strong><span class="fa" data-ng-class="incexp.currencyObj.faIconCls"> {{incexp.amount}}</span>
-                        <br/>
-                        <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.vaultLbl']}}</strong>{{incexp.vault.displayName}}
-                        <br/>
-                        <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.tagsLbl']}}</strong>
-                        <span class="fa fa-tags" data-ng-repeat="tag in incexp.tags" style="color:{{tag.color}}">{{tag.label}}</span>
-                        <br/>
-                        <span>
-                        	<strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.createdBy']}}</strong>{{incexp.owner.displayName}}
-                        </span>
-                        <br/>
-                        <span data-ng-if="incexp.isPending">
-                        	<strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.pendingWithLbl']}}</strong>{{incexp.pendingWith.displayName}}
-                            &nbsp;&nbsp;&nbsp;&nbsp;
-                            <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.pendingMsgLbl']}}</strong>{{incexp.pendingMsg}}
-                        </span>
-                    </div>
+	                    <div data-collapse="incexp.collapsed">
+	                    	<div class="well info-well">
+	                        <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.nameLbl']}}</strong>{{incexp.displayName}}
+	                        <br/>
+	                        <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.descLbl']}}</strong>{{incexp.description}}
+	                        <br/>
+	                        <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.dateLbl']}}</strong><span data-am-time-ago="incexp.evDate"></span>    (<span>{{incexp.evDate | amDateFormat:'dddd, MMMM Do YYYY'}}</span>)
+	                        Vault : {{incexp.vault.displayName}}
+	                        <br/>                        
+	                        <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.amountLbl']}}</strong><span class="fa" data-ng-class="incexp.currencyObj.faIconCls"> {{incexp.amount}}</span>
+	                        <br/>
+	                        <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.vaultLbl']}}</strong>{{incexp.vault.displayName}}
+	                        <br/>
+	                        <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.tagsLbl']}}</strong>
+	                        	<span data-ng-repeat="tag in incexp.tags">
+	                        		&nbsp;
+		                        	<span class="label" data-ng-class="tag.class">
+										<span class="fa fa-tags"></span>
+										{{tag.label}}
+									</span>
+								</span>
+	                        <br/>
+	                        <span>
+	                        	<strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.createdBy']}}</strong>{{incexp.owner.displayName}}
+	                        </span>
+	                        <br/>
+	                        <span data-ng-if="incexp.isPending">
+	                        	<strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.pendingWithLbl']}}</strong>{{incexp.pendingWith.displayName}}
+	                            &nbsp;&nbsp;&nbsp;&nbsp;
+	                            <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.pendingMsgLbl']}}</strong>{{incexp.pendingMsg}}
+	                        </span>
+	                        </div>
+	                    </div>
                 </td>
             </tr>
         </table>

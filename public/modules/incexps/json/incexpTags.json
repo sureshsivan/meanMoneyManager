@@ -17,6 +17,24 @@
 	"color": "#7AA",
 	"class": "label-success"
 }, {
+	"label": "Health",
+	"id": "HLTH",
+	"desc": "Any Items spent Hospitals or Medicines",
+	"color": "#7AA",
+	"class": "label-danger"
+}, {
+  "label": "Necessary",
+  "id": "NEC",
+  "desc": "Any Necessary Expenses",
+  "color": "#7AA",
+	"class": "label-success"
+}, {
+  "label": "Un-Necessary",
+  "id": "UNNEC",
+  "desc": "Not Necessary Expenses",
+  "color": "#7AA",
+	"class": "label-danger"
+}, {
   "label": "Other",
   "id": "OTH",
   "desc": "Any Items spent Home Making",
