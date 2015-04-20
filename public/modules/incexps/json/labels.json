@@ -84,7 +84,7 @@
 	"app.vaults.info.msg.approveIncexpChanges" : "Successfully Approved Changes on Income/Expense entry",
 	"app.vaults.info.msg.approveIncexpEditAccReq" : "Successfully Approved Edit Access request for the Income/Expense entry",
 	"app.vaults.info.msg.rejectIncexpEditAccReq" : "Successfully Rejected Edit Access request for the Income/Expense entry"
-    
+
 
 }
 

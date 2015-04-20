@@ -1,43 +1,43 @@
-tags-input .tags .tag-item {
-  margin: 0 4px !important;
-}
-tags-input.ti-input-sm .tags .tag-item, .input-group-sm tags-input .tags .tag-item {
-  height: 22px;
-  line-height: 21px;
-  font-size: 16px;
-  border-radius: 3px;
-}
+/*tags-input .tags .tag-item {*/
+  /*margin: 0 4px !important;*/
+/*}*/
+/*tags-input.ti-input-sm .tags .tag-item, .input-group-sm tags-input .tags .tag-item {*/
+  /*height: 22px;*/
+  /*line-height: 21px;*/
+  /*font-size: 16px;*/
+  /*border-radius: 3px;*/
+/*}*/
 
-tags-input .tags .tag-item {
-  margin: 2px 4px;
-  padding: 1px;
-  background: none;
-  display: inline-block;
-  float: left;
-  font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
-  height: 26px;
-}
+/*tags-input .tags .tag-item {*/
+  /*margin: 2px 4px;*/
+  /*padding: 1px;*/
+  /*background: none;*/
+  /*display: inline-block;*/
+  /*float: left;*/
+  /*font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+  /*height: 26px;*/
+/*}*/
 
-tags-input .tags .tag-item {
-  color: white;
-  border: 1px solid #FFF;
-  border-radius: 4px;
-}
-.incexp-tag-item {
-	border-radius: 4px !important;
-	padding: 0 0px;
-	display: block;
-}
-tags-input .tags .tag-item.selected {
-  border: 1px solid #d43f3a !important;
+/*tags-input .tags .tag-item {*/
+  /*color: white;*/
+  /*border: 1px solid #FFF;*/
+  /*border-radius: 4px;*/
+/*}*/
+/*.incexp-tag-item {*/
+	/*border-radius: 4px !important;*/
+	/*padding: 0 0px;*/
+	/*display: block;*/
+/*}*/
+/*tags-input .tags .tag-item.selected {*/
+  /*border: 1px solid #d43f3a !important;*/
 
-}
+/*}*/
 
-tags-input .tags .tag-item.selected > div.incexp-tag-item{
-  color: white !important;
-  background: #d9534f !important;
-  border: 1px solid #d43f3a !important;
-}
+/*tags-input .tags .tag-item.selected > div.incexp-tag-item{*/
+  /*color: white !important;*/
+  /*background: #d9534f !important;*/
+  /*border: 1px solid #d43f3a !important;*/
+/*}*/
 .info-icon,
 .warn-icon,
 .danger-icon{
@@ -62,9 +62,9 @@ tags-input .tags .tag-item.selected > div.incexp-tag-item{
 
 .info-well{
 	margin-bottom: 0 !important;
-	  background-color: inherit !important;
-  border: 0px !important;
-  border-radius: 0px !important;
-  background-image: none !important;
+    background-color: inherit !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background-image: none !important;
 }
 

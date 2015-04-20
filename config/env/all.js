@@ -14,7 +14,6 @@ module.exports = {
 		lib: {
 			css: [
 				'public/lib/bootstrap/dist/css/bootstrap.css',
-//				'public/lib/bootswatch-dist/css/bootstrap.css',
 				'public/lib/bootstrap/dist/css/bootstrap-theme.css',
 				'public/lib/fontawesome/css/font-awesome.css',
                 'public/lib/angular-loading-bar/build/loading-bar.css',
@@ -23,7 +22,6 @@ module.exports = {
 			],
 			js: [
 				'public/lib/angular/angular.js',
-				//'public/lib/bootstrap/dist/js/bootstrap.js',
 				'public/lib/angular-resource/angular-resource.js',
 				'public/lib/angular-cookies/angular-cookies.js', 
 				'public/lib/angular-animate/angular-animate.js', 
@@ -36,17 +34,6 @@ module.exports = {
 				'public/lib/angular-moment/angular-moment.js',
                 'public/lib/angular-loading-bar/build/loading-bar.js',
                 'public/lib/ng-tags-input/ng-tags-input.js',
-                //'public/lib/angular-strap/dist/modules/alert.js',
-                //'public/lib/angular-strap/dist/modules/alert.tpl.js',
-                //'public/lib/angular-strap/dist/modules/modal.js',
-                //'public/lib/angular-strap/dist/modules/modal.tpl.js',
-                //'public/lib/angular-strap/dist/modules/dimensions.js'
-                //'public/lib/angular-strap/dist/angular-strap.js',
-                //'public/lib/angular-strap/dist/angular-strap.tpl.js',
-				//'public/lib/xtform/xtForm.js'
-//				'public/lib/highcharts/highcharts.src.js',
-//				'public/lib/highcharts-ng/dist/highcharts-ng.js'
-				
 			]
 		},
 		css: [
