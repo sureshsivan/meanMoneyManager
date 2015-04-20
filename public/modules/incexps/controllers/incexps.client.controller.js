@@ -260,6 +260,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     type: _this.type,
                     tracker: $stateParams.trackerId,
                     tags: _this.tags,
+                    evDate : _this.evDate,
                     amount: _this.amount,
                     vault: _this.vault,
                     owner: _this.authentication.user._id,
@@ -352,7 +353,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
     						trackerId: $stateParams.trackerId
     					}, function(res){
     					$state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams, {reload: true});
-    		            AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.deleteIncexp']);
+    		            AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.deletedIncexp']);
                     });
     			}
     		};        	
