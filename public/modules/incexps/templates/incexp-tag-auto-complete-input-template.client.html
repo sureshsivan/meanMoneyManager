@@ -1,4 +1,7 @@
 <div>
-	<span class="label" style="background-color:{{data.color}}">{{data.label}}</span>
-	<span class="label" style="color:{{data.color}}">{{data.desc}}</span>
+	<span class="label" data-ng-class="data.class">
+		<span class="fa fa-tags"></span>
+		{{data.label}}
+	</span>
+	<span class="label" style="background: none !important; color: #000 !important"> {{' (' + data.desc + ')'}}</span>
 </div>

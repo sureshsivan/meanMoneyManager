@@ -1,4 +1,8 @@
-<div class="incexp-tag-item" style="background-color:{{data.color}}">
-	<span class="">{{$getDisplayText()}}</span>
-	<a class="fa fa-remove remove-btn" ng-click="$removeTag()" style="color: #FFF"></a>
+<div class="incexp-tag-item">
+	<span class="label" data-ng-class="data.class">
+		<span class="fa fa-tags"></span>
+		{{$getDisplayText()}}
+		<span class="fa fa-remove remove-btn" data-ng-click="$removeTag()" style="color: #000"></span>
+	</span>
+	
 </div>

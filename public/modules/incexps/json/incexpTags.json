@@ -2,20 +2,24 @@
 	"label": "Entertainment",
 	"id": "ENT",
 	"desc": "Any Items spent for Entertainment",
-	"color": "#000"
+	"color": "#000",
+	"class": "label-info"
 }, {
 	"label": "Baby",
 	"id": "BABY",
 	"desc": "Any Items spent for Babycare",
-	"color": "#F4F"
+	"color": "#F4F",
+	"class": "label-success"
 }, {
 	"label": "Grocery",
 	"id": "NEC",
 	"desc": "Any Items spent Home Making",
-	"color": "#7AA"
+	"color": "#7AA",
+	"class": "label-success"
 }, {
   "label": "Other",
   "id": "OTH",
   "desc": "Any Items spent Home Making",
-  "color": "#7AA"
+  "color": "#7AA",
+	"class": "label-warning"
 }]

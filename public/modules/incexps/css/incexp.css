@@ -1,4 +1,14 @@
 tags-input .tags .tag-item {
+  margin: 0 4px !important;
+}
+tags-input.ti-input-sm .tags .tag-item, .input-group-sm tags-input .tags .tag-item {
+  height: 22px;
+  line-height: 21px;
+  font-size: 16px;
+  border-radius: 3px;
+}
+
+tags-input .tags .tag-item {
   margin: 2px 4px;
   padding: 1px;
   background: none;
@@ -15,10 +25,12 @@ tags-input .tags .tag-item {
 }
 .incexp-tag-item {
 	border-radius: 4px !important;
-	padding: 0 10px;
+	padding: 0 0px;
+	display: block;
 }
 tags-input .tags .tag-item.selected {
   border: 1px solid #d43f3a !important;
+
 }
 
 tags-input .tags .tag-item.selected > div.incexp-tag-item{
