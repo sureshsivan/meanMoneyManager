@@ -13,22 +13,27 @@ angular.module('trackers')
             _this.assignedUsers = [];
             _this.assignedUsers.push(Authentication.user);
             var pullMsgs = function(){
-                return TrackerLocaleMessages.pullMessages().then(function(labels){
-                    _this.labelsObj = labels;
+            	var deferred = $q.defer();
+            	TrackerLocaleMessages.pullMessages().then(function(labels){
+        			_this.labelsObj = labels;
+        			deferred.resolve(null);
                 });
+                return deferred.promise;
             };
 
             var pullTrackers = function () {
                 _this.trackers = Trackers.query();
+                return _this.trackers.$promise
             };
             
             var pullTracker = function () {
                 $scope.tracker = Trackers.get({
                     trackerId: $stateParams.trackerId
                 });
+                return $scope.tracker.$promise;
             };
             
-            var pullIncexpTypes = function(){
+            var pullCurrencies = function(){
             	var deferred = $q.defer();
             	var cachedVal = _this.appStatics.getCurrencies();
             	//	If value is already cached by service - then use it otherwise 
@@ -48,9 +53,9 @@ angular.module('trackers')
             };
             
             var bootmodule = function () {
-                _this.getLabel = function(key){
-                	return _this.labelsObj[key];
-                };
+//                _this.getLabel = function(key){
+//                	return _this.labelsObj[key];
+//                };
                 _this.getLocalTime = function (time) {
                     return moment(time).toString();
                 };
@@ -80,9 +85,8 @@ angular.module('trackers')
                     $state.go(VAULT_CONST.LIST_VAULTS_STATE_NAME, {trackerId: trackerId});
                 };
                 _this.loadIncexps = function (trackerId) {
-                    $state.go('listTrackerIncexps', {trackerId: trackerId});
+                    $state.go(RACKER_CONST.LIST_TRACKERS_STATE_NAME, {trackerId: trackerId});
                 };
-
                 _this.createTracker = function (size) {
                     _this.tracker = {};
                     $state.go(TRACKER_CONST.CREATE_TRACKER_STATE_NAME);
@@ -108,7 +112,7 @@ angular.module('trackers')
                     });
                     tracker.$save(function (response) {
                         $state.go(TRACKER_CONST.LIST_TRACKERS_STATE_NAME);
-                        AppMessenger.sendInfoMsg('Successfully Created New Tracker');
+                        AppMessenger.sendInfoMsg(_this.labelsObj['app.trackers.info.msg.createdTracker']);
                     }, function (errorResponse) {
                         $scope.error = errorResponse.data.message;
                     });
@@ -124,7 +128,7 @@ angular.module('trackers')
                     tracker.users = users;
                     tracker.$update(function () {
                         $state.go(TRACKER_CONST.LIST_TRACKERS_STATE_NAME);
-                        AppMessenger.sendInfoMsg('Successfully Updated theTracker');
+                        AppMessenger.sendInfoMsg(_this.labelsObj['app.trackers.info.msg.updatedTracker']);
                     }, function (errorResponse) {
                         $scope.error = errorResponse.data.message;
                     });
@@ -135,7 +139,7 @@ angular.module('trackers')
                     if (tracker) {
                         tracker.$remove(function () {
                             $state.go(TRACKER_CONST.LIST_TRACKERS_STATE_NAME, $stateParams, {reload: true});
-                            AppMessenger.sendErrMsg('Successfully Deleted the Tracker');
+                            AppMessenger.sendInfoMsg(_this.labelsObj['app.trackers.info.msg.deletedTracker']);
                         }, function (errorResponse) {
                             $scope.error = errorResponse.data.message;
                         });
@@ -148,9 +152,9 @@ angular.module('trackers')
             if($state.current.name === TRACKER_CONST.LIST_TRACKERS_STATE_NAME){
             	pullMsgs().then(pullTrackers).then(bootmodule);
             } else if($state.current.name === TRACKER_CONST.CREATE_TRACKER_STATE_NAME){
-            	pullMsgs().then(pullIncexpTypes).then(bootmodule);
+            	pullMsgs().then(pullCurrencies).then(bootmodule);
             } else if($state.current.name === TRACKER_CONST.EDIT_TRACKER_STATE_NAME){
-            	pullMsgs().then(pullIncexpTypes).then(pullTracker).then(bootmodule);
+            	pullMsgs().then(pullCurrencies).then(pullTracker).then(bootmodule);
             }
         }
     ])

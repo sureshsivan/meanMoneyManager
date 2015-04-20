@@ -3,9 +3,9 @@
 		data-ng-repeat="tracker in trackersCtrl.trackers | filter:searchText">
   <div class="panel-heading">
 		<span class="fa fa-table"> </span>
-	  <strong>{{trackersCtrl.getLabel('app.trackers.lbl.tracker')}} : {{tracker.displayName}}</strong>
+	  <strong>{{trackersCtrl.labelsObj['app.trackers.lbl.tracker']}} : {{tracker.displayName}}</strong>
   	<span data-ng-if="tracker.userAlertsCount > 0" class="pull-right badge margin-left badge-warn" data-tooltip-placement="bottom"
-          data-tooltip="{{trackersCtrl.getLabel('app.trackers.tt.recordsRequireApproval')}}">{{tracker.userAlertsCount}}
+          data-tooltip="{{trackersCtrl.labelsObj['app.trackers.tt.recordsRequireApproval']}}">{{tracker.userAlertsCount}}
     </span>
   </div>
   <div class="panel-body">
@@ -14,51 +14,51 @@
 	</small>
 	<br/>
 	<small class="text-muted">
-		<strong>{{trackersCtrl.getLabel('app.trackers.lbl.owner')}}</strong><span data-ng-bind="trackersCtrl.getOwnerTxt(tracker)"></span>
+		<strong>{{trackersCtrl.labelsObj['app.trackers.lbl.owner']}}</strong><span data-ng-bind="trackersCtrl.getOwnerTxt(tracker)"></span>
 	</small>
 	<strong> , </strong>
 	<small class="text-muted">
-		<strong>{{trackersCtrl.getLabel('app.trackers.lbl.users')}}</strong><span data-ng-bind="trackersCtrl.getUsersTxt(tracker)"></span>
+		<strong>{{trackersCtrl.labelsObj['app.trackers.lbl.users']}}</strong><span data-ng-bind="trackersCtrl.getUsersTxt(tracker)"></span>
 	</small>
     <strong> , </strong>
 	<small class="text-muted">
-		<strong>{{trackersCtrl.getLabel('app.trackers.lbl.currency')}}</strong><span data-ng-bind="tracker.currency"></span>
+		<strong>{{trackersCtrl.labelsObj['app.trackers.lbl.currency']}}</strong><span data-ng-bind="tracker.currency"></span>
 	</small>
     <br/>
 	<small class="list-group-item-text text-muted">
-		<strong>{{trackersCtrl.getLabel('app.trackers.lbl.createdOn')}}</strong><span data-am-time-ago="tracker.created"></span>    (<span>{{tracker.created | amDateFormat:'dddd, MMMM Do YYYY'}}</span>)
+		<strong>{{trackersCtrl.labelsObj['app.trackers.lbl.createdOn']}}</strong><span data-am-time-ago="tracker.created"></span>    (<span>{{tracker.created | amDateFormat:'dddd, MMMM Do YYYY'}}</span>)
 	</small>
     <strong> , </strong>
     <small class="list-group-item-text text-muted">
-      <strong>{{trackersCtrl.getLabel('app.trackers.lbl.totalVaults')}} </strong><span>{{tracker.vaultsCount}}</span>
+      <strong>{{trackersCtrl.labelsObj['app.trackers.lbl.totalVaults']}} </strong><span>{{tracker.vaultsCount}}</span>
     </small>
     <strong> , </strong>
     <small class="list-group-item-text text-muted">
-      <strong>{{trackersCtrl.getLabel('app.trackers.lbl.totalIncexps')}} </strong><span>{{tracker.incexpCount}}</span>
+      <strong>{{trackersCtrl.labelsObj['app.trackers.lbl.totalIncexps']}} </strong><span>{{tracker.incexpCount}}</span>
     </small>
 	<br/>
 	<span class="pull-right pad-left">
-		<button data-tooltip-placement="bottom" data-tooltip="{{trackersCtrl.getLabel('app.trackers.tt.deleteTracker')}}"
+		<button data-tooltip-placement="bottom" data-tooltip="{{trackersCtrl.labelsObj['app.trackers.tt.deleteTracker']}}"
 				class="btn btn-danger btn-sm" data-ng-click="trackersCtrl.remove(tracker)"
 				data-ng-class="tracker.owner._id == trackersCtrl.authentication.user._id ? (tracker.incexpCount>0 || tracker.vaultsCount>0 ? 'disabled' : '') : 'disabled'">
 			<i class="glyphicon glyphicon-trash"></i>
 		</button>
 	</span>
 	<span class="pull-right pad-left">
-		<button data-tooltip-placement="bottom" data-tooltip-html-unsafe="{{trackersCtrl.getLabel('app.trackers.tt.updateTracker')}}"
+		<button data-tooltip-placement="bottom" data-tooltip-html-unsafe="{{trackersCtrl.labelsObj['app.trackers.tt.updateTracker']}}"
 				class="btn btn-warning btn-sm" data-ng-click="trackersCtrl.editTracker(tracker)"
 			data-ng-class="tracker.owner._id == trackersCtrl.authentication.user._id ? '' : 'disabled'">
 			<i class="glyphicon glyphicon-edit"></i>
 		</button>
 	</span>
 	<span class="pull-right pad-left">
-		<button  data-tooltip-placement="bottom" data-tooltip-html-unsafe="{{trackersCtrl.getLabel('app.trackers.tt.showVaults')}}"
+		<button  data-tooltip-placement="bottom" data-tooltip-html-unsafe="{{trackersCtrl.labelsObj['app.trackers.tt.showVaults']}}"
 				 class="btn btn-info btn-sm" data-ng-click="trackersCtrl.loadVaults(tracker._id)">
 			<i class="fa fa-suitcase"></i>
 		</button>
 	</span>
 	<span class="pull-right pad-left">
-		<button data-tooltip-placement="bottom" data-tooltip-html-unsafe="{{trackersCtrl.getLabel('app.trackers.tt.showIncomeExpenses')}}"
+		<button data-tooltip-placement="bottom" data-tooltip-html-unsafe="{{trackersCtrl.labelsObj['app.trackers.tt.showIncomeExpenses']}}"
 				 class="btn btn-primary btn-sm" data-ng-click="trackersCtrl.loadIncexps(tracker._id)">
 			<i class="fa fa-money"></i>
 		</button>

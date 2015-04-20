@@ -1,14 +1,14 @@
 <section data-ng-controller="TrackersController as trackersCtrl">
     <div class="page-header">
-        <h1>{{trackersCtrl.getLabel('app.trackers.lbl.listOfTrackers')}}</h1>
+        <h1>{{trackersCtrl.labelsObj['app.trackers.lbl.listOfTrackers']}}</h1>
     </div>
     <div class="row">
         <div class="col-xs-12">
             <div class="input-group">
-                <input type="text" data-ng-model="searchText" class="form-control" placeholder="{{trackersCtrl.getLabel('app.trackers.lbl.searchTracker')}}">
+                <input type="text" data-ng-model="searchText" class="form-control" placeholder="{{trackersCtrl.labelsObj['app.trackers.lbl.searchTracker']}}">
                 <span class="input-group-btn">
 		            <button type="button" class="pull-left btn btn-success text-center" data-ng-click="trackersCtrl.createTracker()">
-		                <i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;{{trackersCtrl.getLabel('app.trackers.lbl.newTracker')}}
+		                <i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;{{trackersCtrl.labelsObj['app.trackers.lbl.newTracker']}}
 		            </button>
                 </span>
             </div>
@@ -18,7 +18,7 @@
    	<trackers-list></trackers-list>
     <div class="row">
         <div class="alert alert-warning text-center" data-ng-hide="!trackersCtrl.trackers.$resolved || trackersCtrl.trackers.length">
-            <a href="/#!/trackers/create">{{trackersCtrl.getLabel('app.trackers.lbl.noTrackerYet')}}</a>
+            <a href="/#!/trackers/create">{{trackersCtrl.labelsObj['app.trackers.lbl.noTrackerYet']}}</a>
         </div>
     </div>
 

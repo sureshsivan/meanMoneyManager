@@ -43,8 +43,12 @@
 
 
   "app.trackers.err.msg.inputTrackerName" : "Please input a name for the Tracker",
-  "app.trackers.err.msg.minMaxLengthTrackerName" : "Tracker Name should be between 8 to 20 characters",
+  "app.trackers.err.msg.minMaxLengthTrackerName" : "Tracker Name should be between 6 to 50 characters",
   "app.trackers.err.msg.inputTrackerDesc" : "Please input description for the Tracker",
-  "app.trackers.err.msg.minMaxLengthTrackerDesc" : "Tracker Description should be between 12 to 50 characters",
-  "app.trackers.err.msg.selectTrackerCurrency" : "Please select a Tracker Currency"
+  "app.trackers.err.msg.minMaxLengthTrackerDesc" : "Tracker Description should be between 6 to 100 characters",
+  "app.trackers.err.msg.selectTrackerCurrency" : "Please select a Tracker Currency",
+  
+  "app.trackers.info.msg.createdTracker" : "Successfully Created New Tracker",
+  "app.trackers.info.msg.updatedTracker" : "Successfully Updated the Tracker",
+  "app.trackers.info.msg.deletedTracker" : "Successfully Deleted the Tracker"
 }

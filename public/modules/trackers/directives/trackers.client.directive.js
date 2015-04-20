@@ -17,7 +17,6 @@ angular.module('trackers')
 	    return {
 	        restrict: 'E',
 	        transclude: true,
-//	        templateUrl: 'modules/core/views/add-users-template.html',
 	        templateUrl: UserStatics.getAddUsersTmpl(),
 	        link: function(scope, element, attrs) {
 	        },
@@ -31,16 +30,16 @@ angular.module('trackers')
 	        },
 	        controller: function($scope){
 	        	$scope.authentication = Authentication;
-						$scope.queryUsers = function(query){
-							var curUsersArr = [];
-							  angular.forEach($scope.assignedUsers, function(value, key) {
-								  curUsersArr.push(value._id);
-								});
-							return UserStatics.queryUsers(query, curUsersArr.join());
-						};
-						$scope.assignNewUser = function(user){
-							$scope.currentUser = null;
-							$scope.assignedUsers.push(user);
+					$scope.queryUsers = function(query){
+						var curUsersArr = [];
+						  angular.forEach($scope.assignedUsers, function(value, key) {
+							  curUsersArr.push(value._id);
+							});
+						return UserStatics.queryUsers(query, curUsersArr.join());
+					};
+					$scope.assignNewUser = function(user){
+						$scope.currentUser = null;
+						$scope.assignedUsers.push(user);
 			    	};
 			    	$scope.removeUser = function(index){
 			    		$scope.assignedUsers.splice(index, 1);

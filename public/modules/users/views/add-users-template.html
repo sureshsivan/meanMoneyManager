@@ -8,30 +8,29 @@
                 {{btntext}}
             </button>
         </span>
-        <input type="text" ng-model="currentUser" placeholder="{{placeholder}}"
-            typeahead="user as (user.displayName + ' (' + user.email + ')') for user in queryUsers($viewValue)"
-            typeahead-loading="loadingUsers" class="form-control" formnovalidate/>
-        <i ng-show="loadingUsers" class="glyphicon glyphicon-refresh"></i>
+        <input type="text" data-ng-model="currentUser" placeholder="{{placeholder}}"
+            data-typeahead="user as (user.displayName + ' (' + user.email + ')') for user in queryUsers($viewValue)"
+            data-typeahead-loading="loadingUsers" class="form-control" formnovalidate/>
+        <i data-ng-show="loadingUsers" class="glyphicon glyphicon-refresh"></i>
     </div>
     <br/>
     <ul class="list-group">
         <li class="list-group-item list-group-item-info"
             data-ng-class="user._id === authentication.user._id ? 'list-group-item-danger' : 'list-group-item-info'"
             data-ng-repeat="user in assignedUsers">
-            <strong data-ng-show="user._id === authentication.user._id">{{ownerTxt}} : </strong>
+            <strong data-ng-show="user._id === authentication.user._id">{{ownerTxt}}</strong>
             {{user.displayName}} ({{user.email}})
             <button type="button" class="close"
                     data-ng-hide="user._id !== authentication.user._id"
-                    tooltip="{{ttOwner}}">
+                    data-tooltip="{{ttOwner}}">
                 <span class="fa fa-user"></span>
             </button>
             <button type="button" class="close"
                     data-ng-hide="user._id === authentication.user._id"
                     data-ng-click="removeUser($index)"
-                    tooltip="{{ttUser}}">
+                    data-tooltip="{{ttUser}}">
                 <span class="fa fa-times-circle"></span>
             </button>
         </li>
     </ul>
 </div>
-

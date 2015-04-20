@@ -1,74 +1,74 @@
 <section data-ng-controller="TrackersController as trackersCtrl">
     <div class="page-header">
-        <h3>{{trackersCtrl.getLabel('app.trackers.lbl.newTracker')}}</h3>
+        <h3>{{trackersCtrl.labelsObj['app.trackers.lbl.newTracker']}}</h3>
     </div>
     <form name="createTrackerForm" data-ng-submit="trackersCtrl.saveTracker()" novalidate>
         <fieldset>
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group form-group-sm">
-                        <label class="control-label" for="displayName"> {{trackersCtrl.getLabel('app.trackers.lbl.trackerName')}}</label>
+                        <label class="control-label" for="displayName"> {{trackersCtrl.labelsObj['app.trackers.lbl.trackerName']}}</label>
                         <div class="controls">
                             <input type="text" data-ng-model="trackersCtrl.displayName" name="displayName" id="displayName" class="form-control"
-                                   placeholder="{{trackersCtrl.getLabel('app.trackers.ph.trackerName')}}"
-                                   data-ng-minlength="8" data-ng-maxlength="20" required/>
+                                   placeholder="{{trackersCtrl.labelsObj['app.trackers.ph.trackerName']}}"
+                                   data-ng-minlength="6" data-ng-maxlength="50" required/>
                             <div data-ng-if="createTrackerForm.displayName.$invalid && createTrackerForm.displayName.$dirty"
                                  data-data-ng-messages="createTrackerForm.displayName.$error">
                                 <span data-ng-if="createTrackerForm.displayName.$error.required"
                                       class="label label-warning" data-ng-message="required">
-                                    {{trackersCtrl.getLabel('app.trackers.err.msg.inputTrackerName')}}
+                                    {{trackersCtrl.labelsObj['app.trackers.err.msg.inputTrackerName']}}
                                 </span>
                                 <span data-ng-if="createTrackerForm.displayName.$error.minlength || createTrackerForm.displayName.$error.maxlength"
                                       class="label label-warning" data-ng-message="minlength, maxlength">
-                                    {{trackersCtrl.getLabel('app.trackers.err.msg.minMaxLengthTrackerName')}}
+                                    {{trackersCtrl.labelsObj['app.trackers.err.msg.minMaxLengthTrackerName']}}
                                 </span>
                             </div>
                         </div>
                     </div>
                     <div class="form-group form-group-sm">
-                        <label class="control-label" for="description"> {{trackersCtrl.getLabel('app.trackers.lbl.trackerDesc')}}</label>
+                        <label class="control-label" for="description"> {{trackersCtrl.labelsObj['app.trackers.lbl.trackerDesc']}}</label>
                         <div class="controls">
                             <input type="text" data-ng-model="trackersCtrl.description" id="description" class="form-control" name="description"
-                                   placeholder="{{trackersCtrl.getLabel('app.trackers.ph.trackerDesc')}}"
-                                   data-ng-minlength="12" data-ng-maxlength="50" required/>
+                                   placeholder="{{trackersCtrl.labelsObj['app.trackers.ph.trackerDesc']}}"
+                                   data-ng-minlength="6" data-ng-maxlength="100" required/>
                             <div data-ng-if="createTrackerForm.description.$invalid && createTrackerForm.description.$dirty"
                                  data-data-ng-messages="createTrackerForm.description.$error">
                                 <span data-ng-if="createTrackerForm.description.$error.required"
                                       class="label label-warning" data-ng-message="required">
-                                    {{trackersCtrl.getLabel('app.trackers.err.msg.inputTrackerDesc')}}
+                                    {{trackersCtrl.labelsObj['app.trackers.err.msg.inputTrackerDesc']}}
                                 </span>
                                 <span data-ng-if="createTrackerForm.description.$error.minlength || createTrackerForm.description.$error.maxlength"
                                       class="label label-warning" data-ng-message="minlength, maxlength">
-                                    {{trackersCtrl.getLabel('app.trackers.err.msg.minMaxLengthTrackerDesc')}}
+                                    {{trackersCtrl.labelsObj['app.trackers.err.msg.minMaxLengthTrackerDesc']}}
                                 </span>
                             </div>
                         </div>
                     </div>
                     <div class="form-group form-group-sm">
-                        <label class="control-label" for="currency"> {{trackersCtrl.getLabel('app.trackers.lbl.trackerCurrency')}}</label>
+                        <label class="control-label" for="currency"> {{trackersCtrl.labelsObj['app.trackers.lbl.trackerCurrency']}}</label>
                         <div class="controls">
                              <select data-ng-model="trackersCtrl.currency" id="currency" class="form-control ng-invalid" name="currency"
                                      data-ng-options="currencyItem.id as currencyItem.label for currencyItem in trackersCtrl.currencies" required>
-                                <option value="">{{trackersCtrl.getLabel('app.trackers.ph.trackerCurrency')}}</option>
+                                <option value="">{{trackersCtrl.labelsObj['app.trackers.ph.trackerCurrency']}}</option>
                             </select>
                             <div data-ng-if="createTrackerForm.currency.$invalid && createTrackerForm.currency.$dirty"
                                  data-data-ng-messages="createTrackerForm.displayName.$error">
                                 <span data-ng-if="createTrackerForm.currency.$error.required"
                                       class="label label-warning" data-ng-message="required">
-                                    {{trackersCtrl.getLabel('app.trackers.err.msg.selectTrackerCurrency')}}
+                                    {{trackersCtrl.labelsObj['app.trackers.err.msg.selectTrackerCurrency']}}
                                 </span>
                             </div>
                         </div>
                     </div>
                     <div class="form-group form-group-sm">
-                        <label class="control-label"> {{trackersCtrl.getLabel('app.trackers.lbl.shareTracker')}}</label>
+                        <label class="control-label"> {{trackersCtrl.labelsObj['app.trackers.lbl.shareTracker']}}</label>
                         <div class="controls">
                             <add-users data-users="trackersCtrl.assignedUsers"
-                                       data-btntext="trackersCtrl.getLabel('app.trackers.lbl.addUser')"
-                                       data-tt-owner="trackersCtrl.getLabel('app.trackers.tt.trackerOwner')"
-                                       data-tt-user="trackersCtrl.getLabel('app.trackers.tt.trackerUser')"
-                                       data-owner-txt="trackersCtrl.getLabel('app.trackers.lbl.owner')"
-                                       data-placeholder="trackersCtrl.getLabel('app.trackers.ph.addUsers')">
+                                       data-btntext="trackersCtrl.labelsObj['app.trackers.lbl.addUser']"
+                                       data-tt-owner="trackersCtrl.labelsObj['app.trackers.tt.trackerOwner']"
+                                       data-tt-user="trackersCtrl.labelsObj['app.trackers.tt.trackerUser']"
+                                       data-owner-txt="trackersCtrl.labelsObj['app.trackers.lbl.owner']"
+                                       data-placeholder="trackersCtrl.labelsObj['app.trackers.ph.addUsers']">
                             </add-users>
                         </div>
                     </div>
@@ -78,7 +78,7 @@
             <div class="form-group">
                 <!--<input type="submit" class="btn btn-default pull-right">-->
                 <button class="btn btn-success btn-sm pull-right"
-                        data-ng-disabled="createTrackerForm.$invalid">{{trackersCtrl.getLabel('app.trackers.lbl.newTracker')}}</button>
+                        data-ng-disabled="createTrackerForm.$invalid">{{trackersCtrl.labelsObj['app.trackers.lbl.newTracker']}}</button>
             </div>
         </fieldset>
     </form>
