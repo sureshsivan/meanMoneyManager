@@ -289,6 +289,11 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     incexp.pendingType = _this.approvalModel.pendingType;
                     incexp.pendingWith = _this.approvalModel.pendingWith._id;
                     incexp.pendingMsg = _this.approvalModel.pendingMsg;
+                } else {
+                	incexp.isPending = false;
+                    incexp.pendingType = null;
+                    incexp.pendingWith = null;
+                    incexp.pendingMsg = null;
                 }
                 delete incexp.tracker;
                 incexp.$update($stateParams, function() {
