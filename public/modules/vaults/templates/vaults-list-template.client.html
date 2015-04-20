@@ -2,7 +2,7 @@
 		data-ng-repeat="vault in vaultsCtrl.trackerVaults | filter:searchText">
   <div class="panel-heading">
 		<span class="fa fa-suitcase"> </span>
-	  <strong>{{vaultsCtrl.getLabel('app.vaults.lbl.vault')}} : {{vault.displayName}}</strong>
+	  <strong>{{vaultsCtrl.labelsObj['app.vaults.lbl.vault']}} : {{vault.displayName}}</strong>
   </div>
   <div class="panel-body">
 	<small class="text-muted">
@@ -10,29 +10,29 @@
 	</small>
 	<br/>
 	<small class="text-muted">
-		<strong>{{vaultsCtrl.getLabel('app.vaults.lbl.createdBy')}}</strong>
+		<strong>{{vaultsCtrl.labelsObj['app.vaults.lbl.createdBy']}}</strong>
 		<span data-ng-bind="vaultsCtrl.getOwnerTxt(vault);"></span>
 	</small>
 	<strong> , </strong>
 	<small class="text-muted">
-		<strong>{{vaultsCtrl.getLabel('app.vaults.lbl.noOfRecords')}}</strong>
+		<strong>{{vaultsCtrl.labelsObj['app.vaults.lbl.noOfRecords']}}</strong>
 		<span data-ng-bind="vault.incexpCount"></span>
 	</small>
 	<br/>
 	<small class="text-muted">
-		<strong>{{vaultsCtrl.getLabel('app.vaults.lbl.createdOn')}}</strong>
+		<strong>{{vaultsCtrl.labelsObj['app.vaults.lbl.createdOn']}}</strong>
 		<span data-am-time-ago="vault.created"></span>    (<span>{{vault.created | amDateFormat:'dddd, MMMM Do YYYY'}}</span>)
 	</small>
 	<br/>
 	<span class="pull-right pad-left">
-		<button data-tooltip-placement="bottom" data-tooltip="{{vaultsCtrl.getLabel('app.vaults.lbl.deleteVault')}}"
+		<button data-tooltip-placement="bottom" data-tooltip="{{vaultsCtrl.labelsObj['app.vaults.lbl.deleteVault']}}"
 				class="btn btn-danger btn-sm" data-ng-click="vaultsCtrl.deleteVault(vault)"
 				data-ng-class="(vault.owner._id == vaultsCtrl.authentication.user._id && vault.incexpCount == 0) ? '' : 'disabled'">
 			<i class="glyphicon glyphicon-trash"></i>
 		</button>
 	</span>
 	<span class="pull-right pad-left">
-		<button data-tooltip-placement="bottom" data-tooltip-html-unsafe="{{vaultsCtrl.getLabel('app.vault.lbl.updateVault')}}"
+		<button data-tooltip-placement="bottom" data-tooltip="{{vaultsCtrl.labelsObj['app.vaults.tt.updateVault']}}"
 				class="btn btn-warning btn-sm" data-ng-click="vaultsCtrl.editVault(vault)"
 			data-ng-class="vault.owner._id == vaultsCtrl.authentication.user._id ? '' : 'disabled'">
 			<i class="glyphicon glyphicon-edit"></i>

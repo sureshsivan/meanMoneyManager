@@ -75,10 +75,11 @@
 
                 </div>
             </div>
-            <div class="form-group">
-                <!--<input type="submit" class="btn btn-default pull-right">-->
-                <button class="btn btn-success btn-sm pull-right"
+            <div class="modal-footer">
+                <!--<input type="submit" class="btn btn-default">-->
+                <button class="btn btn-success btn-sm"
                         data-ng-disabled="createTrackerForm.$invalid">{{trackersCtrl.labelsObj['app.trackers.lbl.newTracker']}}</button>
+                <button class="btn btn-warning btn-sm pull-right" data-ng-click="trackersCtrl.cancel()">{{trackersCtrl.labelsObj['app.trackers.lbl.cancel']}}</button>
             </div>
         </fieldset>
     </form>

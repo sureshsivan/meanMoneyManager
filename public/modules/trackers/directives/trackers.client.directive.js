@@ -30,20 +30,20 @@ angular.module('trackers')
 	        },
 	        controller: function($scope){
 	        	$scope.authentication = Authentication;
-					$scope.queryUsers = function(query){
-						var curUsersArr = [];
-						  angular.forEach($scope.assignedUsers, function(value, key) {
-							  curUsersArr.push(value._id);
-							});
-						return UserStatics.queryUsers(query, curUsersArr.join());
-					};
-					$scope.assignNewUser = function(user){
-						$scope.currentUser = null;
-						$scope.assignedUsers.push(user);
-			    	};
-			    	$scope.removeUser = function(index){
-			    		$scope.assignedUsers.splice(index, 1);
-			    	};
+				$scope.queryUsers = function(query){
+					var curUsersArr = [];
+					  angular.forEach($scope.assignedUsers, function(value, key) {
+						  curUsersArr.push(value._id);
+						});
+					return UserStatics.queryUsers(query, curUsersArr.join());
+				};
+				$scope.assignNewUser = function(user){
+					$scope.currentUser = null;
+					$scope.assignedUsers.push(user);
+		    	};
+		    	$scope.removeUser = function(index){
+		    		$scope.assignedUsers.splice(index, 1);
+		    	};
 	        }
 	    };
 	}])

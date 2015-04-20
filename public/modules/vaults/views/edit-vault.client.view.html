@@ -1,6 +1,6 @@
 <section data-ng-controller="VaultsController as vaultsCtrl" data-ng-init="vaultsCtrl.findOne()">
     <div class="page-header">
-        <h3 class="modal-title">{{vaultsCtrl.getLabel('app.vaults.lbl.update')}} {{vault.displayName}}</h3>
+        <h3 class="modal-title">{{vaultsCtrl.labelsObj['app.vaults.lbl.update']}} {{vault.displayName}}</h3>
     </div>
     <div class="modal-body">
         <form name=editVaultForm>
@@ -8,39 +8,39 @@
 	           <div class="row">
 	               <div class="col-sm-12">
 	                   <div class="form-group form-group-sm">
-	                       <label class="control-label" for="displayName"> {{vaultsCtrl.getLabel('app.vaults.lbl.vaultName')}}</label>
+	                       <label class="control-label" for="displayName"> {{vaultsCtrl.labelsObj['app.vaults.lbl.vaultName']}}</label>
 	                       <div class="controls">
 	                           <input type="text" data-ng-model="vault.displayName" name="displayName" id="displayName" class="form-control"
-	                                  placeholder="{{vaultsCtrl.getLabel('app.vaults.ph.vaultName')}}"
+	                                  placeholder="{{vaultsCtrl.labelsObj['app.vaults.ph.vaultName']}}"
 	                                  data-ng-minlength="8" data-ng-maxlength="20" required/>
 	                           <div data-ng-if="editVaultForm.displayName.$invalid && editVaultForm.displayName.$dirty"
 	                                data-data-ng-messages="editVaultForm.displayName.$error">
 	                               <span data-ng-if="editVaultForm.displayName.$error.required"
 	                                     class="label label-warning" data-ng-message="required">
-	                                   {{vaultsCtrl.getLabel('app.vaults.err.msg.inputVaultName')}}
+	                                   {{vaultsCtrl.labelsObj['app.vaults.err.msg.inputVaultName']}}
 	                               </span>
 	                               <span data-ng-if="editVaultForm.displayName.$error.minlength || editVaultForm.displayName.$error.maxlength"
 	                                     class="label label-warning" data-ng-message="minlength, maxlength">
-	                                   {{vaultsCtrl.getLabel('app.vaults.err.msg.minMaxLengthVaultName')}}
+	                                   {{vaultsCtrl.labelsObj['app.vaults.err.msg.minMaxLengthVaultName']}}
 	                               </span>
 	                           </div>
 	                       </div>
 	                   </div>
 	                   <div class="form-group form-group-sm">
-	                       <label class="control-label" for="description"> {{vaultsCtrl.getLabel('app.vaults.lbl.vaultDesc')}}</label>
+	                       <label class="control-label" for="description"> {{vaultsCtrl.labelsObj['app.vaults.lbl.vaultDesc']}}</label>
 	                       <div class="controls">
 	                           <input type="text" data-ng-model="vault.description" id="description" class="form-control" name="description"
-	                                  placeholder="{{vaultsCtrl.getLabel('app.vaults.ph.vaultDesc')}}"
+	                                  placeholder="{{vaultsCtrl.labelsObj['app.vaults.ph.vaultDesc']}}"
 	                                  data-ng-minlength="12" data-ng-maxlength="50" required/>
 	                           <div data-ng-if="editVaultForm.description.$invalid && editVaultForm.description.$dirty"
 	                                data-data-ng-messages="editVaultForm.description.$error">
 	                               <span data-ng-if="editVaultForm.description.$error.required"
 	                                     class="label label-warning" data-ng-message="required">
-	                                   {{vaultsCtrl.getLabel('app.vaults.err.msg.inputVaultDesc')}}
+	                                   {{vaultsCtrl.labelsObj['app.vaults.err.msg.inputVaultDesc']}}
 	                               </span>
 	                               <span data-ng-if="editVaultForm.description.$error.minlength || editVaultForm.description.$error.maxlength"
 	                                     class="label label-warning" data-ng-message="minlength, maxlength">
-	                                   {{vaultsCtrl.getLabel('app.vaults.err.msg.minMaxLengthVaultDesc')}}
+	                                   {{vaultsCtrl.labelsObj['app.vaults.err.msg.minMaxLengthVaultDesc']}}
 	                               </span>
 	                           </div>
 	                       </div>
@@ -52,7 +52,7 @@
     </div>
     <div class="modal-footer">
         <button class="btn btn-success btn-sm" data-ng-disabled="editVaultForm.$invalid" 
-        			data-ng-click="vaultsCtrl.updateVault(vault)">{{vaultsCtrl.getLabel('app.vaults.lbl.updateVault')}}</button>
-        <button class="btn btn-warning btn-sm" data-ng-click="vaultsCtrl.cancelVaultEdit()">Cancel</button>
+        			data-ng-click="vaultsCtrl.updateVault(vault)">{{vaultsCtrl.labelsObj['app.vaults.lbl.updateVault']}}</button>
+        <button class="btn btn-warning btn-sm" data-ng-click="vaultsCtrl.cancel()">Cancel</button>
     </div>
 </section>

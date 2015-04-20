@@ -6,32 +6,33 @@ angular.module('vaults')
 
 
     .controller('VaultsController', ['$scope', '$stateParams', 'Authentication', '$state', 'VAULT_CONST',
-                'TrackerVaults', 'moment', 'AppStatics', 'AppMessenger', 'VaultLocaleMessages',
+                'TrackerVaults', 'moment', 'AppStatics', 'AppMessenger', 'VaultLocaleMessages', '$q',
         function($scope, $stateParams, Authentication, $state, VAULT_CONST, 
-                    TrackerVaults, moment, AppStatics, AppMessenger, VaultLocaleMessages) {
+                    TrackerVaults, moment, AppStatics, AppMessenger, VaultLocaleMessages, $q) {
             var _this = this;
             _this.authentication = Authentication;
             _this.appStatics = AppStatics;
             $scope.$stateParams = $stateParams;
-
             var pullMsgs = function(){
-                return VaultLocaleMessages.pullMessages().then(function(labels){
+            	var deferred = $q.defer();
+            	VaultLocaleMessages.pullMessages().then(function(labels){
                     _this.labelsObj = labels;
+                    deferred.resolve(null);
                 });
+                return deferred.promise;
             };
             
             var pullVaults = function () {
             	_this.trackerVaults = TrackerVaults.listTrackerVaults($stateParams);
+            	return _this.trackerVaults.$promise;
             };
             
             var pullVault = function () {
                 $scope.vault = TrackerVaults.get($stateParams);
+                return $scope.vault.$promise;
             };
 
             var bootmodule = function(){
-                _this.getLabel = function(key){
-                	return _this.labelsObj[key];
-                };
                 _this.getOwnerTxt = function (vault) {
                     return (vault.owner && vault.owner._id && (vault.owner._id === Authentication.user._id)) ? 'Me' :
                         ((vault.owner && vault.owner.displayName) ? vault.owner.displayName : 'No Name');
@@ -39,6 +40,15 @@ angular.module('vaults')
                 _this.createVault = function() {
                     _this.vault = {};
                     $state.go(VAULT_CONST.CREATE_VAULT_STATE_NAME, $stateParams);
+                };
+                _this.editVault = function(vault) {
+                    $state.go(VAULT_CONST.EDIT_VAULT_STATE_NAME, {
+                    	trackerId : $stateParams.trackerId,
+                    	vaultId: vault._id
+                    });
+                };
+                _this.cancel = function(){
+                	$state.go(VAULT_CONST.LIST_VAULTS_STATE_NAME, $stateParams);
                 };
                 _this.saveVault = function() {
                     var vault = new TrackerVaults({
@@ -51,15 +61,9 @@ angular.module('vaults')
                     // Redirect after save
                     vault.$save($stateParams,function(response) {
                         $state.go(VAULT_CONST.LIST_VAULTS_STATE_NAME, $stateParams);
-                        AppMessenger.sendInfoMsg('Successfully Created New Vault');
+                        AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.createdVault']);
                     }, function(errorResponse) {
                         $scope.error = errorResponse.data.message;
-                    });
-                };
-                _this.editVault = function(vault) {
-                    $state.go('editVault', {
-                    	trackerId : $stateParams.trackerId,
-                    	vaultId: vault._id
                     });
                 };
                 _this.updateVault = function(updatedVault){
@@ -68,14 +72,12 @@ angular.module('vaults')
                     delete vault.tracker;
                     vault.$update($stateParams, function() {
                     	$state.go(VAULT_CONST.LIST_VAULTS_STATE_NAME, $stateParams);
-                        AppMessenger.sendInfoMsg('Successfully Updated the Vault');
+                        AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.updatedVault']);
                     }, function(errorResponse) {
                         $scope.error = errorResponse.data.message;
                     });
                 };
-                _this.cancelVaultEdit = function(){
-                	$state.go(VAULT_CONST.LIST_VAULTS_STATE_NAME, $stateParams);
-                };
+
                 _this.deleteVault = function(vault) {
                     if (vault) {
                         vault.$remove({
@@ -83,7 +85,7 @@ angular.module('vaults')
                         	vaultId: vault._id
                         }, function(res){
                         	$state.go(VAULT_CONST.LIST_VAULTS_STATE_NAME, $stateParams, {reload: true});
-                            AppMessenger.sendInfoMsg('Successfully Deleted the Vault');
+                            AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.deletedVault']);
                         });
                     }
                 };	

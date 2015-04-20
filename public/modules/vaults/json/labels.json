@@ -18,10 +18,14 @@
   "app.vaults.ph.vaultDesc" : "Type Vault Description",
 
   "app.vaults.tt.deleteVault" : "Delete Vault",
-  "app.vault.tt.updateVault" : "Update Vault",
+  "app.vaults.tt.updateVault" : "Update Vault",
 
   "app.vaults.err.msg.inputVaultName" : "Please input a name for the Vault",
-  "app.vaults.err.msg.minMaxLengthVaultName" : "Vault Name should be between 8 to 20 characters",
+  "app.vaults.err.msg.minMaxLengthVaultName" : "Vault Name should be between 6 to 50 characters",
   "app.vaults.err.msg.inputVaultDesc" : "Please input description for the Vault",
-  "app.vaults.err.msg.minMaxLengthVaultDesc" : "Vault Description should be between 12 to 50 characters"
+  "app.vaults.err.msg.minMaxLengthVaultDesc" : "Vault Description should be between 6 to 100 characters",
+  
+"app.vaults.info.msg.createdVault" : "Successfully Created New Vault",
+"app.vaults.info.msg.updatedVault" : "Successfully Updated the Vault",
+"app.vaults.info.msg.deletedVault" : "Successfully Deleted the Vault"
 }

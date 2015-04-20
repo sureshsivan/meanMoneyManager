@@ -6,7 +6,7 @@
         <fieldset>
 
             <div class="row">
-                <div class="col-sm-9">
+                <div class="col-sm-12">
                     <div class="form-group">
                         <label class="control-label" for="displayName"> {{trackersCtrl.labelsObj['app.trackers.lbl.trackerName']}}</label>
                         <div class="controls">
@@ -83,6 +83,6 @@
             {{trackersCtrl.labelsObj['app.trackers.lbl.updTracker']}}
         </button>
         <!-- ng-disabled="updateTrackerForm.$invalid -->
-        <button class="btn btn-warning btn-sm" data-ng-click="trackersCtrl.cancelTrackerEdit()">{{trackersCtrl.labelsObj['app.trackers.lbl.cancel']}}</button>
+        <button class="btn btn-warning btn-sm" data-ng-click="trackersCtrl.cancel()">{{trackersCtrl.labelsObj['app.trackers.lbl.cancel']}}</button>
     </div>
 </section>
