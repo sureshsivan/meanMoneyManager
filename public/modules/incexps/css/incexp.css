@@ -59,3 +59,12 @@ tags-input .tags .tag-item.selected > div.incexp-tag-item{
 .incexp-row-item{
     cursor: pointer;
 }
+
+.info-well{
+	margin-bottom: 0 !important;
+	  background-color: inherit !important;
+  border: 0px !important;
+  border-radius: 0px !important;
+  background-image: none !important;
+}
+
