@@ -14,7 +14,7 @@
                             <div class="controls">
                                 <input type="text" data-ng-model="incexpsCtrl.displayName" id="displayName" name="displayName"
                                 	placeholder="{{incexpsCtrl.labelsObj['app.incexps.ph.name']}}" class="form-control" 
-                                	data-ng-minlength="8" data-ng-maxlength="20" required/>
+                                	data-ng-minlength="6" data-ng-maxlength="50" required/>
 	                            <div data-ng-if="createIncexpForm.displayName.$invalid && createIncexpForm.displayName.$dirty"
 	                                 data-data-ng-messages="createIncexpForm.displayName.$error">
 	                                <span data-ng-if="createIncexpForm.displayName.$error.required"
@@ -33,7 +33,7 @@
                             <div class="controls">
                                 <input type="text" data-ng-model="incexpsCtrl.description" id="description" name="description"  
                                 		placeholder="{{incexpsCtrl.labelsObj['app.incexps.ph.description']}}" class="form-control" 
-                                		data-ng-minlength="12" data-ng-maxlength="50"  required/>
+                                		data-ng-minlength="6" data-ng-maxlength="100"  required/>
 	                            <div data-ng-if="createIncexpForm.description.$invalid && createIncexpForm.description.$dirty"
 	                                 data-data-ng-messages="createIncexpForm.description.$error">
 	                                <span data-ng-if="createIncexpForm.description.$error.required"

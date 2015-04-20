@@ -83,8 +83,8 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
             var cachedVal = _this.incexpStatics.getApprovalTypes();
             //	If value is already cached by service - then use it otherwise
             if(cachedVal){
-                _this.approvalTypes = cachedVal;
-                _this.approvalTypes.map(function(item){
+                _this.approvalTypes = [];
+                cachedVal.map(function(item){
                     if(displayMode){
                         if(item && item.displayMode &&
                             (item.displayMode.indexOf(displayMode) > -1 || item.displayMode.indexOf('ALL') > -1)){
@@ -188,6 +188,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         var bootmodule = function(){
               //populate 'approvalModel' for the directive
             if($scope.incexp){  //  Editing an item
+            	console.log('Sample Log');
             } else {    //  For New Income Expense Creation
                 _this.approvalModel = {'isPending': false, 'pendingType': null,'pendingMsg': null};
             }
@@ -273,7 +274,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 // Redirect after save
                 incexp.$save($stateParams, function(response) {
                     $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
-                    AppMessenger.sendInfoMsg('Successfully Created New Tracker');
+                    AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.createdIncexp']);
                 }, function(errorResponse) {
                     $scope.error = errorResponse.data.message;
                 });
@@ -292,7 +293,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 delete incexp.tracker;
                 incexp.$update($stateParams, function() {
                   $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
-                  AppMessenger.sendInfoMsg('Successfully Updated the Income/Expense');
+                  AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.updatedIncexp']);
                 }, function(errorResponse) {
                     $scope.error = errorResponse.data.message;
                 });
@@ -306,7 +307,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 delete incexp.tracker;
                 incexp.$approveIncexpChanges($stateParams, function() {
                     $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
-                    AppMessenger.sendInfoMsg('Successfully Approved the Income/Expense Changes');
+                    AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.approveIncexpChanges']);
                 }, function(errorResponse) {
                     $scope.error = errorResponse.data.message;
                 });
@@ -320,6 +321,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     incexpId : incexp._id
                 }, function(response){
                     $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams, {reload: true});
+                    AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.reqEditAccess']);
                 });
             };
             _this.approveEditAccessRequest = function(incexp){
@@ -327,6 +329,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     incexpId : incexp._id
                 }, function(response){
                     $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams, {reload: true});
+                    AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.approveIncexpEditAccReq']);
                 });
             };
             _this.rejectEditAccessRequest = function(incexp){
@@ -334,6 +337,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     incexpId : incexp._id
                 }, function(response){
                     $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams, {reload: true});
+                    AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.rejectIncexpEditAccReq']);
                 });
             };
     		_this.remove = function(incexp) {
@@ -343,7 +347,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
     						trackerId: $stateParams.trackerId
     					}, function(res){
     					$state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams, {reload: true});
-    		            AppMessenger.sendInfoMsg('Successfully Deleted the Income/Expense');
+    		            AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.deleteIncexp']);
                     });
     			}
     		};        	

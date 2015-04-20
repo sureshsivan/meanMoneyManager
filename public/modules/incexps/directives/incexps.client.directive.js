@@ -27,7 +27,7 @@ angular.module('incexps')
             controller: function($scope){
                 $scope.authentication = Authentication;
                 var curUsersArr = [];
-                curUsersArr.push(Authentication.user.id);
+                curUsersArr.push(Authentication.user._id);
                 $scope.queryUsers = function(query){
                     return UserStatics.queryUsers(query, curUsersArr.join());
                 };

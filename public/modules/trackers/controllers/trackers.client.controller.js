@@ -4,8 +4,8 @@
 
 
 angular.module('trackers')
-    .controller('TrackersController', ['$scope', '$state', '$stateParams', 'Authentication', 'Trackers', 'TrackerLocaleMessages', 'TRACKER_CONST', 'VAULT_CONST', 'AppStatics', 'UserStatics', 'AppMessenger', 'moment', '$q',
-        function($scope, $state, $stateParams, Authentication, Trackers, TrackerLocaleMessages, TRACKER_CONST, VAULT_CONST, AppStatics, UserStatics, AppMessenger, moment, $q) {
+    .controller('TrackersController', ['$scope', '$state', '$stateParams', 'Authentication', 'Trackers', 'TrackerLocaleMessages', 'TRACKER_CONST', 'VAULT_CONST', 'INCEXP_CONST', 'AppStatics', 'UserStatics', 'AppMessenger', 'moment', '$q',
+        function($scope, $state, $stateParams, Authentication, Trackers, TrackerLocaleMessages, TRACKER_CONST, VAULT_CONST, INCEXP_CONST, AppStatics, UserStatics, AppMessenger, moment, $q) {
             var _this = this;
             _this.appStatics = AppStatics;
             _this.userStatics = UserStatics;
@@ -23,7 +23,7 @@ angular.module('trackers')
 
             var pullTrackers = function () {
                 _this.trackers = Trackers.query();
-                return _this.trackers.$promise
+                return _this.trackers.$promise;
             };
             
             var pullTracker = function () {
@@ -85,7 +85,7 @@ angular.module('trackers')
                     $state.go(VAULT_CONST.LIST_VAULTS_STATE_NAME, {trackerId: trackerId});
                 };
                 _this.loadIncexps = function (trackerId) {
-                    $state.go(RACKER_CONST.LIST_TRACKERS_STATE_NAME, {trackerId: trackerId});
+                    $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, {trackerId: trackerId});
                 };
                 _this.createTracker = function (size) {
                     _this.tracker = {};
