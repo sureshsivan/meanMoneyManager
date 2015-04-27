@@ -123,6 +123,12 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         	_this.trackerIncexps = TrackerIncexps.listTrackerIncexps($stateParams);
         	return _this.trackerIncexps.$promise; 
         };
+        var pullIncexpsByMonth = function () {
+            _this.trackerIncexps = TrackerIncexps.listTrackerIncexpsByMonth($stateParams);
+            return _this.trackerIncexps.$promise;
+        };
+
+
         var pullIncexp = function () {
             var deferred = $q.defer();
             TrackerIncexps.get($stateParams).$promise.then(function(response){
@@ -358,9 +364,12 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
     			}
     		};        	
         };
-        
+
         if($state.current.name === INCEXP_CONST.LIST_INCEXPS_STATE_NAME){
-        	pullMsgs().then(loadCurrencies).then(pullIncexps).then(loadIncexpAlerts).then(bootmodule);
+            pullMsgs().then(loadCurrencies).then(pullIncexps).then(loadIncexpAlerts).then(bootmodule);
+        } else if($state.current.name === INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_NAME){
+            pullMsgs().then(loadCurrencies).then(pullIncexpsByMonth).then(loadIncexpAlerts).then(bootmodule);
+            $scope.monthlyView = true;
         } else if($state.current.name === INCEXP_CONST.CREATE_INCEXP_STATE_NAME){
         	pullMsgs().then(pullVaults).then(pullIncexpTypes).then(pullTags).then(pullApprovalTypes).then(bootmodule);
             //TODO - load up this with boot module

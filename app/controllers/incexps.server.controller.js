@@ -144,6 +144,64 @@ exports.listByTrackerId = function(req, res) {
 	});
 };
 
+
+/**
+ * List of Vaults
+ */
+exports.listByTrackerIdAndMonth = function(req, res) {
+    var trackerId = null;
+    if(req.query.trackerId){
+        trackerId = req.query.trackerId;
+    } else if (req.params.trackerId){
+        trackerId = req.params.trackerId;
+    }
+
+    var start = null;
+    var end = null;
+    if(req.params.month && req.params.year){
+        start = new Date(req.params.year, req.params.month-1);
+        end = new Date(req.params.year, req.params.month-1);
+        end.setMonth(req.params.month);
+    }
+    Incexp.find({
+        '$and': [{
+            tracker: mongoose.Types.ObjectId(trackerId)
+        }, {
+            evDate: {
+                '$lt': end,
+                '$gte': start
+            }
+        }]
+    })//{tracker: mongoose.Types.ObjectId(trackerId)})
+        // Vault.find({'tracker' : mongoose.Types.ObjectId(req.tracker._id)})
+        .populate({
+            'path' : 'owner',
+            'select' : 'firstName lastName displayName email _id'
+        })
+        .populate({
+            'path' : 'tracker',
+            'select' : 'displayName currency _id'
+        })
+        .populate({
+            'path' : 'pendingWith',
+            'select' : 'displayName _id'
+        })
+        .populate({
+            'path' : 'vault',
+            'select' : 'displayName _id'
+        })
+        .sort('-evDate').exec(function(err, incexps) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                res.jsonp(incexps);
+            }
+        });
+};
+
+
 /**
  * Incexp middleware
  */

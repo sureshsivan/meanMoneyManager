@@ -10,6 +10,9 @@ module.exports = function(app) {
         .get(users.requiresLogin, incexps.listByTrackerId)
         .post(users.requiresLogin, incexps.create);
 
+    app.route('/trackerincexps/:trackerId/showMonth/:month/:year')
+        .get(users.requiresLogin, incexps.listByTrackerIdAndMonth);
+
     app.route('/trackerincexps/:trackerId/:incexpId')
         .get(users.requiresLogin, incexps.read)
         .put(users.requiresLogin, incexps.hasAuthorization, incexps.update)
