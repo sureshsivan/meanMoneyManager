@@ -5,6 +5,8 @@ angular.module('incexps').constant('INCEXP_CONST', {
 	
 	'LIST_INCEXPS_STATE_NAME': 'listTrackerIncexps',
 	'LIST_INCEXPS_STATE_URL': '/trackerincexps/:trackerId',
+	'LIST_INCEXPS_BY_MONTH_STATE_NAME': 'listTrackerIncexpsByMonth',
+	'LIST_INCEXPS_BY_MONTH_STATE_URL': '/trackerincexps/:trackerId/showMonth/:month/:year',
 	'LIST_INCEXPS_STATE_TEMPLATE_URL': 'modules/incexps/views/list-incexps.client.view.html',
 
 	'CREATE_INCEXP_STATE_NAME': 'createIncexp',
