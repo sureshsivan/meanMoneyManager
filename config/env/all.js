@@ -34,6 +34,11 @@ module.exports = {
 				'public/lib/angular-moment/angular-moment.js',
                 'public/lib/angular-loading-bar/build/loading-bar.js',
                 'public/lib/ng-tags-input/ng-tags-input.js',
+                'public/lib/highcharts/adapters/standalone-framework.src.js',
+                'public/lib/highcharts/highcharts.src.js',
+                'public/lib/highcharts/highcharts-more.src.js',
+                'public/lib/highcharts/modules/heatmap.src.js',
+                'public/lib/highcharts-ng/dist/highcharts-ng.js'
 			]
 		},
 		css: [

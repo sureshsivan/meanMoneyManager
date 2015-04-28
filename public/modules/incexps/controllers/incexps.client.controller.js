@@ -2,9 +2,9 @@
 
 // Incexps controller
 angular.module('incexps').controller('IncexpsController', ['$scope', '$stateParams', '$location', 'Authentication',
-        'TrackerIncexps', '$modal', '$log', 'moment', 'AppStatics', 'Notify', 'VaultStatics', '$state', 'IncexpStatics', 'AppMessenger', 'IncexpLocaleMessages', '$q', 'INCEXP_CONST',
+        'TrackerIncexps', '$modal', '$log', 'moment', 'AppStatics', 'Notify', 'VaultStatics', '$state', 'IncexpStatics', 'AppMessenger', 'IncexpLocaleMessages', '$q', 'INCEXP_CONST', 'ChartService', 
 	function($scope, $stateParams, $location, Authentication,
-             TrackerIncexps, $modal, $log, moment, AppStatics, Notify, VaultStatics, $state, IncexpStatics, AppMessenger, IncexpLocaleMessages, $q, INCEXP_CONST) {
+             TrackerIncexps, $modal, $log, moment, AppStatics, Notify, VaultStatics, $state, IncexpStatics, AppMessenger, IncexpLocaleMessages, $q, INCEXP_CONST, ChartService) {
 		var _this = this;
         _this.authentication = Authentication;
 		_this.vaultStatics = VaultStatics;
@@ -362,9 +362,16 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
     		            AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.deletedIncexp']);
                     });
     			}
-    		};        	
+    		};      
         };
-
+        var loadCharts = function(){
+        	console.log('Loading Charts');
+        	$scope.heatMapChartConfig = ChartService.getHeatmapConfig(_this.trackerIncexps);   
+        	console.log('Loading Charts - complete');
+        	console.dir($scope.heatMapChartConfig);
+        };
+        console.log('$$$$$$$$$$$$$$$$$');
+        console.log($state.current.name);
         if($state.current.name === INCEXP_CONST.LIST_INCEXPS_STATE_NAME){
             pullMsgs().then(loadCurrencies).then(pullIncexps).then(loadIncexpAlerts).then(bootmodule);
         } else if($state.current.name === INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_NAME){
@@ -376,6 +383,8 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
             _this.approvalModel = {'isPending': false, 'pendingType': null,'pendingMsg': null};
         } else if($state.current.name === INCEXP_CONST.EDIT_INCEXP_STATE_NAME){
             pullMsgs().then(pullVaults).then(pullIncexpTypes).then(pullTags).then(pullApprovalTypes).then(pullIncexp).then(bootmodule);
+        } else if($state.current.name === INCEXP_CONST.DASH_INCEXPS_BY_MONTH_STATE_NAME){
+            pullMsgs().then(pullIncexpsByMonth).then(loadCharts);
         }
 	}
 ])
