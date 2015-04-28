@@ -365,13 +365,8 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
     		};      
         };
         var loadCharts = function(){
-        	console.log('Loading Charts');
-        	$scope.heatMapChartConfig = ChartService.getHeatmapConfig(_this.trackerIncexps);   
-        	console.log('Loading Charts - complete');
-        	console.dir($scope.heatMapChartConfig);
+        	$scope.heatMapChartConfig = ChartService.getHeatmapConfig(_this.labelsObj, _this.trackerIncexps);   
         };
-        console.log('$$$$$$$$$$$$$$$$$');
-        console.log($state.current.name);
         if($state.current.name === INCEXP_CONST.LIST_INCEXPS_STATE_NAME){
             pullMsgs().then(loadCurrencies).then(pullIncexps).then(loadIncexpAlerts).then(bootmodule);
         } else if($state.current.name === INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_NAME){

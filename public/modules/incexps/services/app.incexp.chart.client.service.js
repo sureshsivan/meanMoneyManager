@@ -16,10 +16,8 @@ angular.module('incexps').service('ChartService', [ '$http', '$q',
 			                   [6, 0, 47], [6, 1, 114], [6, 2, 31], [6, 3, 48]];
 			return data;
 		};
-		chartService.getHeatmapConfig = function(trackerIncexps){
-			console.log('getHeatmapConfig');
+		chartService.getHeatmapConfig = function(labels, trackerIncexps){
 			var heatMapData = this.transformToHeatMapData(trackerIncexps);
-			console.dir(heatMapData);
         	var heatMapChartConfig = {
         			options: {
         				chart: {
@@ -70,8 +68,6 @@ angular.module('incexps').service('ChartService', [ '$http', '$q',
         	        }]       	        
         	
         	};
-        	console.dir('EEEEEEEEEEEEEEEEE');
-        	console.dir(heatMapChartConfig);
         	return heatMapChartConfig;
 		};
 		return chartService;
