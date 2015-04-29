@@ -3,10 +3,47 @@
 angular.module('incexps').service('ChartService', [ '$http', '$q', '$stateParams',
 	function($http, $q, $stateParams) {
 		var chartService = {};
+        chartService.groupAndAggregate = function(items, groupBy, aggregateBy){
+            var groupedObj = {};
+            var aggregatedArr = angular.forEach(incexps, function(value, key){
+                var groupStr = JSON.stringify(groupBy(value));
+                var aggregated = null;
+                if(!groupedObj[groupStr]){
+                    aggregated = {evDate: value.evDate, amount: value.amount};
+                } else {
+                    var prevItem = groupedObj[groupStr];
+                    aggregated = {evDate: value.evDate, val: aggregateBy(prevItem, value)};
+                }
+                groupedObj[groupStr].removeAll();
+                groupedObj[groupStr].push(aggregated);
+                //groupedObj[groupStr] = groupedObj[groupStr] || [];
+                //groupedObj[groupStr].push(value);
+                return Object.keys(groupedObj).map(function(group){
+                    return groupedObj[group];
+                });
+            });
+            return aggregatedArr;
+        };
 		chartService.transformToHeatMapData = function(incexps){
 			
 			var data = {};
-			
+
+            var groupBy = function(item){
+                return [item.evDate];
+            };
+            var aggregateBy = function(previousItem, currentItem){
+                return previousItem.amount + currentItem.amount;
+            };
+            var filterBy = function(item){
+                return item.type === 'INC';
+            };
+            var projectBy = function(item){
+                return {
+                    evDate: item.evDate
+                };
+            };
+            var aggregatedArr = this.groupAndAggregate(incexps, groupBy, aggregateBy);
+
 		    var start = null;
 		    var end = null;
 		    if($stateParams.month && $stateParams.year){
@@ -15,6 +52,7 @@ angular.module('incexps').service('ChartService', [ '$http', '$q', '$stateParams
 		    }
 	    	var currentDate = new Date(start);//pull and store start date here
 	    	var currentWeek = 1;
+
 		    while(true){
 		    	if(currentDate >= start && currentDate < end){
 		    		var dataArr = [];
