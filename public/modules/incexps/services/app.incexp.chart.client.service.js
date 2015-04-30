@@ -3,46 +3,78 @@
 angular.module('incexps').service('ChartService', [ '$http', '$q', '$stateParams',
 	function($http, $q, $stateParams) {
 		var chartService = {};
-        chartService.groupAndAggregate = function(items, groupBy, aggregateBy){
-            var groupedObj = {};
-            var aggregatedArr = angular.forEach(incexps, function(value, key){
-                var groupStr = JSON.stringify(groupBy(value));
-                var aggregated = null;
-                if(!groupedObj[groupStr]){
-                    aggregated = {evDate: value.evDate, amount: value.amount};
-                } else {
-                    var prevItem = groupedObj[groupStr];
-                    aggregated = {evDate: value.evDate, val: aggregateBy(prevItem, value)};
-                }
-                groupedObj[groupStr].removeAll();
-                groupedObj[groupStr].push(aggregated);
-                //groupedObj[groupStr] = groupedObj[groupStr] || [];
-                //groupedObj[groupStr].push(value);
-                return Object.keys(groupedObj).map(function(group){
-                    return groupedObj[group];
-                });
-            });
-            return aggregatedArr;
+        chartService.groupAndAggregate = function(items, projectBy, filterBy, groupBy, aggregateBy){
+            var result = [];
+            var groupedObj = {};            
+            for(var i = items.length-1; i >=0; --i){
+            	var value = items[i];
+            	if(filterBy && filterBy(value)){
+            		continue;
+            	}
+            	value = projectBy ? projectBy(value) : value;
+            	if(groupBy){
+                	var groupStr = JSON.stringify(groupBy(value));
+                	var aggregated = value;
+                	groupedObj[groupStr] = groupedObj[groupStr] || [];
+                	if(!groupedObj[groupStr]){
+                		aggregated['agg'] = aggregateBy ? aggregateBy(null, value) : value;
+                    } else {
+                    	groupedObj[groupStr] = aggregateBy ? [] : groupedObj[groupStr];
+                        var prevItem = groupedObj[groupStr];
+                        aggregated['agg'] = aggregateBy ? aggregateBy(prevItem, value) : value;
+                    }
+                    groupedObj[groupStr].push(aggregated);
+            	} else {
+            		result.push(value);
+            	}
+            }
+            console.dir(result);
+            return result;
+            
+//			var aggregatedArr = Object.keys(groupedObj).map(function(group){
+//			    return groupedObj[group];
+//			});
+			
+//            var aggregatedArr = angular.forEach(incexps, function(value, key){
+//                var groupStr = JSON.stringify(groupBy(value));
+//                var aggregated = null;
+//                if(!groupedObj[groupStr]){
+//                    aggregated = {evDate: value.evDate, amount: value.amount};
+//                } else {
+//                    var prevItem = groupedObj[groupStr];
+//                    aggregated = {evDate: value.evDate, val: aggregateBy(prevItem, value)};
+//                }
+//                groupedObj[groupStr].removeAll();
+//                groupedObj[groupStr].push(aggregated);
+//                //groupedObj[groupStr] = groupedObj[groupStr] || [];
+//                //groupedObj[groupStr].push(value);
+//                return Object.keys(groupedObj).map(function(group){
+//                    return groupedObj[group];
+//                });
+//            });
+
         };
 		chartService.transformToHeatMapData = function(incexps){
 			
 			var data = {};
 
-            var groupBy = function(item){
+            var groupByDate = function(item){
                 return [item.evDate];
             };
-            var aggregateBy = function(previousItem, currentItem){
-                return previousItem.amount + currentItem.amount;
+            var aggregateBySumAmount = function(previousItem, currentItem){
+                return (previousItem && currentItem ? (previousItem.amount + currentItem.amount) : 
+                		(currentItem ? currentItem.amount : (previousItem ? previousItem.amount : 0)));
             };
-            var filterBy = function(item){
-                return item.type === 'INC';
+            var filterByIncome = function(item){
+                return item.type !== 'INC';
             };
-            var projectBy = function(item){
+            var projectByFields = function(item){
                 return {
-                    evDate: item.evDate
+                    evDate: item.evDate,
+                    amount: item.amount
                 };
             };
-            var aggregatedArr = this.groupAndAggregate(incexps, groupBy, aggregateBy);
+            var aggregatedArr = this.groupAndAggregate(incexps, projectByFields, filterByIncome, groupByDate, aggregateBySumAmount);
 
 		    var start = null;
 		    var end = null;
