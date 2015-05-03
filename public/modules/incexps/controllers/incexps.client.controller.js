@@ -1,9 +1,9 @@
 'use strict';
 
 // Incexps controller
-angular.module('incexps').controller('IncexpsController', ['$scope', '$stateParams', '$location', 'Authentication',
+angular.module('incexps').controller('IncexpsController', ['$scope', '$stateParams', '$location', 'Authentication', '$filter',
         'TrackerIncexps', '$modal', '$log', 'moment', 'AppStatics', 'Notify', 'VaultStatics', '$state', 'IncexpStatics', 'AppMessenger', 'IncexpLocaleMessages', '$q', 'INCEXP_CONST', 'ChartService', 
-	function($scope, $stateParams, $location, Authentication,
+	function($scope, $stateParams, $location, Authentication, $filter,
              TrackerIncexps, $modal, $log, moment, AppStatics, Notify, VaultStatics, $state, IncexpStatics, AppMessenger, IncexpLocaleMessages, $q, INCEXP_CONST, ChartService) {
 		var _this = this;
         _this.authentication = Authentication;
@@ -260,12 +260,16 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 });
             };
             _this.saveIncexp = function() {
+                //amDateFormat
+                //evDate : $filter('amDateFormat')(_this.evDate,'dd-MMMM-yyyy'),
+                //$filter('amDateFormat')(item.evDate,'YYYYMMDD')
                 var incexp = new TrackerIncexps({
                     displayName: _this.displayName,
                     description: _this.description,
                     type: _this.type,
                     tracker: $stateParams.trackerId,
                     tags: _this.tags,
+                    //evDate : $filter('date')(_this.evDate,'dd-MMMM-yyyy', '+0530'),
                     evDate : _this.evDate,
                     amount: _this.amount,
                     vault: _this.vault,

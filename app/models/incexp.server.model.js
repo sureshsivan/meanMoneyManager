@@ -32,8 +32,8 @@ var IncexpSchema = new Schema({
 	},
     evDate: {
         type: Date,
-        //required: 'Please fill Date of Income or Expense',
-        default: Date.now
+        required: 'Please fill Date of Income or Expense'
+        //default: Date.now
     },
 	tags: [],
 	amount: {

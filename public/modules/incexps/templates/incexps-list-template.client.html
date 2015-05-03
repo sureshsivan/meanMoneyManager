@@ -96,8 +96,9 @@
 	                        <br/>
 	                        <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.descLbl']}}</strong>{{incexp.description}}
 	                        <br/>
-	                        <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.dateLbl']}}</strong><span data-am-time-ago="incexp.evDate"></span>    (<span>{{incexp.evDate | amDateFormat:'dddd, MMMM Do YYYY'}}</span>)
-	                        Vault : {{incexp.vault.displayName}}
+	                        <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.dateLbl']}}</strong><span>{{incexp.evDate | amDateFormat:'dddd, MMMM Do YYYY'}}</span>
+                            <br/>
+	                        <strong>Vault : </strong>{{incexp.vault.displayName}}
 	                        <br/>                        
 	                        <strong>{{incexpsCtrl.labelsObj['app.incexps.lbl.amountLbl']}}</strong><span class="fa" data-ng-class="incexp.currencyObj.faIconCls"> {{incexp.amount}}</span>
 	                        <br/>

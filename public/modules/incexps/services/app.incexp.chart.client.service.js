@@ -1,11 +1,11 @@
 'use strict';
 
-angular.module('incexps').service('ChartService', [ '$http', '$q', '$stateParams',
-	function($http, $q, $stateParams) {
+angular.module('incexps').service('ChartService', [ '$http', '$q', '$stateParams', 'moment', '$filter',
+	function($http, $q, $stateParams, moment, $filter) {
 		var chartService = {};
         chartService.groupAndAggregate = function(items, groupBy, aggregateBy){
             var groupedObj = {};
-            var aggregatedArr = angular.forEach(incexps, function(value, key){
+            var aggregatedArr = angular.forEach(items, function(value, key){
                 var groupStr = JSON.stringify(groupBy(value));
                 var aggregated = null;
                 if(!groupedObj[groupStr]){
@@ -14,13 +14,10 @@ angular.module('incexps').service('ChartService', [ '$http', '$q', '$stateParams
                     var prevItem = groupedObj[groupStr];
                     aggregated = {evDate: value.evDate, val: aggregateBy(prevItem, value)};
                 }
-                groupedObj[groupStr].removeAll();
+                groupedObj[groupStr] = [];
                 groupedObj[groupStr].push(aggregated);
                 //groupedObj[groupStr] = groupedObj[groupStr] || [];
                 //groupedObj[groupStr].push(value);
-                return Object.keys(groupedObj).map(function(group){
-                    return groupedObj[group];
-                });
             });
             return aggregatedArr;
         };
@@ -29,13 +26,13 @@ angular.module('incexps').service('ChartService', [ '$http', '$q', '$stateParams
 			var data = {};
 
             var groupBy = function(item){
-                return [item.evDate];
+                return [$filter('amDateFormat')(item.evDate,'YYYYMMDD')];
             };
             var aggregateBy = function(previousItem, currentItem){
                 return previousItem.amount + currentItem.amount;
             };
             var filterBy = function(item){
-                return item.type === 'INC';
+                return item.type === 'EXP';
             };
             var projectBy = function(item){
                 return {
