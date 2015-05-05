@@ -369,7 +369,8 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
     		};      
         };
         var loadCharts = function(){
-        	$scope.heatMapChartConfig = ChartService.getHeatmapConfig(_this.labelsObj, _this.trackerIncexps);   
+        	$scope.incomeHeatMapChartConfig = ChartService.getIncomeHeatMapConfig(_this.labelsObj, _this.trackerIncexps);
+            $scope.expenseHeatMapChartConfig = ChartService.getExpenseHeatMapConfig(_this.labelsObj, _this.trackerIncexps);
         };
         if($state.current.name === INCEXP_CONST.LIST_INCEXPS_STATE_NAME){
             pullMsgs().then(loadCurrencies).then(pullIncexps).then(loadIncexpAlerts).then(bootmodule);
