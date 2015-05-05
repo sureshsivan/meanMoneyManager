@@ -96,7 +96,7 @@ angular.module('trackers')
                     	year: year
                     });
                 };
-                _this.loadIncexps = function (trackerId) {
+                _this.loadIncexpsDashboard = function (trackerId) {
 //                  $state.go(INCEXP_CONST.DASH_INCEXPS_STATE_NAME, {trackerId: trackerId});
                   //TODO - find current month and year
                   var now = moment();
