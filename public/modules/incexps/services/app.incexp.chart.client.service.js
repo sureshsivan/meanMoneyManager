@@ -24,6 +24,7 @@ angular.module('incexps').service('ChartService', [ '$http', '$q', '$stateParams
                         aggregated['agg'] = aggregateBy ? aggregateBy(prevItem, value) : value;
                     }
                     groupedObj[groupStr].push(aggregated);
+
                     resultArr = Object.keys(groupedObj).map(function(group){
         			    return groupedObj[group];
         			});

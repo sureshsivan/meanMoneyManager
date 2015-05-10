@@ -259,6 +259,16 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     incexpId: updatedIncexp._id
                 });
             };
+            _this.showNextMonth = function(){
+                console.dir($stateParams);
+                $stateParams.month = $stateParams.month + 1;
+                $state.go(INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_NAME, $stateParams);
+            };
+            _this.showPrevMonth = function(){
+                console.dir($stateParams);
+                $stateParams.month = $stateParams.month - 1;
+                $state.go(INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_NAME, $stateParams);
+            };
             _this.saveIncexp = function() {
                 //amDateFormat
                 //evDate : $filter('amDateFormat')(_this.evDate,'dd-MMMM-yyyy'),
@@ -377,6 +387,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         } else if($state.current.name === INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_NAME){
             pullMsgs().then(loadCurrencies).then(pullIncexpsByMonth).then(loadIncexpAlerts).then(bootmodule);
             $scope.monthlyView = true;
+            $scope.now = new Date();
         } else if($state.current.name === INCEXP_CONST.CREATE_INCEXP_STATE_NAME){
         	pullMsgs().then(pullVaults).then(pullIncexpTypes).then(pullTags).then(pullApprovalTypes).then(bootmodule);
             //TODO - load up this with boot module
@@ -385,6 +396,8 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
             pullMsgs().then(pullVaults).then(pullIncexpTypes).then(pullTags).then(pullApprovalTypes).then(pullIncexp).then(bootmodule);
         } else if($state.current.name === INCEXP_CONST.DASH_INCEXPS_BY_MONTH_STATE_NAME){
             pullMsgs().then(pullIncexpsByMonth).then(loadCharts);
+            $scope.monthlyView = true;
+            $scope.now = new Date();
         }
 	}
 ])

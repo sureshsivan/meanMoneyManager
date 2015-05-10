@@ -1,10 +1,20 @@
 <nav>
     <ul class="pager" data-ng-if="monthlyView">
-        <li class="previous"><a href="#"><span aria-hidden="true">&larr;</span> Older</a></li>
-        <li class="next"><a href="#">Newer <span aria-hidden="true">&rarr;</span></a></li>
+        <li class="previous"
+            data-ng-click="incexpsCtrl.showPrevMonth()"
+            data-ng-disabled="(parseInt($stateParams.month) === parseInt(now.getMonth()+1)) && (parseInt($stateParams.year) === parseInt(now.getFullYear()-1))">
+            <a href="#">
+                <span aria-hidden="true">&larr;</span> Older</a>
+        </li>
+        <li class="next"
+            data-ng-click="incexpsCtrl.showNextMonth()"
+            data-ng-disabled="(parseInt($stateParams.month) === parseInt(now.getMonth()+1)) && (parseInt($stateParams.year) === parseInt(now.getFullYear()))">
+            <a href="#">
+                Newer <span aria-hidden="true" >&rarr;</span>
+            </a>
+        </li>
     </ul>
 </nav>
-
 <div class="list-group">
 	<div class="col-xs-12 pad-top">
 
