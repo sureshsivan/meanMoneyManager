@@ -1,11 +1,24 @@
+<div class="row" data-ng-controller="IncexpsController as incexpsCtrl">
 <br/><br/>
 <div class="row">
-    <div class="col-sm-6 pull-left" data-ng-controller="IncexpsController as incexpsCtrl">
+    <button type="button" class="pull-right btn btn-success" data-ng-click="incexpsCtrl.showNextMonth()"
+            data-ng-disabled="(parseInt($stateParams.month) === parseInt(now.getMonth()+1)) && (parseInt($stateParams.year) === parseInt(now.getFullYear()))">
+        Newer <span aria-hidden="true">&rarr;</span>
+    </button>
+    <button type="button" class="pull-left btn btn-success" data-ng-click="incexpsCtrl.showPrevMonth()"
+            data-ng-disabled="(parseInt($stateParams.month) === parseInt(now.getMonth()+1)) && (parseInt($stateParams.year) === parseInt(now.getFullYear()-1))">
+        <span aria-hidden="true" >&larr;</span> Older
+    </button>
+</div>
+<br/><br/>
+<div class="row">
+    <div class="col-sm-6 pull-left" >
         <highchart id="heatMapChart" config="incomeHeatMapChartConfig">
         </highchart>
     </div>
-    <div class="col-sm-6 pull-right" data-ng-controller="IncexpsController as incexpsCtrl">
+    <div class="col-sm-6 pull-right">
         <highchart id="heatMapChart" config="expenseHeatMapChartConfig">
         </highchart>
     </div>
+</div>
 </div>

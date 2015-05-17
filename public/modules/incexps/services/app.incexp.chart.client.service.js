@@ -66,6 +66,12 @@ angular.module('incexps').service('ChartService', [ '$http', '$q', '$stateParams
 	    	var currentWeek = 0;
 	    	var dataArr = [];
 		    while(true){
+                //if(currentDate.getDay() !== 0){
+                //    for(k=0;k<currentDate.getDay();k++){
+                //        dataArr.push([])
+                //    }
+                //
+                //}
 		    	if(currentDate >= start && currentDate < end){
 		    		//dayno = columnIdx
 		    		var dayItem = [];
@@ -147,7 +153,7 @@ angular.module('incexps').service('ChartService', [ '$http', '$q', '$stateParams
         	        },
         	        series: [{
         	            name: 'Sales per employee',
-        	            borderWidth: 1,
+        	            borderWidth: 0,
         	            data: heatMapData.seriesData,
         	            dataLabels: {
         	                enabled: true,
@@ -223,12 +229,14 @@ angular.module('incexps').service('ChartService', [ '$http', '$q', '$stateParams
                     }
                 },
                 xAxis: {
+                    lineWidth: 0
                 },
                 yAxis: {
+                    lineWidth: 0
                 },
                 series: [{
                     name: 'Sales per employee',
-                    borderWidth: 1,
+                    borderWidth: 0.1,
                     data: null,
                     dataLabels: {
                         enabled: true,

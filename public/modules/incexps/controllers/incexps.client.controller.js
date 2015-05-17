@@ -260,15 +260,6 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     incexpId: updatedIncexp._id
                 });
             };
-            _this.showNextMonth = function(){
-                $stateParams.month = $filter('pad')((parseInt($stateParams.month) + 1), 2);
-                $state.go(INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_NAME, $stateParams, {reload: true});
-            };
-            _this.showPrevMonth = function(){
-                $stateParams.month = $filter('pad')((parseInt($stateParams.month) - 1), 2);
-                $state.go(INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_NAME, $stateParams, {reload: true});
-            };
-
 
             _this.saveIncexp = function() {
                 //amDateFormat
@@ -382,6 +373,14 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         var loadCharts = function(){
         	$scope.incomeHeatMapChartConfig = ChartService.getIncomeHeatMapConfig(_this.labelsObj, _this.trackerIncexps);
             $scope.expenseHeatMapChartConfig = ChartService.getExpenseHeatMapConfig(_this.labelsObj, _this.trackerIncexps);
+            _this.showNextMonth = function(){
+                $stateParams.month = $filter('pad')((parseInt($stateParams.month) + 1), 2);
+                $state.go(INCEXP_CONST.DASH_INCEXPS_BY_MONTH_STATE_NAME, $stateParams, {reload: true});
+            };
+            _this.showPrevMonth = function(){
+                $stateParams.month = $filter('pad')((parseInt($stateParams.month) - 1), 2);
+                $state.go(INCEXP_CONST.DASH_INCEXPS_BY_MONTH_STATE_NAME, $stateParams, {reload: true});
+            };
         };
         if($state.current.name === INCEXP_CONST.LIST_INCEXPS_STATE_NAME){
             pullMsgs().then(loadCurrencies).then(pullIncexps).then(loadIncexpAlerts).then(bootmodule);
