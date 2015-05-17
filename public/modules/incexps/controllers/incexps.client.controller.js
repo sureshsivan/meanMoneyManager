@@ -6,6 +6,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
 	function($scope, $stateParams, $location, Authentication, $filter,
              TrackerIncexps, $modal, $log, moment, AppStatics, Notify, VaultStatics, $state, IncexpStatics, AppMessenger, IncexpLocaleMessages, $q, INCEXP_CONST, ChartService) {
 		var _this = this;
+        $scope.parseInt = parseInt;
         _this.authentication = Authentication;
 		_this.vaultStatics = VaultStatics;
         _this.appStatics = AppStatics;
@@ -185,8 +186,8 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     }
                     incexp.collapsed = true;
                     incexp.currencyObj = AppStatics.getCurrencyObj(incexp.tracker.currency);
-                    deferred.resolve(null);
                 }
+                deferred.resolve(null);
             });
             return deferred.promise; 
         };
@@ -260,15 +261,15 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 });
             };
             _this.showNextMonth = function(){
-                console.dir($stateParams);
-                $stateParams.month = $stateParams.month + 1;
-                $state.go(INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_NAME, $stateParams);
+                $stateParams.month = $filter('pad')((parseInt($stateParams.month) + 1), 2);
+                $state.go(INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_NAME, $stateParams, {reload: true});
             };
             _this.showPrevMonth = function(){
-                console.dir($stateParams);
-                $stateParams.month = $stateParams.month - 1;
-                $state.go(INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_NAME, $stateParams);
+                $stateParams.month = $filter('pad')((parseInt($stateParams.month) - 1), 2);
+                $state.go(INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_NAME, $stateParams, {reload: true});
             };
+
+
             _this.saveIncexp = function() {
                 //amDateFormat
                 //evDate : $filter('amDateFormat')(_this.evDate,'dd-MMMM-yyyy'),
@@ -376,7 +377,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
     		            AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.deletedIncexp']);
                     });
     			}
-    		};      
+    		};
         };
         var loadCharts = function(){
         	$scope.incomeHeatMapChartConfig = ChartService.getIncomeHeatMapConfig(_this.labelsObj, _this.trackerIncexps);
