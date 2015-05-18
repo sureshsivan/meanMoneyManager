@@ -48,36 +48,62 @@
                 	</span>
                 </td>
                 <td>
-                    <button class="btn btn-danger btn-xs"
-                            data-tooltip="{{incexpsCtrl.labelsObj['app.incexps.lbl.deleteIncexp']}}"
+                    <span class="fa fa-trash icon-btn text-danger" 
+                    		data-tooltip="{{incexpsCtrl.labelsObj['app.incexps.lbl.deleteIncexp']}}"
                     		data-ng-click="incexpsCtrl.remove(incexp)"
                     		data-ng-show="incexpsCtrl.canDelete(incexp)">
-                        <i class="fa fa-trash"></i>
-                    </button>
-                    <button class="btn btn-warning btn-xs"
+                    </span>
+                    <span class="fa fa-pencil icon-btn text-warning"
                             data-tooltip="{{incexpsCtrl.labelsObj['app.incexps.lbl.updateIncexp']}}"
                     		data-ng-click="incexpsCtrl.editIncexp(incexp)"
                     		data-ng-show="incexpsCtrl.canEdit(incexp)">
-                        <i class="fa fa-pencil"></i>
-                    </button>
- 					<button class="btn btn-info btn-xs"
+                    </span>
+ 					<span class="fa fa-question-circle icon-btn text-info"
                             data-tooltip="{{incexpsCtrl.labelsObj['app.incexps.lbl.reqEditAccess']}}"
                     		data-ng-click="! incexpsCtrl.requestForEdit(incexp)"
                     		data-ng-show="incexpsCtrl.canRequestEditAccess(incexp)">
-                        <i class="fa fa-question-circle"></i>
-                    </button>
-                    <button class="btn btn-success btn-xs"
+                    </span>
+                    <span class="fa fa-unlock icon-btn text-success"
                             data-tooltip="{{incexpsCtrl.labelsObj['app.incexps.lbl.approveEditAccess']}}"
                             data-ng-click="incexpsCtrl.approveEditAccessRequest(incexp)"
                             data-ng-show="incexpsCtrl.canApproveEditRequest(incexp)">
-                        <i class="fa fa-unlock"></i>
-                    </button>
-                    <button class="btn btn-danger btn-xs"
+                    </span>
+                    <span class="fa fa-lock icon-btn text-danger"
                             data-tooltip="{{incexpsCtrl.labelsObj['app.incexps.lbl.rejectEditAccess']}}"
                             data-ng-click="incexpsCtrl.rejectEditAccessRequest(incexp)"
                             data-ng-show="incexpsCtrl.canApproveEditRequest(incexp)">
-                        <i class="fa fa-lock"></i>
-                    </button>
+                    </span>
+                    
+<!--                     <button class="btn btn-danger btn-xs" -->
+<!--                             data-tooltip="{{incexpsCtrl.labelsObj['app.incexps.lbl.deleteIncexp']}}" -->
+<!--                     		data-ng-click="incexpsCtrl.remove(incexp)" -->
+<!--                     		data-ng-show="incexpsCtrl.canDelete(incexp)"> -->
+<!--                         <i class="fa fa-trash"></i> -->
+<!--                     </button> -->
+<!--                     <button class="btn btn-warning btn-xs" -->
+<!--                             data-tooltip="{{incexpsCtrl.labelsObj['app.incexps.lbl.updateIncexp']}}" -->
+<!--                     		data-ng-click="incexpsCtrl.editIncexp(incexp)" -->
+<!--                     		data-ng-show="incexpsCtrl.canEdit(incexp)"> -->
+<!--                         <i class="fa fa-pencil"></i> -->
+<!--                     </button> -->
+<!--  					<button class="btn btn-info btn-xs" -->
+<!--                             data-tooltip="{{incexpsCtrl.labelsObj['app.incexps.lbl.reqEditAccess']}}" -->
+<!--                     		data-ng-click="! incexpsCtrl.requestForEdit(incexp)" -->
+<!--                     		data-ng-show="incexpsCtrl.canRequestEditAccess(incexp)"> -->
+<!--                         <i class="fa fa-question-circle"></i> -->
+<!--                     </button> -->
+<!--                     <button class="btn btn-success btn-xs" -->
+<!--                             data-tooltip="{{incexpsCtrl.labelsObj['app.incexps.lbl.approveEditAccess']}}" -->
+<!--                             data-ng-click="incexpsCtrl.approveEditAccessRequest(incexp)" -->
+<!--                             data-ng-show="incexpsCtrl.canApproveEditRequest(incexp)"> -->
+<!--                         <i class="fa fa-unlock"></i> -->
+<!--                     </button> -->
+<!--                     <button class="btn btn-danger btn-xs" -->
+<!--                             data-tooltip="{{incexpsCtrl.labelsObj['app.incexps.lbl.rejectEditAccess']}}" -->
+<!--                             data-ng-click="incexpsCtrl.rejectEditAccessRequest(incexp)" -->
+<!--                             data-ng-show="incexpsCtrl.canApproveEditRequest(incexp)"> -->
+<!--                         <i class="fa fa-lock"></i> -->
+<!--                     </button> -->
                 </td>
             </tr>
             <tr data-ng-class="(incexp.isPending ? (incexp.pendingWith._id === incexpsCtrl.authentication.user._id ? 'danger' : 'warning') : 'info')"
