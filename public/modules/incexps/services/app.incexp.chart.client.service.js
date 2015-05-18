@@ -65,13 +65,14 @@ angular.module('incexps').service('ChartService', [ '$http', '$q', '$stateParams
 	    	var currentDate = new Date(start);//pull and store start date here
 	    	var currentWeek = 0;
 	    	var dataArr = [];
+	    	
+            if(currentDate.getDay() !== 0){
+                for(var k = 0;k < currentDate.getDay();k++){
+                    dataArr.push([k, 0, -1])
+                }
+            }
+	    	
 		    while(true){
-                //if(currentDate.getDay() !== 0){
-                //    for(k=0;k<currentDate.getDay();k++){
-                //        dataArr.push([])
-                //    }
-                //
-                //}
 		    	if(currentDate >= start && currentDate < end){
 		    		//dayno = columnIdx
 		    		var dayItem = [];
@@ -109,70 +110,79 @@ angular.module('incexps').service('ChartService', [ '$http', '$q', '$stateParams
 			data.seriesData = dataArr;
 			return data;
 		};
-		chartService.getHeatmapConfig = function(labels, trackerIncexps){
-			var heatMapData = this.transformToHeatMapData(trackerIncexps);
-        	var heatMapChartConfig = {
-        			options: {
-        				chart: {
-        		            type: 'heatmap',
-        		            marginTop: 40,
-        		            marginBottom: 80
-        		        },
-        		        title: {
-        		            text: 'Expenses for the Month : XX'
-        		        },
-        		        colorAxis: {
-        		            min: 0,
-        		            minColor: '#FFFFFF',
-        		            maxColor: '#000000'
-        		        },
-
-        		        legend: {
-        		            align: 'right',
-        		            layout: 'vertical',
-        		            margin: 0,
-        		            verticalAlign: 'top',
-        		            y: 25,
-        		            symbolHeight: 280
-        		        },
-        		        tooltip: {
-        		            formatter: function () {
-        		                return '<b> Day : ' + this.series.xAxis.categories[this.point.x] + '</b><br><b>' +
-        		                	'<b> Week : ' + this.series.yAxis.categories[this.point.y] + '</b><br><b>' +
-        		                	'<b> Amount : ' + this.point.value + '</b>';
-        		            }
-        		        }
-        			},
-        	        xAxis: {
-        	            categories: heatMapData.xAxis
-        	        },
-
-        	        yAxis: {
-        	            categories: heatMapData.yAxis,
-        	            title: 'SSSSSSSSSSSS'
-        	        },
-        	        series: [{
-        	            name: 'Sales per employee',
-        	            borderWidth: 0,
-        	            data: heatMapData.seriesData,
-        	            dataLabels: {
-        	                enabled: true,
-        	                color: '#000000'
-        	            }
-        	        }]       	        
-        	
-        	};
-        	return heatMapChartConfig;
-		};
+//		chartService.getHeatmapConfig = function(labels, trackerIncexps){
+//			var heatMapData = this.transformToHeatMapData(trackerIncexps);
+//        	var heatMapChartConfig = {
+//        			options: {
+//        				chart: {
+//        		            type: 'heatmap',
+//        		            marginTop: 40,
+//        		            marginBottom: 80
+//        		        },
+//        		        title: {
+//        		            text: 'Expenses for the Month : XX'
+//        		        },
+//        		        colorAxis: {
+//        		            min: 0,
+//        		            minColor: '#FFFFFF',
+//        		            maxColor: '#000000'
+//        		        },
+//
+//        		        legend: {
+//        		            align: 'right',
+//        		            layout: 'vertical',
+//        		            margin: 0,
+//        		            verticalAlign: 'top',
+//        		            y: 25,
+//        		            symbolHeight: 280
+//        		        },
+//        		        tooltip: {
+//        		            formatter: function () {
+//        		                return '<b> Day : ' + this.series.xAxis.categories[this.point.x] + '</b><br><b>' +
+//        		                	'<b> Week : ' + this.series.yAxis.categories[this.point.y] + '</b><br><b>' +
+//        		                	'<b> Amount : ' + this.point.value + '</b>';
+//        		            }
+//        		        }
+//        			},
+//        	        xAxis: {
+//        	            categories: heatMapData.xAxis
+//        	        },
+//
+//        	        yAxis: {
+//        	            categories: heatMapData.yAxis,
+//        	            title: 'SSSSSSSSSSSS'
+//        	        },
+//        	        series: [{
+//        	            name: 'Sales per employee',
+//        	            borderWidth: 0,
+//        	            data: heatMapData.seriesData,
+//        	            dataLabels: {
+//        	                enabled: true,
+//        	                color: '#000000'
+//        	            }
+//        	        }]       	        
+//        	
+//        	};
+//        	return heatMapChartConfig;
+//		};
         chartService.getIncomeHeatMapConfig = function(labels, trackerIncexps){
             var heatMapConfig = this.getBaseHeatmapConfig(labels);
-            var filterByIncome = function(item){
-                    return item.type === 'INC';
+            var isItIncome = function(item){
+            	var isIncome = item.type === 'INC';
+            	var isFakeIncome = false;
+            	angular.forEach(item.tags, function(val, key){
+            		if(!isFakeIncome) {
+            			if(val.id === 'REF'){
+            				isFakeIncome = true;	
+            			}
+            		}
+            	})
+                return isIncome && (!isFakeIncome);
             };
-            var heatMapData = this.transformToHeatMapData(trackerIncexps, filterByIncome);
+            var heatMapData = this.transformToHeatMapData(trackerIncexps, isItIncome);
             heatMapConfig.xAxis.categories = heatMapData.xAxis;
             heatMapConfig.yAxis.categories = heatMapData.yAxis;
-            heatMapConfig.options.colorAxis.minColor = '#E6F5FF';
+            heatMapConfig.options.colorAxis.minColor = '#FFFFFF';
             heatMapConfig.options.colorAxis.maxColor = '#33ADFF';
             heatMapConfig.options.title.text = 'Income HEat Map - Cool Actually';
             heatMapConfig.series[0].data = heatMapData.seriesData;
@@ -183,13 +193,22 @@ angular.module('incexps').service('ChartService', [ '$http', '$q', '$stateParams
         };
         chartService.getExpenseHeatMapConfig = function(labels, trackerIncexps){
             var heatMapConfig = this.getBaseHeatmapConfig(labels);
-            var filterByIncome = function(item){
-                return item.type === 'EXP';
+            var isItExpense = function(item){
+            	var isExpense = item.type === 'EXP';
+            	var isFakeExpense = false;
+            	angular.forEach(item.tags, function(val, key){
+            		if(!isFakeExpense) {
+            			if((val.id === 'CCP') || (val.id === 'CAN')){
+            				isFakeExpense = true;	
+            			}
+            		}
+            	})
+                return isExpense && (!isFakeExpense);
             };
-            var heatMapData = this.transformToHeatMapData(trackerIncexps, filterByIncome);
+            var heatMapData = this.transformToHeatMapData(trackerIncexps, isItExpense);
             heatMapConfig.xAxis.categories = heatMapData.xAxis;
             heatMapConfig.yAxis.categories = heatMapData.yAxis;
-            heatMapConfig.options.colorAxis.minColor = '#FFF0F0';
+            heatMapConfig.options.colorAxis.minColor = '#FFFFFF';
             heatMapConfig.options.colorAxis.maxColor = '#FF8585';
             heatMapConfig.options.title.text = 'Expenses HEat Map';
             heatMapConfig.series[0].data = heatMapData.seriesData;

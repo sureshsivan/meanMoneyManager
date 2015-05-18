@@ -55,7 +55,7 @@
 }, {
   "label": "Cancelled",
   "id": "CAN",
-  "desc": "Cancelled Transactions which will be refunded",
+  "desc": "Cancelled Payment Transactions which will be refunded",
   "color": "#7AA",
   "class": "label-default"
 }, {
