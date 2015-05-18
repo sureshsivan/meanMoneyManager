@@ -1,9 +1,9 @@
 'use strict';
 
 // Incexps controller
-angular.module('incexps').controller('IncexpsController', ['$scope', '$stateParams', '$location', 'Authentication', '$filter',
+angular.module('incexps').controller('IncexpsController', ['$scope', '$stateParams', '$location', 'Authentication', '$filter', '$timeout', 
         'TrackerIncexps', '$modal', '$log', 'moment', 'AppStatics', 'Notify', 'VaultStatics', '$state', 'IncexpStatics', 'AppMessenger', 'IncexpLocaleMessages', '$q', 'INCEXP_CONST', 'ChartService', 
-	function($scope, $stateParams, $location, Authentication, $filter,
+	function($scope, $stateParams, $location, Authentication, $filter, $timeout, 
              TrackerIncexps, $modal, $log, moment, AppStatics, Notify, VaultStatics, $state, IncexpStatics, AppMessenger, IncexpLocaleMessages, $q, INCEXP_CONST, ChartService) {
 		var _this = this;
         $scope.parseInt = parseInt;
@@ -260,7 +260,16 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     incexpId: updatedIncexp._id
                 });
             };
-
+            _this.showNextMonth = function(){
+            	var nav = $filter('navmonths')($stateParams.month, $stateParams.year, 1);
+            	nav.trackerId = $stateParams.trackerId;
+                $state.go($state.current.name, nav, {reload: true});
+            };
+            _this.showPrevMonth = function(){
+                var nav = $filter('navmonths')($stateParams.month, $stateParams.year, -1);
+                nav.trackerId = $stateParams.trackerId;
+                $state.go($state.current.name, nav, {reload: true});
+            }
             _this.saveIncexp = function() {
                 //amDateFormat
                 //evDate : $filter('amDateFormat')(_this.evDate,'dd-MMMM-yyyy'),
@@ -330,10 +339,6 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     $scope.error = errorResponse.data.message;
                 });
             };
-
-
-
-
             _this.requestForEdit = function(incexp){
                 incexp.$requestEditAccess({
                     incexpId : incexp._id
@@ -371,16 +376,10 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
     		};
         };
         var loadCharts = function(){
-        	$scope.incomeHeatMapChartConfig = ChartService.getIncomeHeatMapConfig(_this.labelsObj, _this.trackerIncexps);
-            $scope.expenseHeatMapChartConfig = ChartService.getExpenseHeatMapConfig(_this.labelsObj, _this.trackerIncexps);
-            _this.showNextMonth = function(){
-                $stateParams.month = $filter('pad')((parseInt($stateParams.month) + 1), 2);
-                $state.go(INCEXP_CONST.DASH_INCEXPS_BY_MONTH_STATE_NAME, $stateParams, {reload: true});
-            };
-            _this.showPrevMonth = function(){
-                $stateParams.month = $filter('pad')((parseInt($stateParams.month) - 1), 2);
-                $state.go(INCEXP_CONST.DASH_INCEXPS_BY_MONTH_STATE_NAME, $stateParams, {reload: true});
-            };
+        	return $timeout(function(){
+        		$scope.incomeHeatMapChartConfig = ChartService.getIncomeHeatMapConfig(_this.labelsObj, _this.trackerIncexps);
+                $scope.expenseHeatMapChartConfig = ChartService.getExpenseHeatMapConfig(_this.labelsObj, _this.trackerIncexps);
+        	}, 1);
         };
         if($state.current.name === INCEXP_CONST.LIST_INCEXPS_STATE_NAME){
             pullMsgs().then(loadCurrencies).then(pullIncexps).then(loadIncexpAlerts).then(bootmodule);
@@ -395,7 +394,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         } else if($state.current.name === INCEXP_CONST.EDIT_INCEXP_STATE_NAME){
             pullMsgs().then(pullVaults).then(pullIncexpTypes).then(pullTags).then(pullApprovalTypes).then(pullIncexp).then(bootmodule);
         } else if($state.current.name === INCEXP_CONST.DASH_INCEXPS_BY_MONTH_STATE_NAME){
-            pullMsgs().then(pullIncexpsByMonth).then(loadCharts);
+            pullMsgs().then(pullIncexpsByMonth).then(loadCharts).then(bootmodule);
             $scope.monthlyView = true;
             $scope.now = new Date();
         }
