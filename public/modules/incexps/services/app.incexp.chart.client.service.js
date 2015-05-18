@@ -18,10 +18,10 @@ angular.module('incexps').service('ChartService', [ '$http', '$q', '$stateParams
                     var prevItem = groupedObj[groupStr] && groupedObj[groupStr][0];
                 	groupedObj[groupStr] = groupedObj[groupStr] || [];
                 	if(!groupedObj[groupStr]){
-                		aggregated['agg'] = aggregateBy ? aggregateBy(null, value) : value;
+                		aggregated.agg = aggregateBy ? aggregateBy(null, value) : value;
                     } else {
                     	groupedObj[groupStr] = aggregateBy ? [] : groupedObj[groupStr];
-                        aggregated['agg'] = aggregateBy ? aggregateBy(prevItem, value) : value;
+                        aggregated.agg = aggregateBy ? aggregateBy(prevItem, value) : value;
                     }
                     groupedObj[groupStr].push(aggregated);
 
@@ -68,7 +68,7 @@ angular.module('incexps').service('ChartService', [ '$http', '$q', '$stateParams
 	    	
             if(currentDate.getDay() !== 0){
                 for(var k = 0;k < currentDate.getDay();k++){
-                    dataArr.push([k, 0, -1])
+                    dataArr.push([k, 0, -1]);
                 }
             }
 	    	
@@ -121,7 +121,7 @@ angular.module('incexps').service('ChartService', [ '$http', '$q', '$stateParams
             				isFakeIncome = true;	
             			}
             		}
-            	})
+            	});
                 return isIncome && (!isFakeIncome);
             };
             var heatMapData = this.transformToHeatMapData(trackerIncexps, isItIncome);
@@ -150,7 +150,7 @@ angular.module('incexps').service('ChartService', [ '$http', '$q', '$stateParams
             				isFakeExpense = true;	
             			}
             		}
-            	})
+            	});
                 return isExpense && (!isFakeExpense);
             };
             var heatMapData = this.transformToHeatMapData(trackerIncexps, isItExpense);
@@ -217,7 +217,7 @@ angular.module('incexps').service('ChartService', [ '$http', '$q', '$stateParams
                             } else if (this.point.value === -1){
                                 return 'NA';
                             }else {
-                                return this.point.value
+                                return this.point.value;
                             }
                         }
                     }

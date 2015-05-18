@@ -1,18 +1,18 @@
 'use strict';
 
 angular.module('core')
-    .filter('pad', function() {
+    .filter('pad', [function() {
         return function(n, width, z) {
             z = z || '0';
             n = n + '';
             return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
         };
-    })
+    }])
     .filter('navmonths', ['$filter', function($filter) {
         return function(month, year, n) {
         	n = n || 1;
-        	var month = parseInt(month);
-        	var year = parseInt(year);
+        	month = parseInt(month);
+        	year = parseInt(year);
         	if((month + n) < 1){
         		year = (year - 1) + '';
         		month = $filter('pad')((12 + month + n), 2);
@@ -26,6 +26,6 @@ angular.module('core')
         	return {
     			year: year,
     			month: month
-    		}
+    		};
         };
     }]);

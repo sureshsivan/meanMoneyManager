@@ -269,7 +269,7 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 var nav = $filter('navmonths')($stateParams.month, $stateParams.year, -1);
                 nav.trackerId = $stateParams.trackerId;
                 $state.go($state.current.name, nav, {reload: true});
-            }
+            };
             _this.saveIncexp = function() {
                 //amDateFormat
                 //evDate : $filter('amDateFormat')(_this.evDate,'dd-MMMM-yyyy'),
