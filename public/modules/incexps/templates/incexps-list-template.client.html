@@ -14,8 +14,7 @@
                 <th>{{incexpsCtrl.labelsObj['app.incexps.lbl.action']}}</th>
             </tr>
             <tr data-ng-repeat-start="incexp in incexpsCtrl.trackerIncexps | filter:searchText"
-                data-ng-click="incexpsCtrl.expandRow(incexp)"
-                    data-ng-class="(incexp.isPending ? (incexp.pendingWith._id === incexpsCtrl.authentication.user._id ? 'danger' : 'warning') : 'info')">
+                data-ng-click="incexpsCtrl.expandRow(incexp)">
                 <td scope="row">{{$index+1}}</td>
                 <td>
                     <span class="fa" data-ng-class="item.clazz" data-tooltip="{{item.tooltip}}"

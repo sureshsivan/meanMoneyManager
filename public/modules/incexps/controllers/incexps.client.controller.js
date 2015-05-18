@@ -157,18 +157,18 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     incexp.infoAlerts = [];
                     if(!incexp.isPending){
                         incexp.infoAlerts.push({
-                            'clazz': 'fa-check-circle info-icon',
+                            'clazz': 'fa-check-circle info-icon lpad',
                             'tooltip': _this.labelsObj['app.incexps.tt.allOk']
                         });
                     } else {
                         if(incexp.pendingWith._id === Authentication.user._id){
                             incexp.infoAlerts.push({
-                                'clazz': 'fa-exclamation-circle danger-icon',
+                                'clazz': 'fa-exclamation-circle danger-icon lpad',
                                 'tooltip': _this.labelsObj['app.incexps.tt.requireActionFrmMe']
                             });
                         }else {
                             incexp.infoAlerts.push({
-                                'clazz': 'fa-exclamation-circle warn-icon',
+                                'clazz': 'fa-exclamation-circle warn-icon lpad',
                                 'tooltip': _this.labelsObj['app.incexps.tt.requireActionFrm'] + incexp.pendingWith.displayName
                             });
                         }
