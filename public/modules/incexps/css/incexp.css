@@ -44,7 +44,7 @@
 /*     color: #404040; */
 /*     padding: 0 5px 0 0; */
 /* } */
-.lpad:{
+.lpad{
 	padding-left: 5px;
 }
 .info-icon{
@@ -67,10 +67,12 @@
 }
 .icon-btn{
 	padding-left: 5px;
-	font-size: larger;
+	font-size: large;
+    color: #bbbbbb;
 }
-.icon-btn:HOVER{
-	font-weight: bold;	
+.icon-btn:hover{
+    color: red;
+    cursor: pointer;
 }
 .info-well{
 	margin-bottom: 0 !important;
