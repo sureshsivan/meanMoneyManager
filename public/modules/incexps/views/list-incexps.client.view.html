@@ -33,25 +33,28 @@
 
     <br/>
 
-    <div class="row">
-        <button type="button" class="pull-right btn btn-success" data-ng-click="incexpsCtrl.showNextMonth()"
-                data-ng-disabled="(parseInt($stateParams.month) === parseInt(now.getMonth()+1)) && (parseInt($stateParams.year) === parseInt(now.getFullYear()))">
-            Newer <span aria-hidden="true">&rarr;</span>
-        </button>
-        <button type="button" class="pull-left btn btn-success" data-ng-click="incexpsCtrl.showPrevMonth()"
-                data-ng-disabled="(parseInt($stateParams.month) === parseInt(now.getMonth()+1)) && (parseInt($stateParams.year) === parseInt(now.getFullYear()-1))">
-            <span aria-hidden="true" >&larr;</span> Older
-        </button>
-    </div>
-
-    <incexps-list data-ng-if="incexpsCtrl.trackerIncexps && incexpsCtrl.trackerIncexps.length > 0"></incexps-list>
-
-    <br/>
-
-    <div class="row">
-        <div class="alert alert-warning text-center" data-ng-hide="!incexpsCtrl.trackerIncexps.$resolved || incexpsCtrl.trackerIncexps.length">
-            <a data-ui-sref="createIncexp($stateParams)">{{incexpsCtrl.labelsObj['app.vaults.lbl.noIncecpYet']}}</a>?
+    <div class="panel panel-default" data-ng-controller="IncexpsController as incexpsCtrl">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                Panel title
+            <span class="fa fa-arrow-circle-o-right icon-btn pull-right"
+                  data-ng-hide="(parseInt($stateParams.month) === parseInt(now.getMonth()+1)) && (parseInt($stateParams.year) === parseInt(now.getFullYear()))"
+                  data-ng-click="incexpsCtrl.showNextMonth()"></span>
+            <span class="fa fa-arrow-circle-o-left icon-btn pull-right"
+                  data-ng-hide="(parseInt($stateParams.month) === parseInt(now.getMonth()+1)) && (parseInt($stateParams.year) === parseInt(now.getFullYear()-1))"
+                  data-ng-click="incexpsCtrl.showPrevMonth()"></span>
+                <span class="pull-right">{{$stateParams.month + '  ' + $stateParams.year}}</span>
+            </h3>
+        </div>
+        <div class="panel-body">
+            <incexps-list data-ng-if="incexpsCtrl.trackerIncexps && incexpsCtrl.trackerIncexps.length > 0"></incexps-list>
+            <div class="">
+                <div class="alert alert-warning text-center" data-ng-hide="!incexpsCtrl.trackerIncexps.$resolved || incexpsCtrl.trackerIncexps.length">
+                    <a data-ui-sref="createIncexp($stateParams)">{{incexpsCtrl.labelsObj['app.vaults.lbl.noIncecpYet']}}</a>
+                </div>
+            </div>
         </div>
     </div>
+
 </section>
 
