@@ -1,11 +1,12 @@
 'use strict';
 
 // Incexps controller
-angular.module('incexps').controller('IncexpsController', ['$scope', '$stateParams', '$location', 'Authentication',
-        'TrackerIncexps', '$modal', '$log', 'moment', 'AppStatics', 'Notify', 'VaultStatics', '$state', 'IncexpStatics', 'AppMessenger', 'IncexpLocaleMessages', '$q', 'INCEXP_CONST',
-	function($scope, $stateParams, $location, Authentication,
-             TrackerIncexps, $modal, $log, moment, AppStatics, Notify, VaultStatics, $state, IncexpStatics, AppMessenger, IncexpLocaleMessages, $q, INCEXP_CONST) {
+angular.module('incexps').controller('IncexpsController', ['$scope', '$stateParams', '$location', 'Authentication', '$filter', '$timeout', 
+        'TrackerIncexps', '$modal', '$log', 'moment', 'AppStatics', 'Notify', 'VaultStatics', '$state', 'IncexpStatics', 'AppMessenger', 'IncexpLocaleMessages', '$q', 'INCEXP_CONST', 'ChartService', 
+	function($scope, $stateParams, $location, Authentication, $filter, $timeout, 
+             TrackerIncexps, $modal, $log, moment, AppStatics, Notify, VaultStatics, $state, IncexpStatics, AppMessenger, IncexpLocaleMessages, $q, INCEXP_CONST, ChartService) {
 		var _this = this;
+        $scope.parseInt = parseInt;
         _this.authentication = Authentication;
 		_this.vaultStatics = VaultStatics;
         _this.appStatics = AppStatics;
@@ -123,6 +124,12 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         	_this.trackerIncexps = TrackerIncexps.listTrackerIncexps($stateParams);
         	return _this.trackerIncexps.$promise; 
         };
+        var pullIncexpsByMonth = function () {
+            _this.trackerIncexps = TrackerIncexps.listTrackerIncexpsByMonth($stateParams);
+            return _this.trackerIncexps.$promise;
+        };
+
+
         var pullIncexp = function () {
             var deferred = $q.defer();
             TrackerIncexps.get($stateParams).$promise.then(function(response){
@@ -150,18 +157,18 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     incexp.infoAlerts = [];
                     if(!incexp.isPending){
                         incexp.infoAlerts.push({
-                            'clazz': 'fa-check-circle info-icon',
+                            'clazz': 'fa-check-circle info-icon lpad',
                             'tooltip': _this.labelsObj['app.incexps.tt.allOk']
                         });
                     } else {
                         if(incexp.pendingWith._id === Authentication.user._id){
                             incexp.infoAlerts.push({
-                                'clazz': 'fa-exclamation-circle danger-icon',
+                                'clazz': 'fa-exclamation-circle danger-icon lpad',
                                 'tooltip': _this.labelsObj['app.incexps.tt.requireActionFrmMe']
                             });
                         }else {
                             incexp.infoAlerts.push({
-                                'clazz': 'fa-exclamation-circle warn-icon',
+                                'clazz': 'fa-exclamation-circle warn-icon lpad',
                                 'tooltip': _this.labelsObj['app.incexps.tt.requireActionFrm'] + incexp.pendingWith.displayName
                             });
                         }
@@ -179,8 +186,8 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     }
                     incexp.collapsed = true;
                     incexp.currencyObj = AppStatics.getCurrencyObj(incexp.tracker.currency);
-                    deferred.resolve(null);
                 }
+                deferred.resolve(null);
             });
             return deferred.promise; 
         };
@@ -253,13 +260,27 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     incexpId: updatedIncexp._id
                 });
             };
+            _this.showNextMonth = function(){
+            	var nav = $filter('navmonths')($stateParams.month, $stateParams.year, 1);
+            	nav.trackerId = $stateParams.trackerId;
+                $state.go($state.current.name, nav, {reload: true});
+            };
+            _this.showPrevMonth = function(){
+                var nav = $filter('navmonths')($stateParams.month, $stateParams.year, -1);
+                nav.trackerId = $stateParams.trackerId;
+                $state.go($state.current.name, nav, {reload: true});
+            }
             _this.saveIncexp = function() {
+                //amDateFormat
+                //evDate : $filter('amDateFormat')(_this.evDate,'dd-MMMM-yyyy'),
+                //$filter('amDateFormat')(item.evDate,'YYYYMMDD')
                 var incexp = new TrackerIncexps({
                     displayName: _this.displayName,
                     description: _this.description,
                     type: _this.type,
                     tracker: $stateParams.trackerId,
                     tags: _this.tags,
+                    //evDate : $filter('date')(_this.evDate,'dd-MMMM-yyyy', '+0530'),
                     evDate : _this.evDate,
                     amount: _this.amount,
                     vault: _this.vault,
@@ -274,7 +295,15 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 }
                 // Redirect after save
                 incexp.$save($stateParams, function(response) {
-                    $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
+                    var current = moment(_this.evDate);
+                    var month = current.format('MM');
+                    var year = current.format('YYYY');
+                    $state.go(INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_NAME, {
+                        trackerId: $stateParams.trackerId,
+                        month : month,
+                        year: year
+                    });
+                    //$state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
                     AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.createdIncexp']);
                 }, function(errorResponse) {
                     $scope.error = errorResponse.data.message;
@@ -298,7 +327,15 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 }
                 delete incexp.tracker;
                 incexp.$update($stateParams, function() {
-                  $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
+                    var current = moment(incexp.evDate);
+                    var month = current.format('MM');
+                    var year = current.format('YYYY');
+                    $state.go(INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_NAME, {
+                        trackerId: $stateParams.trackerId,
+                        month : month,
+                        year: year
+                    });
+                  //$state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
                   AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.updatedIncexp']);
                 }, function(errorResponse) {
                     $scope.error = errorResponse.data.message;
@@ -318,10 +355,6 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     $scope.error = errorResponse.data.message;
                 });
             };
-
-
-
-
             _this.requestForEdit = function(incexp){
                 incexp.$requestEditAccess({
                     incexpId : incexp._id
@@ -356,17 +389,30 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
     		            AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.deletedIncexp']);
                     });
     			}
-    		};        	
+    		};
         };
-        
+        var loadCharts = function(){
+        	return $timeout(function(){
+        		$scope.incomeHeatMapChartConfig = ChartService.getIncomeHeatMapConfig(_this.labelsObj, _this.trackerIncexps);
+                $scope.expenseHeatMapChartConfig = ChartService.getExpenseHeatMapConfig(_this.labelsObj, _this.trackerIncexps);
+        	}, 1);
+        };
         if($state.current.name === INCEXP_CONST.LIST_INCEXPS_STATE_NAME){
-        	pullMsgs().then(loadCurrencies).then(pullIncexps).then(loadIncexpAlerts).then(bootmodule);
+            pullMsgs().then(loadCurrencies).then(pullIncexps).then(loadIncexpAlerts).then(bootmodule);
+        } else if($state.current.name === INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_NAME){
+            pullMsgs().then(loadCurrencies).then(pullIncexpsByMonth).then(loadIncexpAlerts).then(bootmodule);
+            $scope.monthlyView = true;
+            $scope.now = new Date();
         } else if($state.current.name === INCEXP_CONST.CREATE_INCEXP_STATE_NAME){
         	pullMsgs().then(pullVaults).then(pullIncexpTypes).then(pullTags).then(pullApprovalTypes).then(bootmodule);
             //TODO - load up this with boot module
             _this.approvalModel = {'isPending': false, 'pendingType': null,'pendingMsg': null};
         } else if($state.current.name === INCEXP_CONST.EDIT_INCEXP_STATE_NAME){
             pullMsgs().then(pullVaults).then(pullIncexpTypes).then(pullTags).then(pullApprovalTypes).then(pullIncexp).then(bootmodule);
+        } else if($state.current.name === INCEXP_CONST.DASH_INCEXPS_BY_MONTH_STATE_NAME){
+            pullMsgs().then(pullIncexpsByMonth).then(loadCharts).then(bootmodule);
+            $scope.monthlyView = true;
+            $scope.now = new Date();
         }
 	}
 ])

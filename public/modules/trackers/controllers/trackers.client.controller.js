@@ -85,8 +85,29 @@ angular.module('trackers')
                     $state.go(VAULT_CONST.LIST_VAULTS_STATE_NAME, {trackerId: trackerId});
                 };
                 _this.loadIncexps = function (trackerId) {
-                    $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, {trackerId: trackerId});
+//                    $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, {trackerId: trackerId});
+                    //TODO - find current month and year
+                    var now = moment();
+                    var month = now.format('MM');
+                    var year = now.format('YYYY');
+                    $state.go(INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_NAME, {
+                    	trackerId: trackerId,
+                    	month : month,
+                    	year: year
+                    });
                 };
+                _this.loadIncexpsDashboard = function (trackerId) {
+//                  $state.go(INCEXP_CONST.DASH_INCEXPS_STATE_NAME, {trackerId: trackerId});
+                  //TODO - find current month and year
+                  var now = moment();
+                  var month = now.format('MM');
+                  var year = now.format('YYYY');
+                  $state.go(INCEXP_CONST.DASH_INCEXPS_BY_MONTH_STATE_NAME, {
+                  	trackerId: trackerId,
+                  	month : month,
+                  	year: year
+                  });
+              };
                 _this.createTracker = function (size) {
                     _this.tracker = {};
                     $state.go(TRACKER_CONST.CREATE_TRACKER_STATE_NAME);

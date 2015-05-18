@@ -40,4 +40,28 @@
   "desc": "Any Items spent Home Making",
   "color": "#7AA",
 	"class": "label-warning"
+}, {
+  "label": "CC Payment",
+  "id": "CCP",
+  "desc": "Payment for Credit Card Bill",
+  "color": "#7AA",
+  "class": "label-default"
+}, {
+  "label": "Refund",
+  "id": "REF",
+  "desc": "Refunded Amount Like cancelled Transaction",
+  "color": "#7AA",
+  "class": "label-default"
+}, {
+  "label": "Cancelled",
+  "id": "CAN",
+  "desc": "Cancelled Payment Transactions which will be refunded",
+  "color": "#7AA",
+  "class": "label-default"
+}, {
+  "label": "SC Cancelled Tranx",
+  "id": "SCX",
+  "desc": "Service Charge incurred on Cancelled Transactions",
+  "color": "#7AA",
+  "class": "label-danger"
 }]

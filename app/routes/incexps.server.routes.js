@@ -10,6 +10,9 @@ module.exports = function(app) {
         .get(users.requiresLogin, incexps.listByTrackerId)
         .post(users.requiresLogin, incexps.create);
 
+    app.route('/trackerincexps/:trackerId/showMonth/:month/:year')
+        .get(users.requiresLogin, incexps.listByTrackerIdAndMonth);
+
     app.route('/trackerincexps/:trackerId/:incexpId')
         .get(users.requiresLogin, incexps.read)
         .put(users.requiresLogin, incexps.hasAuthorization, incexps.update)
@@ -27,6 +30,10 @@ module.exports = function(app) {
     app.route('/incexps/approveChanges/:incexpId')
         .put(users.requiresLogin, incexps.hasAuthToApproveChanges, incexps.approveIncexpChanges);
 
+//    app.route('/incexps/chartdata/:trackerId/showMonth/:month/:year')
+//    	.get(users.requiresLogin, incexps.listByTrackerIdAndMonth);
+    
+    
 	// Finish by binding the Incexp middleware
 	app.param('incexpId', incexps.incexpByID);
     app.param('trackerId', trackers.trackerByID);

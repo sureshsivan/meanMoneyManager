@@ -12,6 +12,12 @@ angular.module('incexps').factory('TrackerIncexps', ['$resource',
                 params: {trackerId : 'trackerId'},
                 isArray: true
             },
+            listTrackerIncexpsByMonth: {
+                url: 'trackerincexps/:trackerId/showMonth/:month/:year',
+                method: 'GET',
+                params: {trackerId : 'trackerId', month: 'month', year: 'year'},
+                isArray: true
+            },
             requestEditAccess: {
                 url: 'incexps/requestEditAccess/:incexpId',
                 method: 'PUT'
