@@ -212,7 +212,6 @@ angular.module('incexps').service('ChartService', [ '$http', '$q', '$stateParams
                         enabled: true,
                         color: '#000000',
                         formatter: function(){
-                            console.dir(this.point.value);
                             if(this.point.value === 0){
                                 return '-';
                             } else if (this.point.value === -1){
