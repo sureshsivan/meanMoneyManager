@@ -5,7 +5,7 @@ var ApplicationConfiguration = (function() {
 	// Init module configuration options
 	var applicationModuleName = 'meanmoneymanager';
 	var applicationModuleVendorDependencies = ['ngResource', 'ngCookies',  'ngAnimate',  'ngTouch',  'ngSanitize',
-	                                           'ui.router', 'ui.bootstrap', 'ui.utils', 'angularMoment', 'ngTagsInput']
+	                                           'ui.router', 'ui.bootstrap', 'ui.utils', 'angularMoment', 'ngTagsInput', 'highcharts-ng']
                                                 //'mgcrea.ngStrap.alert', 'mgcrea.ngStrap.modal', 'mgcrea.ngStrap.helpers.dimensions'];
 
 	// Add a new vertical module
@@ -221,6 +221,38 @@ angular.module('core').controller('StatusBarController', ['$scope', 'Authenticat
         });
 	}
 ]);
+
+'use strict';
+
+angular.module('core')
+    .filter('pad', function() {
+        return function(n, width, z) {
+            z = z || '0';
+            n = n + '';
+            return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+        };
+    })
+    .filter('navmonths', ['$filter', function($filter) {
+        return function(month, year, n) {
+        	n = n || 1;
+        	var month = parseInt(month);
+        	var year = parseInt(year);
+        	if((month + n) < 1){
+        		year = (year - 1) + '';
+        		month = $filter('pad')((12 + month + n), 2);
+        	} else if ((month + n) > 12){
+        		year = (year + 1) + '';
+        		month = $filter('pad')((month + n - 12 + 1), 2);
+        	} else {
+    			year = year + '';
+    			month = $filter('pad')((parseInt(month) + n), 2);
+        	}
+        	return {
+    			year: year,
+    			month: month
+    		}
+        };
+    }]);
 
 'use strict';
 
@@ -535,6 +567,9 @@ angular.module('incexps').constant('INCEXP_CONST', {
 	'LIST_INCEXPS_STATE_NAME': 'listTrackerIncexps',
 	'LIST_INCEXPS_STATE_URL': '/trackerincexps/:trackerId',
 	'LIST_INCEXPS_STATE_TEMPLATE_URL': 'modules/incexps/views/list-incexps.client.view.html',
+	'LIST_INCEXPS_BY_MONTH_STATE_NAME': 'listTrackerIncexpsByMonth',
+	'LIST_INCEXPS_BY_MONTH_STATE_URL': '/trackerincexps/:trackerId/showMonth/:month/:year',
+	'LIST_INCEXPS_BY_MONTH_STATE_TEMPLATE_URL': 'modules/incexps/views/list-incexps.client.view.html',
 
 	'CREATE_INCEXP_STATE_NAME': 'createIncexp',
 	'CREATE_INCEXP_STATE_URL': '/trackerincexps/:trackerId/create',
@@ -542,8 +577,12 @@ angular.module('incexps').constant('INCEXP_CONST', {
 	
 	'EDIT_INCEXP_STATE_NAME': 'editIncexp',
 	'EDIT_INCEXP_STATE_URL': '/trackerincexps/:trackerId/:incexpId/edit',
-	'EDIT_INCEXP_STATE_TEMPLATE_URL': 'modules/incexps/views/edit-incexp.client.view.html'
+	'EDIT_INCEXP_STATE_TEMPLATE_URL': 'modules/incexps/views/edit-incexp.client.view.html',
 	
+	'DASH_INCEXPS_BY_MONTH_STATE_NAME': 'DashBoardTrackerIncexpsByMonth',
+	'DASH_INCEXPS_BY_MONTH_STATE_URL': '/trackerincexpsDashboard/:trackerId/showMonth/:month/:year',
+	'DASH_INCEXPS_BY_MONTH_STATE_TEMPLATE_URL': 'modules/incexps/views/charts-incexp.client.view.html',
+		
 });
 
 'use strict';
@@ -555,8 +594,15 @@ angular.module('incexps').run(['Menus',
 //		Menus.addMenuItem('topbar', 'Incexps', 'incexps', 'dropdown', '/incexps(/create)?');
 //		Menus.addSubMenuItem('topbar', 'incexps', 'List Incexps', 'incexps');
 //		Menus.addSubMenuItem('topbar', 'incexps', 'New Incexp', 'incexps/create');
+
+
+        // do not let angular convert date to UTC
+        //$httpProvider.defaults.headers.common
+        //http.defaults.headers.common.Authorization = 'Basic YmVlcDpib29w'
+        //$httpProvider.defaults.transformRequest
 	}
 ]);
+
 'use strict';
 
 //Setting up route
@@ -567,6 +613,14 @@ angular.module('incexps').config(['$stateProvider', 'INCEXP_CONST',
 		state(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, {
 			url: INCEXP_CONST.LIST_INCEXPS_STATE_URL,
 			templateUrl: INCEXP_CONST.LIST_INCEXPS_STATE_TEMPLATE_URL
+		}).
+		state(INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_NAME, {
+			url: INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_URL,
+			templateUrl: INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_TEMPLATE_URL
+		}).
+		state(INCEXP_CONST.DASH_INCEXPS_BY_MONTH_STATE_NAME, {
+			url: INCEXP_CONST.DASH_INCEXPS_BY_MONTH_STATE_URL,
+			templateUrl: INCEXP_CONST.DASH_INCEXPS_BY_MONTH_STATE_TEMPLATE_URL
 		}).
 		state(INCEXP_CONST.CREATE_INCEXP_STATE_NAME, {
 			url: INCEXP_CONST.CREATE_INCEXP_STATE_URL,
@@ -582,11 +636,12 @@ angular.module('incexps').config(['$stateProvider', 'INCEXP_CONST',
 'use strict';
 
 // Incexps controller
-angular.module('incexps').controller('IncexpsController', ['$scope', '$stateParams', '$location', 'Authentication',
-        'TrackerIncexps', '$modal', '$log', 'moment', 'AppStatics', 'Notify', 'VaultStatics', '$state', 'IncexpStatics', 'AppMessenger', 'IncexpLocaleMessages', '$q', 'INCEXP_CONST',
-	function($scope, $stateParams, $location, Authentication,
-             TrackerIncexps, $modal, $log, moment, AppStatics, Notify, VaultStatics, $state, IncexpStatics, AppMessenger, IncexpLocaleMessages, $q, INCEXP_CONST) {
+angular.module('incexps').controller('IncexpsController', ['$scope', '$stateParams', '$location', 'Authentication', '$filter', '$timeout', 
+        'TrackerIncexps', '$modal', '$log', 'moment', 'AppStatics', 'Notify', 'VaultStatics', '$state', 'IncexpStatics', 'AppMessenger', 'IncexpLocaleMessages', '$q', 'INCEXP_CONST', 'ChartService', 
+	function($scope, $stateParams, $location, Authentication, $filter, $timeout, 
+             TrackerIncexps, $modal, $log, moment, AppStatics, Notify, VaultStatics, $state, IncexpStatics, AppMessenger, IncexpLocaleMessages, $q, INCEXP_CONST, ChartService) {
 		var _this = this;
+        $scope.parseInt = parseInt;
         _this.authentication = Authentication;
 		_this.vaultStatics = VaultStatics;
         _this.appStatics = AppStatics;
@@ -704,6 +759,12 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         	_this.trackerIncexps = TrackerIncexps.listTrackerIncexps($stateParams);
         	return _this.trackerIncexps.$promise; 
         };
+        var pullIncexpsByMonth = function () {
+            _this.trackerIncexps = TrackerIncexps.listTrackerIncexpsByMonth($stateParams);
+            return _this.trackerIncexps.$promise;
+        };
+
+
         var pullIncexp = function () {
             var deferred = $q.defer();
             TrackerIncexps.get($stateParams).$promise.then(function(response){
@@ -731,18 +792,18 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     incexp.infoAlerts = [];
                     if(!incexp.isPending){
                         incexp.infoAlerts.push({
-                            'clazz': 'fa-check-circle info-icon',
+                            'clazz': 'fa-check-circle info-icon lpad',
                             'tooltip': _this.labelsObj['app.incexps.tt.allOk']
                         });
                     } else {
                         if(incexp.pendingWith._id === Authentication.user._id){
                             incexp.infoAlerts.push({
-                                'clazz': 'fa-exclamation-circle danger-icon',
+                                'clazz': 'fa-exclamation-circle danger-icon lpad',
                                 'tooltip': _this.labelsObj['app.incexps.tt.requireActionFrmMe']
                             });
                         }else {
                             incexp.infoAlerts.push({
-                                'clazz': 'fa-exclamation-circle warn-icon',
+                                'clazz': 'fa-exclamation-circle warn-icon lpad',
                                 'tooltip': _this.labelsObj['app.incexps.tt.requireActionFrm'] + incexp.pendingWith.displayName
                             });
                         }
@@ -760,8 +821,8 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     }
                     incexp.collapsed = true;
                     incexp.currencyObj = AppStatics.getCurrencyObj(incexp.tracker.currency);
-                    deferred.resolve(null);
                 }
+                deferred.resolve(null);
             });
             return deferred.promise; 
         };
@@ -834,13 +895,27 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     incexpId: updatedIncexp._id
                 });
             };
+            _this.showNextMonth = function(){
+            	var nav = $filter('navmonths')($stateParams.month, $stateParams.year, 1);
+            	nav.trackerId = $stateParams.trackerId;
+                $state.go($state.current.name, nav, {reload: true});
+            };
+            _this.showPrevMonth = function(){
+                var nav = $filter('navmonths')($stateParams.month, $stateParams.year, -1);
+                nav.trackerId = $stateParams.trackerId;
+                $state.go($state.current.name, nav, {reload: true});
+            }
             _this.saveIncexp = function() {
+                //amDateFormat
+                //evDate : $filter('amDateFormat')(_this.evDate,'dd-MMMM-yyyy'),
+                //$filter('amDateFormat')(item.evDate,'YYYYMMDD')
                 var incexp = new TrackerIncexps({
                     displayName: _this.displayName,
                     description: _this.description,
                     type: _this.type,
                     tracker: $stateParams.trackerId,
                     tags: _this.tags,
+                    //evDate : $filter('date')(_this.evDate,'dd-MMMM-yyyy', '+0530'),
                     evDate : _this.evDate,
                     amount: _this.amount,
                     vault: _this.vault,
@@ -855,7 +930,15 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 }
                 // Redirect after save
                 incexp.$save($stateParams, function(response) {
-                    $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
+                    var current = moment(_this.evDate);
+                    var month = current.format('MM');
+                    var year = current.format('YYYY');
+                    $state.go(INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_NAME, {
+                        trackerId: $stateParams.trackerId,
+                        month : month,
+                        year: year
+                    });
+                    //$state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
                     AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.createdIncexp']);
                 }, function(errorResponse) {
                     $scope.error = errorResponse.data.message;
@@ -879,7 +962,15 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 }
                 delete incexp.tracker;
                 incexp.$update($stateParams, function() {
-                  $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
+                    var current = moment(incexp.evDate);
+                    var month = current.format('MM');
+                    var year = current.format('YYYY');
+                    $state.go(INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_NAME, {
+                        trackerId: $stateParams.trackerId,
+                        month : month,
+                        year: year
+                    });
+                  //$state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
                   AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.updatedIncexp']);
                 }, function(errorResponse) {
                     $scope.error = errorResponse.data.message;
@@ -899,10 +990,6 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     $scope.error = errorResponse.data.message;
                 });
             };
-
-
-
-
             _this.requestForEdit = function(incexp){
                 incexp.$requestEditAccess({
                     incexpId : incexp._id
@@ -937,17 +1024,30 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
     		            AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.deletedIncexp']);
                     });
     			}
-    		};        	
+    		};
         };
-        
+        var loadCharts = function(){
+        	return $timeout(function(){
+        		$scope.incomeHeatMapChartConfig = ChartService.getIncomeHeatMapConfig(_this.labelsObj, _this.trackerIncexps);
+                $scope.expenseHeatMapChartConfig = ChartService.getExpenseHeatMapConfig(_this.labelsObj, _this.trackerIncexps);
+        	}, 1);
+        };
         if($state.current.name === INCEXP_CONST.LIST_INCEXPS_STATE_NAME){
-        	pullMsgs().then(loadCurrencies).then(pullIncexps).then(loadIncexpAlerts).then(bootmodule);
+            pullMsgs().then(loadCurrencies).then(pullIncexps).then(loadIncexpAlerts).then(bootmodule);
+        } else if($state.current.name === INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_NAME){
+            pullMsgs().then(loadCurrencies).then(pullIncexpsByMonth).then(loadIncexpAlerts).then(bootmodule);
+            $scope.monthlyView = true;
+            $scope.now = new Date();
         } else if($state.current.name === INCEXP_CONST.CREATE_INCEXP_STATE_NAME){
         	pullMsgs().then(pullVaults).then(pullIncexpTypes).then(pullTags).then(pullApprovalTypes).then(bootmodule);
             //TODO - load up this with boot module
             _this.approvalModel = {'isPending': false, 'pendingType': null,'pendingMsg': null};
         } else if($state.current.name === INCEXP_CONST.EDIT_INCEXP_STATE_NAME){
             pullMsgs().then(pullVaults).then(pullIncexpTypes).then(pullTags).then(pullApprovalTypes).then(pullIncexp).then(bootmodule);
+        } else if($state.current.name === INCEXP_CONST.DASH_INCEXPS_BY_MONTH_STATE_NAME){
+            pullMsgs().then(pullIncexpsByMonth).then(loadCharts).then(bootmodule);
+            $scope.monthlyView = true;
+            $scope.now = new Date();
         }
 	}
 ])
@@ -1154,6 +1254,238 @@ angular.module('incexps').factory('Incexps', ['$resource',
 ]);
 'use strict';
 
+angular.module('incexps').service('ChartService', [ '$http', '$q', '$stateParams', 'moment', '$filter',
+	function($http, $q, $stateParams, moment, $filter) {
+		var chartService = {};
+        chartService.groupAndAggregate = function(items, projectBy, filterBy, groupBy, aggregateBy){
+            var resultArr = [];
+            var groupedObj = {};            
+            for(var i = items.length-1; i >=0; --i){
+            	var value = items[i];
+            	if(filterBy && !filterBy(value)){
+            		continue;
+            	}
+            	value = projectBy ? projectBy(value) : value;
+            	if(groupBy){
+                	var groupStr = JSON.stringify(groupBy(value));
+                	var aggregated = value;
+                    var prevItem = groupedObj[groupStr] && groupedObj[groupStr][0];
+                	groupedObj[groupStr] = groupedObj[groupStr] || [];
+                	if(!groupedObj[groupStr]){
+                		aggregated['agg'] = aggregateBy ? aggregateBy(null, value) : value;
+                    } else {
+                    	groupedObj[groupStr] = aggregateBy ? [] : groupedObj[groupStr];
+                        aggregated['agg'] = aggregateBy ? aggregateBy(prevItem, value) : value;
+                    }
+                    groupedObj[groupStr].push(aggregated);
+
+                    resultArr = Object.keys(groupedObj).map(function(group){
+        			    return groupedObj[group];
+        			});
+            	} else {
+            		resultArr.push(value);
+            	}
+            }
+            console.dir(resultArr);
+            return resultArr;
+
+        };
+		chartService.transformToHeatMapData = function(incexps, filterBy){
+			var data = {};
+            var groupByDate = function(item){
+                return [$filter('amDateFormat')(item.evDate,'YYYYMMDD')];
+            };
+            var aggregateBySumAmount = function(previousItem, currentItem){
+                return (previousItem && currentItem ? (previousItem.amount + currentItem.amount) : 
+                		(currentItem ? currentItem.amount : (previousItem ? previousItem.amount : 0)));
+            };
+            var filterByIncome = filterBy || function(item){
+                return item.type === 'EXP';
+            };
+            var projectByFields = function(item){
+                return {
+                    evDate: item.evDate,
+                    amount: item.amount
+                };
+            };
+            var aggregatedArr = this.groupAndAggregate(incexps, projectByFields, filterByIncome, groupByDate, aggregateBySumAmount);
+            var max = 1;
+		    var start = null;
+		    var end = null;
+		    if($stateParams.month && $stateParams.year){
+		        start = new Date($stateParams.year, $stateParams.month-1);
+		        end = new Date($stateParams.year, $stateParams.month);
+		    }
+	    	var currentDate = new Date(start);//pull and store start date here
+	    	var currentWeek = 0;
+	    	var dataArr = [];
+	    	
+            if(currentDate.getDay() !== 0){
+                for(var k = 0;k < currentDate.getDay();k++){
+                    dataArr.push([k, 0, -1])
+                }
+            }
+	    	
+		    while(true){
+		    	if(currentDate >= start && currentDate < end){
+		    		//dayno = columnIdx
+		    		var dayItem = [];
+		    		var value = 0;
+		    		var hasMatch = false;
+		    		for(var i = aggregatedArr.length-1; i >=0; --i){
+		    			var item = aggregatedArr[i] && aggregatedArr[i][0];
+		    			var aggDate = $filter('amDateFormat')(item.evDate,'YYYYMMDD');
+		    			var calDate = $filter('amDateFormat')(currentDate,'YYYYMMDD');
+		    			if(aggDate === calDate){
+		    				value = item.agg;
+		    				break;
+		    			}
+		    		}
+    				dayItem.push(currentDate.getDay());
+    				dayItem.push(currentWeek);
+    				dayItem.push(value);
+    				max = value > max ? value : max;
+		    		dataArr.push(dayItem);
+		    	} else {
+		    		break;
+		    	}
+	    		if(currentDate.getDay() === 6){
+	    			currentWeek++;	//reached day Saturday - so moving pointer to next week		
+	    		}
+		    	currentDate.setDate(currentDate.getDate() + 1);	//	moving the pointer to next date
+		    }
+		    data.max = max;
+			data.xAxis = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+			var yAxis = [];
+			for(var j = 0; j<=currentWeek; j++){
+				yAxis.push('Week-' + (j+1));
+			}
+			data.yAxis = yAxis;
+			data.seriesData = dataArr;
+			return data;
+		};
+        chartService.getIncomeHeatMapConfig = function(labels, trackerIncexps){
+            var heatMapConfig = this.getBaseHeatmapConfig(labels);
+            var isItIncome = function(item){
+            	var isIncome = item.type === 'INC';
+            	var isFakeIncome = false;
+            	angular.forEach(item.tags, function(val, key){
+            		if(!isFakeIncome) {
+            			if(val.id === 'REF'){
+            				isFakeIncome = true;	
+            			}
+            		}
+            	})
+                return isIncome && (!isFakeIncome);
+            };
+            var heatMapData = this.transformToHeatMapData(trackerIncexps, isItIncome);
+            heatMapConfig.xAxis.categories = heatMapData.xAxis;
+            //heatMapConfig.xAxis.min = -1;
+            //heatMapConfig.yAxis.max = 0;
+            heatMapConfig.yAxis.categories = heatMapData.yAxis;
+            heatMapConfig.options.colorAxis.minColor = '#FFFFFF';
+            heatMapConfig.options.colorAxis.maxColor = '#33ADFF';
+            heatMapConfig.options.colorAxis.max = heatMapData.max;
+            heatMapConfig.options.title.text = 'Income HEat Map - Cool Actually';
+            heatMapConfig.series[0].data = heatMapData.seriesData;
+            heatMapConfig.series[0].borderColor = '#007ACC';
+            heatMapConfig.series[0].color = '#007ACC';
+            heatMapConfig.series[0].dataLabels.color= '#005C99';
+            return heatMapConfig;
+        };
+        chartService.getExpenseHeatMapConfig = function(labels, trackerIncexps){
+            var heatMapConfig = this.getBaseHeatmapConfig(labels);
+            var isItExpense = function(item){
+            	var isExpense = item.type === 'EXP';
+            	var isFakeExpense = false;
+            	angular.forEach(item.tags, function(val, key){
+            		if(!isFakeExpense) {
+            			if((val.id === 'CCP') || (val.id === 'CAN')){
+            				isFakeExpense = true;	
+            			}
+            		}
+            	})
+                return isExpense && (!isFakeExpense);
+            };
+            var heatMapData = this.transformToHeatMapData(trackerIncexps, isItExpense);
+            heatMapConfig.xAxis.categories = heatMapData.xAxis;
+            //heatMapConfig.xAxis.min = -1;
+            //heatMapConfig.yAxis.max = 0;
+            heatMapConfig.yAxis.categories = heatMapData.yAxis;
+            heatMapConfig.options.colorAxis.minColor = '#FFFFFF';
+            heatMapConfig.options.colorAxis.maxColor = '#FF8585';
+            heatMapConfig.options.colorAxis.max = heatMapData.max;
+            heatMapConfig.options.title.text = 'Expenses HEat Map';
+            heatMapConfig.series[0].data = heatMapData.seriesData;
+            heatMapConfig.series[0].borderColor = '#CC5252';
+            heatMapConfig.series[0].color = '#CC5252';
+            heatMapConfig.series[0].dataLabels.color= '#993D3D';
+            return heatMapConfig;
+        };
+        chartService.getBaseHeatmapConfig = function(labels){
+            var heatMapChartConfig = {
+                options: {
+                    chart: {
+                        type: 'heatmap',
+                        marginTop: 40,
+                        marginBottom: 80
+                    },
+                    title: {
+                    },
+                    colorAxis: {
+                        min: 0
+                    },
+
+                    legend: {
+                        align: 'right',
+                        layout: 'vertical',
+                        margin: 0,
+                        verticalAlign: 'top',
+                        y: 25,
+                        symbolHeight: 280
+                    },
+                    tooltip: {
+                        formatter: function () {
+                            return '<b> Day : ' + this.series.xAxis.categories[this.point.x] + '</b><br><b>' +
+                                '<b> Week : ' + this.series.yAxis.categories[this.point.y] + '</b><br><b>' +
+                                '<b> Amount : ' + this.point.value + '</b>';
+                        }
+                    }
+                },
+                xAxis: {
+                    lineWidth: 0
+                },
+                yAxis: {
+                    lineWidth: 0
+                },
+                series: [{
+                    name: 'Sales per employee',
+                    borderWidth: 0.1,
+                    data: null,
+                    dataLabels: {
+                        enabled: true,
+                        color: '#000000',
+                        formatter: function(){
+                            if(this.point.value === 0){
+                                return '-';
+                            } else if (this.point.value === -1){
+                                return 'NA';
+                            }else {
+                                return this.point.value
+                            }
+                        }
+                    }
+                }]
+
+            };
+            return heatMapChartConfig;
+        };
+		return chartService;
+	}
+]);
+
+'use strict';
+
 angular.module('incexps').service('IncexpLocaleMessages', [ '$http', '$q',
 	function($http, $q) {
 		return {
@@ -1281,6 +1613,12 @@ angular.module('incexps').factory('TrackerIncexps', ['$resource',
             listTrackerIncexps: {
                 method: 'GET',
                 params: {trackerId : 'trackerId'},
+                isArray: true
+            },
+            listTrackerIncexpsByMonth: {
+                url: 'trackerincexps/:trackerId/showMonth/:month/:year',
+                method: 'GET',
+                params: {trackerId : 'trackerId', month: 'month', year: 'year'},
                 isArray: true
             },
             requestEditAccess: {
@@ -1448,8 +1786,29 @@ angular.module('trackers')
                     $state.go(VAULT_CONST.LIST_VAULTS_STATE_NAME, {trackerId: trackerId});
                 };
                 _this.loadIncexps = function (trackerId) {
-                    $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, {trackerId: trackerId});
+//                    $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, {trackerId: trackerId});
+                    //TODO - find current month and year
+                    var now = moment();
+                    var month = now.format('MM');
+                    var year = now.format('YYYY');
+                    $state.go(INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_NAME, {
+                    	trackerId: trackerId,
+                    	month : month,
+                    	year: year
+                    });
                 };
+                _this.loadIncexpsDashboard = function (trackerId) {
+//                  $state.go(INCEXP_CONST.DASH_INCEXPS_STATE_NAME, {trackerId: trackerId});
+                  //TODO - find current month and year
+                  var now = moment();
+                  var month = now.format('MM');
+                  var year = now.format('YYYY');
+                  $state.go(INCEXP_CONST.DASH_INCEXPS_BY_MONTH_STATE_NAME, {
+                  	trackerId: trackerId,
+                  	month : month,
+                  	year: year
+                  });
+              };
                 _this.createTracker = function (size) {
                     _this.tracker = {};
                     $state.go(TRACKER_CONST.CREATE_TRACKER_STATE_NAME);
