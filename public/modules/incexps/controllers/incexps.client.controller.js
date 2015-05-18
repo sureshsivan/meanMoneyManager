@@ -295,7 +295,15 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 }
                 // Redirect after save
                 incexp.$save($stateParams, function(response) {
-                    $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
+                    var current = moment(_this.evDate);
+                    var month = current.format('MM');
+                    var year = current.format('YYYY');
+                    $state.go(INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_NAME, {
+                        trackerId: $stateParams.trackerId,
+                        month : month,
+                        year: year
+                    });
+                    //$state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
                     AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.createdIncexp']);
                 }, function(errorResponse) {
                     $scope.error = errorResponse.data.message;
@@ -319,7 +327,15 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 }
                 delete incexp.tracker;
                 incexp.$update($stateParams, function() {
-                  $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
+                    var current = moment(incexp.evDate);
+                    var month = current.format('MM');
+                    var year = current.format('YYYY');
+                    $state.go(INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_NAME, {
+                        trackerId: $stateParams.trackerId,
+                        month : month,
+                        year: year
+                    });
+                  //$state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
                   AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.updatedIncexp']);
                 }, function(errorResponse) {
                     $scope.error = errorResponse.data.message;
