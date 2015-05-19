@@ -7,7 +7,12 @@ var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	Incexp = mongoose.model('Incexp'),
 	_ = require('lodash'),
-	Q = require('q');
+	Q = require('q'),
+//    config = require('../../config/config'),
+//    nodemailer = require('nodemailer'),
+//    mg = require('nodemailer-mailgun-transport'),
+	mailer = require('../util/mailer'),
+    async = require('async');
 
 /**
  * Create a Incexp
@@ -378,21 +383,33 @@ exports.findVaultIncexpCounts = function(req){
 exports.requestEditIncexpAccess = function(req, res) {
     var incexp = req.incexp ;
 
-    //incexp = _.extend(incexp , req.body);
-
     incexp.isPending = true;
     incexp.pendingType = 'UPD_ACC_REQ';
     incexp.pendingWith = mongoose.Types.ObjectId(incexp.owner._id);
     incexp.pendingMsg = 'Need Edit Income/Expense Access';
     incexp.requestedBy = mongoose.Types.ObjectId(req.user._id);
 
+    var onError = function(e){
+    	return res.status(400).send({
+            message: errorHandler.getErrorMessage(e)
+        });
+    };
+    var onComplete = function(){
+    	res.jsonp(incexp);
+    };
+    
     incexp.save(function(err) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
+        if(!err){
+        	var mailAddresses = {
+					from: 'cliksuresh18@gmail.com',
+					to: ['cliksuresh18@gmail.com', 'kirthi.deva@gmail.com']
+        	};
+        	mailer.sendMail(res, onError, onComplete, 
+        			'request-edit-incexp-access-emailsubject', 
+        			'request-edit-incexp-access-emailbody', 
+        			{}, mailAddresses);
         } else {
-            res.jsonp(incexp);
+        	onError(err);
         }
     });
 };
