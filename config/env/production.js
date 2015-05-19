@@ -9,7 +9,7 @@ module.exports = {
                 'public/lib/bootstrap/dist/css/bootstrap.min.css',
                 'public/lib/bootstrap/dist/css/bootstrap-theme.min.css',
                 'public/lib/fontawesome/css/font-awesome.min.css',
-                'public/lib/angular-loading-bar/build/loading-bar.min.css',
+                'public/lib/angular-loading-bar/build/loading-bar.min.css', 
                 'public/lib/ng-tags-input/ng-tags-input.min.css',
                 'public/lib/ng-tags-input/ng-tags-input.bootstrap.min.css'
 			],
