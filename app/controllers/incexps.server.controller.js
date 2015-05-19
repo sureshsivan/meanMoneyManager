@@ -7,7 +7,11 @@ var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	Incexp = mongoose.model('Incexp'),
 	_ = require('lodash'),
-	Q = require('q');
+	Q = require('q'),
+    config = require('../../config/config'),
+    nodemailer = require('nodemailer'),
+    mg = require('nodemailer-mailgun-transport');
+    async = require('async');
 
 /**
  * Create a Incexp
@@ -376,25 +380,86 @@ exports.findVaultIncexpCounts = function(req){
 };
 
 exports.requestEditIncexpAccess = function(req, res) {
+
     var incexp = req.incexp ;
 
-    //incexp = _.extend(incexp , req.body);
 
-    incexp.isPending = true;
-    incexp.pendingType = 'UPD_ACC_REQ';
-    incexp.pendingWith = mongoose.Types.ObjectId(incexp.owner._id);
-    incexp.pendingMsg = 'Need Edit Income/Expense Access';
-    incexp.requestedBy = mongoose.Types.ObjectId(req.user._id);
+    async.waterfall([
+        function(done) {
+            console.log('#################################');
+            console.log('Saving Item');
+            incexp.isPending = true;
+            incexp.pendingType = 'UPD_ACC_REQ';
+            incexp.pendingWith = mongoose.Types.ObjectId(incexp.owner._id);
+            incexp.pendingMsg = 'Need Edit Income/Expense Access';
+            incexp.requestedBy = mongoose.Types.ObjectId(req.user._id);
 
-    incexp.save(function(err) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
+            incexp.save(function(err) {
+                done(err, incexp);
             });
-        } else {
-            res.jsonp(incexp);
-        }
-    });
+        },
+        //  Process Mail Template
+        function(incexp, done){
+            console.log('#################################');
+            console.log('Rendering TEmplate');
+            res.render('templates/request-edit-incexp-access', {
+                by: 'Summa'
+            }, function(err, emailHTML) {
+                done(err, emailHTML, incexp);
+            });
+        },
+        //  Send mail
+        function(emailHTML, incexp, done) {
+            console.log('#################################');
+            console.log('Rendering TEmplate');
+            console.log(emailHTML);
+            console.log(config.mailer);
+
+            var nodemailerMailgun = nodemailer.createTransport(mg(config.mailer.options.auth));
+            console.log(nodemailerMailgun);
+            nodemailerMailgun.sendMail({
+                from: 'myemail@example.com',
+                to: 'cliksuresh18@gmail.com', // An array if you have multiple recipients.
+                subject: 'Hey you, awesome!',
+                'h:Reply-To': 'reply2this@company.com',
+                html: emailHTML
+            }, function (err, info) {
+                if (err) {
+                    console.log('#################################');
+                    console.log('Mail Error');
+                    console.log(err);
+                    done(err);
+                }
+                else {
+                    res.jsonp(incexp);
+                }
+            });
+
+
+            //var smtpTransport = nodemailer.createTransport(config.mailer.options);
+            //var mailOptions = {
+            //    to: 'cliksuresh18@gmail.com',
+            //    from: config.mailer.from,
+            //    subject: 'Request For Edit Access',
+            //    html: emailHTML
+            //};
+            //smtpTransport.sendMail(mailOptions, function(err) {
+            //    console.log('#################################');
+            //    console.log('Mail Error');
+            //    console.log(err);
+            //    if (!err) {
+            //        res.jsonp(incexp);
+            //    }
+            //    done(err);
+            //});
+        }], function(err) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            }
+        });
+
 };
 
 
