@@ -30,7 +30,7 @@ module.exports = {
 				'public/lib/angular-ui-router/release/angular-ui-router.js',
 				'public/lib/angular-ui-utils/ui-utils.js',
 				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
-				'public/lib/moment/moment.js',
+				'public/lib/moment/min/moment-with-locales.js',
 				'public/lib/angular-moment/angular-moment.js',
                 'public/lib/angular-loading-bar/build/loading-bar.js',
                 'public/lib/ng-tags-input/ng-tags-input.js',

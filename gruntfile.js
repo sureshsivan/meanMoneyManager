@@ -69,7 +69,7 @@ module.exports = function(grunt) {
 			production: {
 				options: {
 					mangle: false,
-                    beautify: true,
+                    beautify: false,
                     sourceMap: true,
                     sourceMapName: 'public/dist/application.min.src.map'
 				},

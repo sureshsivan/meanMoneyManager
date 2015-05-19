@@ -26,12 +26,16 @@ module.exports = {
 				'public/lib/moment/min/moment-with-locales.min.js',
 				'public/lib/angular-moment/angular-moment.min.js',
                 'public/lib/angular-loading-bar/build/loading-bar.min.js',
-                'public/lib/ng-tags-input/ng-tags-input.min.js'
-
+                'public/lib/ng-tags-input/ng-tags-input.min.js',
+                'public/lib/highcharts/adapters/standalone-framework.js',
+                'public/lib/highcharts/highcharts.js',
+                'public/lib/highcharts/highcharts-more.js',
+                'public/lib/highcharts/modules/heatmap.js',
+                'public/lib/highcharts-ng/dist/highcharts-ng.min.js'
 			]
 		},
 		css: 'public/dist/application.min.css',
-		js: 'public/dist/application.min.js'
+		js: 'public/dist/application.js'
 	},
 	facebook: {
 		clientID: process.env.FACEBOOK_ID || 'APP_ID',
