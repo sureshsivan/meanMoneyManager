@@ -1,6 +1,6 @@
 {
 	"app.incexps.lbl.incexp" : "Income or Expense",
-    "app.incexps.lbl.incexpOf": "Incom and Expenses of ",
+    "app.incexps.lbl.incexpOf": "Income and Expenses of ",
     "app.incexps.lbl.noIncexps": "No Income or Expenses record found",
     "app.vaults.lbl.noIncecpYet": "Nn Income or Expenses Yet. Why don't you create one..?",
     "app.incexps.lbl.searchIncexps": "Search Income or Expenses",
