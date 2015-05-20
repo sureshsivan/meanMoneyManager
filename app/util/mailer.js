@@ -20,6 +20,10 @@ exports.sendMail = function(res, onError, onComplete, mailSubjectTemplateFile, m
 		});
 	},
 	function(emailSubject, emailBodyHTML, done) {
+        console.log('#############################');
+        console.log(mailAddresses);
+        console.log(mailData);
+        console.log(emailBodyHTML);
 		var auth = {
 			auth : {
 				api_key : config.mailer.options.auth.api_key,

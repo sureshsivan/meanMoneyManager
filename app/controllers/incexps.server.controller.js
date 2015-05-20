@@ -402,13 +402,17 @@ exports.requestEditIncexpAccess = function(req, res) {
     incexp.save(function(err) {
         if(!err){
         	var mailAddresses = {
-					from: 'cliksuresh18@gmail.com',
-					to: ['cliksuresh18@gmail.com', 'kirthi.deva@gmail.com']
+					from: req.user.email,
+					to: [incexp.owner.email, req.user.email]
         	};
+            var placeHolders = {
+                requestTo: incexp.owner.displayName,
+                requestedBy: req.user.displayName
+            };
         	mailer.sendMail(res, onError, onComplete, 
         			'request-edit-incexp-access-emailsubject', 
-        			'request-edit-incexp-access-emailbody', 
-        			{}, mailAddresses);
+        			'request-edit-incexp-access-emailbody',
+                placeHolders, mailAddresses);
         } else {
         	onError(err);
         }

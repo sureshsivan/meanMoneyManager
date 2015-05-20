@@ -37,8 +37,8 @@ module.exports = {
             auth: {
                 user: process.env.MAILER_EMAIL_ID || 'YY',
                 pass: process.env.MAILER_PASSWORD || 'XX',
-                api_key: process.env.API_KEY || '',
-                domain: process.env.DOMAIN || ''
+                api_key: process.env.MAILGUN_API_KEY || '',
+                domain: process.env.MAILGUN_DOMAIN || ''
             }
         }
     }
