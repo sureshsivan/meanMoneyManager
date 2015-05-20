@@ -381,6 +381,7 @@ exports.findVaultIncexpCounts = function(req){
 };
 
 exports.requestEditIncexpAccess = function(req, res) {
+
     var incexp = req.incexp ;
 
     incexp.isPending = true;
@@ -412,6 +413,7 @@ exports.requestEditIncexpAccess = function(req, res) {
         	onError(err);
         }
     });
+
 };
 
 
