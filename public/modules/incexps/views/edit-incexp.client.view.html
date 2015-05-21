@@ -64,6 +64,9 @@
                         <label class="control-label" for="evDate"> {{incexpsCtrl.labelsObj['app.incexps.lbl.date']}}</label>
                         <div class="controls">
                             <p class="input-group">
+                                <span class="input-group-btn">
+                                  <button type="button" class="btn btn-sm" data-ng-click="incexpsCtrl.openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
                                 <input readonly="readonly" name="evDate" type="text" id="evDate" class="form-control"
                                        data-datepicker-popup="{{'dd-MMMM-yyyy'}}" data-ng-model="incexp.evDate"
                                        data-is-open="datePickerOpened" data-min-date="minDate" data-max-date="maxDate"
@@ -71,9 +74,6 @@
                                        data-current-text="{{incexpsCtrl.labelsObj['app.incexps.lbl.today']}}"
                                        data-clear-text="{{incexpsCtrl.labelsObj['app.incexps.lbl.clear']}}"
                                        data-close-text="{{incexpsCtrl.labelsObj['app.incexps.lbl.close']}}" required/>
-                                      <span class="input-group-btn">
-                                        <button type="button" class="btn btn-sm" data-ng-click="incexpsCtrl.openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                                      </span>
                                 <div data-ng-if="editIncExpForm.evDate.$invalid && editIncExpForm.evDate.$dirty"
                                      data-data-ng-messages="createIncexpForm.evDate.$error">
                                     <span data-ng-if="editIncExpForm.evDate.$error.required"
