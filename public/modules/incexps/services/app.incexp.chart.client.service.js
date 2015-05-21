@@ -117,7 +117,7 @@ angular.module('incexps').service('ChartService', [ '$http', '$q', '$stateParams
             	var isFakeIncome = false;
             	angular.forEach(item.tags, function(val, key){
             		if(!isFakeIncome) {
-            			if(val.id === 'REF'){
+            			if((val.id === 'REF') || (val.id === 'SWAP')){
             				isFakeIncome = true;	
             			}
             		}
@@ -146,7 +146,7 @@ angular.module('incexps').service('ChartService', [ '$http', '$q', '$stateParams
             	var isFakeExpense = false;
             	angular.forEach(item.tags, function(val, key){
             		if(!isFakeExpense) {
-            			if((val.id === 'CCP') || (val.id === 'CAN')){
+            			if((val.id === 'CCP') || (val.id === 'CAN') || (val.id === 'SWAP')){
             				isFakeExpense = true;	
             			}
             		}

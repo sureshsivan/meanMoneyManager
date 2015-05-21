@@ -64,4 +64,10 @@
   "desc": "Service Charge incurred on Cancelled Transactions",
   "color": "#7AA",
   "class": "label-danger"
+}, {
+  "label": "SWAP",
+  "id": "SWAP",
+  "desc": "SWA BEtween two wallets",
+  "color": "#7AA",
+  "class": "label-info"
 }]
