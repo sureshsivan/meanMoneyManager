@@ -407,7 +407,8 @@ exports.requestEditIncexpAccess = function(req, res) {
         	};
             var placeHolders = {
                 requestTo: incexp.owner.displayName,
-                requestedBy: req.user.displayName
+                requestedBy: req.user.displayName,
+                item: incexp
             };
         	mailer.sendMail(res, onError, onComplete, 
         			'request-edit-incexp-access-emailsubject', 
