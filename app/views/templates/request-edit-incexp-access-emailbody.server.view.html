@@ -59,42 +59,48 @@ span.EmailStyle17 {
 div.WordSection1 {
 	page: WordSection1;
 }
+span.boldLabel{
+	font-size: 10.0pt; 
+	font-family: Consolas; 
+	color: blue;
+	font-weight: bold;
+}
+span.normalLabel{
+	font-size: 10.0pt; 
+	font-family: Consolas; 
+	color: blue;
+}
+table{
+	border-collapse: collapse; 
+	border: none
+}
+td.doubleBorder{
+	width: 233.75pt; 
+	border: double #5B9BD5 1.5pt; 
+	padding: 0cm 5.4pt 0cm 5.4pt;
+}
 -->
 </style>
-<body>
+<body style='font-size: 10.0pt; font-family: Consolas;'>
 	<p>Hi {{requestTo}},</p>
 	<p>I would like to Edit the Income Expense item registered by you.
 		Please provide access.</p>
 	<p>
-		<strong>Item Details</strong>
+		<strong>Item Details : </strong>
 	</p>
 	<p>
-	
-	<table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0
-		style='border-collapse: collapse; border: none'>
-		<tr>
-			<td width=312 valign=top
-				style='width: 233.75pt; border: double #5B9BD5 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt'><p
-					class=MsoNormal>
-					<b><span
-						style='font-size: 10.0pt; font-family: Consolas; color: red'>Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							Income Expense Name
-					</span></b>
-				</p></td>
-			<td width=312 valign=top
-				style='width: 233.75pt; border-top: double #5B9BD5 1.5pt; border-left: none; border-bottom: double #5B9BD5 1.5pt; border-right: solid windowtext 1.0pt; padding: 0cm 5.4pt 0cm 5.4pt'><p
-					class=MsoNormal>
-					<span style='font-size: 10.0pt; font-family: Consolas'>{{item.displayName}}</span>
-				</p></td>
-		</tr>
-	</table>
-
-
-
-	<table border="1" cellpadding="0" cellspacing="0" height="100%" width="100%" id="">
+		<table>
 			<tr>
-				<td align="left" valign="middle">Income Expense Name</td>
-				<td align="left" valign="middle">{{item.displayName}}</td>
+				<td width=200 valign=top class="doubleBorder">
+					<p class=MsoNormal>
+						<span class="boldLabel">Income Expense Name</span>
+					</p>
+				</td>
+				<td width=400 valign=top class="doubleBorder">
+					<p class=MsoNormal>
+						<span class="boldLabel">{{item.displayName}}</span>
+					</p>
+				</td>
 			</tr>
 		</table>
 	</p>
