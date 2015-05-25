@@ -20,3 +20,15 @@ body {
 .ng-valid.ng-dirty {
 	border-color: #78FA89;
 }
+
+.carousal-slide-item{
+  	padding: 50px 0px;
+}
+.cc-item{
+	background-image: none !important;
+	color: red !important;
+}
+.carousel-indicators li.cc-item{
+	background-color: blue !important;
+	border: 1px solid red !important;
+}

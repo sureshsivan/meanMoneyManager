@@ -14,6 +14,7 @@ module.exports = {
                 'public/lib/ng-tags-input/ng-tags-input.bootstrap.min.css'
 			],
 			js: [
+			    'public/lib/jquery/dist/jquery.min.js'
 				'public/lib/angular/angular.min.js',
 				'public/lib/angular-resource/angular-resource.min.js',
 				'public/lib/angular-cookies/angular-cookies.min.js',
@@ -31,7 +32,9 @@ module.exports = {
                 'public/lib/highcharts/highcharts.js',
                 'public/lib/highcharts/highcharts-more.js',
                 'public/lib/highcharts/modules/heatmap.js',
-                'public/lib/highcharts-ng/dist/highcharts-ng.min.js'
+                'public/lib/highcharts-ng/dist/highcharts-ng.min.js',
+                'public/lib/slick-carousel/slick/slick.js',
+                'public/lib/angular-slick/dist/slick.js'
 			]
 		},
 		css: 'public/dist/application.min.css',

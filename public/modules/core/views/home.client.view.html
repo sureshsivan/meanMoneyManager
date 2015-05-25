@@ -1,44 +1,9 @@
 <section data-ng-controller="HomeController">
-	<div class="jumbotron text-center">
-		<div class="row">
-			<div class="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-12">
-				<img alt="MEAN.JS" class="img-responsive text-center" src="modules/core/img/brand/logo.png" />
-				<!-- <img alt="MEAN.JS" class="img-responsive text-center" src="modules/core/img/brand/Mean_Money_Manager-logo.png" /> -->
-			</div>
-		</div>
-		<br>
-		<div class="row">
-			<p class="lead">
-				Money Manager Application - @Powered by <a href="http://meanjs.org">MEANJS</a>
-			</p>
-		</div>
-		<div class="row">
-			<p>
-				<a class="btn btn-primary btn-lg" href="" target="_blank">Learn more</a>
-			</p>
-		</div>
-	</div>
 
-	<br/><br/>
-	
-	<div class="row" >
-		<div class="col-sm-6" ng-repeat="alert in alerts">
-			<div class="row">
-				<div class="col-xs-4">
-					<h1 class="pull-right">
-					<button type="button" class="btn" ng-class="alert.btnStyle">
-						<i class="glyphicon" ng-class="alert.iconCls"></i>
-					</button>
-					</h1>
-				</div>
-				<div class="col-xs-8">
-					<h1>{{ alert.val }}</h1>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-xs-8 col-xs-offset-4">{{ alert.note }}</div>
-			</div>
-		</div>
-	</div>
-
+<div data-ng-if="!hasLogin()">
+	Show some non User data here
+</div>
+<div data-ng-if="hasLogin()">
+	Show user data here
+</div>
 </section>
