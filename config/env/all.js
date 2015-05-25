@@ -18,10 +18,11 @@ module.exports = {
 				'public/lib/fontawesome/css/font-awesome.css',
                 'public/lib/angular-loading-bar/build/loading-bar.css',
                 'public/lib/ng-tags-input/ng-tags-input.css',
-                'public/lib/ng-tags-input/ng-tags-input.bootstrap.css'
+                'public/lib/ng-tags-input/ng-tags-input.bootstrap.css',
+                'public/lib/slick-carousel/slick/slick.css'
 			],
 			js: [
-			    'public/lib/jquery/dist/jquery.js'
+			    'public/lib/jquery/dist/jquery.js',
 				'public/lib/angular/angular.js',
 				'public/lib/angular-resource/angular-resource.js',
 				'public/lib/angular-cookies/angular-cookies.js', 
@@ -40,8 +41,8 @@ module.exports = {
                 'public/lib/highcharts/highcharts-more.src.js',
                 'public/lib/highcharts/modules/heatmap.src.js',
                 'public/lib/highcharts-ng/dist/highcharts-ng.js',
-                'public/lib/slick-carousel/slick/slick.min.js',
-                'public/lib/angular-slick/dist/slick.min.js'
+                'public/lib/slick-carousel/slick/slick.js',
+                'public/lib/angular-slick/dist/slick.js'
 			]
 		},
 		css: [

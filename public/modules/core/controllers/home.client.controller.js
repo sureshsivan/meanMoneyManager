@@ -7,7 +7,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 		$scope.authentication = Authentication;
 		$scope.hasLogin = function(){
 			return (typeof Authentication.user.displayName !== 'undefined');
-		}
+		};
 		
 		$scope.slides = [];
 		
