@@ -67,6 +67,10 @@ var config = require('../../config/config'),
 exports.sendMail = function(res, onError, onComplete, mailSubjectTemplateFile, mailBodyTemplateFile, mailData, mailAddresses) {
     var me = this;
 	async.waterfall([function(done) {
+		console.log('Do Cleanup');
+		done();
+	},
+	function(done) {
 		res.render('templates/' + mailSubjectTemplateFile, mailData, function(err, emailSubject) {
 			done(err, emailSubject);
 		});
@@ -77,13 +81,15 @@ exports.sendMail = function(res, onError, onComplete, mailSubjectTemplateFile, m
 		});
 	},
 	function(emailSubject, emailBodyHTML, done) {
-		var auth = {
-			auth : {
-				api_key : config.mailer.options.auth.api_key,
-				domain : config.mailer.options.auth.domain
-			}
-		};
-		var nodemailerMailgun = nodemailer.createTransport(mg(auth));
+//		var auth = {
+//			auth : {
+//				api_key : config.mailer.options.auth.api_key,
+//				domain : config.mailer.options.auth.domain
+//			}
+//		};
+//		var nodemailerMailgun = nodemailer.createTransport(mg(auth));
+		console.log(auth);
+		console.log(nodemailerMailgun);
 		nodemailerMailgun.sendMail({
 			from : mailAddresses.from,
 			to : mailAddresses.to,

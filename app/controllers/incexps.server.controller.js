@@ -432,13 +432,33 @@ exports.approveEditIncexpAccess = function(req, res) {
     incexp.pendingMsg = 'Approved Edit Income/Expense Access';
     incexp.requestedBy = null;
 
+    
+    var onError = function(e){
+    	return res.status(400).send({
+            message: errorHandler.getErrorMessage(e)
+        });
+    };
+    var onComplete = function(){
+    	res.jsonp(incexp);
+    };
+    
     incexp.save(function(err) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
+        if(!err){
+        	var mailAddresses = {
+					from: req.user.email,
+					to: [incexp.owner.email, req.user.email]
+        	};
+            var placeHolders = {
+                requestTo: incexp.owner.displayName,
+                requestedBy: req.user.displayName,
+                item: incexp
+            };
+        	mailer.sendMail(res, onError, onComplete, 
+        			'approve-edit-incexp-request-emailsubject', 
+        			'approve-edit-incexp-request-emailbody',
+                placeHolders, mailAddresses);
         } else {
-            res.jsonp(incexp);
+        	onError(err);
         }
     });
 };
