@@ -261,11 +261,19 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 });
             };
             _this.showNextMonth = function(){
+            	if((parseInt($stateParams.month) === parseInt($scope.now.getMonth()+1)) && (parseInt($stateParams.year) === parseInt($scope.now.getFullYear()))){
+            		console.log('No Future Month');
+            		return;
+            	}
             	var nav = $filter('navmonths')($stateParams.month, $stateParams.year, 1);
             	nav.trackerId = $stateParams.trackerId;
                 $state.go($state.current.name, nav, {reload: true});
             };
             _this.showPrevMonth = function(){
+            	if((parseInt($stateParams.month) === parseInt($scope.now.getMonth()+1)) && (parseInt($stateParams.year) === parseInt($scope.now.getFullYear()-1))){
+            		console.log('No PAst month beyond an year');
+            		return;
+            	}
                 var nav = $filter('navmonths')($stateParams.month, $stateParams.year, -1);
                 nav.trackerId = $stateParams.trackerId;
                 $state.go($state.current.name, nav, {reload: true});
