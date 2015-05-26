@@ -15,7 +15,8 @@ var config = require('../../config/config'),
             domain : config.mailer.options.auth.domain
         }
     },
-    nodemailerMailgun = nodemailer.createTransport(mg(auth));
+    nodemailerMailgun = nodemailer.createTransport(mg(auth)),
+    swig  = require('swig');
 
 
 //function AppMailer(){

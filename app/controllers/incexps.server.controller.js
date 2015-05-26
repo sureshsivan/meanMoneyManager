@@ -21,15 +21,38 @@ exports.create = function(req, res) {
 	var incexp = new Incexp(req.body);
 	incexp.user = req.user;
 
-	incexp.save(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(incexp);
-		}
-	});
+	var onError = function(e){
+    	return res.status(400).send({
+            message: errorHandler.getErrorMessage(e)
+        });
+    };
+    var onComplete = function(){
+    	res.jsonp(incexp);
+    };
+    
+    incexp.save(function(err) {
+        if(!err){
+        	if(incexp.isPending){
+            	var mailAddresses = {
+    					from: req.user.email,
+    					to: [incexp.pendingWith.email, req.user.email]
+            	};
+                var placeHolders = {
+                    requestTo: incexp.pendingWith.displayName,
+                    requestedBy: req.user.displayName,
+                    item: incexp
+                };
+            	mailer.sendMail(res, onError, onComplete, 
+            			'request-edit-incexp-emailsubject', 
+            			'request-edit-incexp-emailbody',
+                    placeHolders, mailAddresses);
+        	} else {
+        		onComplete();
+        	}
+        } else {
+        	onError(err);
+        }
+    });
 };
 
 /**
@@ -47,15 +70,38 @@ exports.update = function(req, res) {
 
 	incexp = _.extend(incexp , req.body);
 
+	var onError = function(e){
+    	return res.status(400).send({
+            message: errorHandler.getErrorMessage(e)
+        });
+    };
+    var onComplete = function(){
+    	res.jsonp(incexp);
+    };
+	
 	incexp.save(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(incexp);
-		}
-	});
+        if(!err){
+        	if(incexp.isPending){
+            	var mailAddresses = {
+    					from: req.user.email,
+    					to: [incexp.pendingWith.email, req.user.email]
+            	};
+                var placeHolders = {
+                    requestTo: incexp.pendingWith.displayName,
+                    requestedBy: req.user.displayName,
+                    item: incexp
+                };
+            	mailer.sendMail(res, onError, onComplete, 
+            			'request-edit-incexp-emailsubject', 
+            			'request-edit-incexp-emailbody',
+                    placeHolders, mailAddresses);
+        	} else {
+        		onComplete();
+        	}
+        } else {
+        	onError(err);
+        }
+    });
 };
 
 /**
@@ -506,7 +552,8 @@ exports.rejectEditIncexpAccess = function(req, res) {
 };
 
 exports.approveIncexpChanges = function(req, res) {
-    var incexp = req.incexp ;
+    var incexp = req.incexp,
+    	oldIncexp = req.incexp;
 
     incexp = _.extend(incexp , req.body);
 
@@ -515,13 +562,34 @@ exports.approveIncexpChanges = function(req, res) {
     incexp.pendingWith = null;
     incexp.pendingMsg = null;
 
+    
+    var onError = function(e){
+    	return res.status(400).send({
+            message: errorHandler.getErrorMessage(e)
+        });
+    };
+    var onComplete = function(){
+    	res.jsonp(incexp);
+    };
+    
     incexp.save(function(err) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
+        if(!err){
+        	var mailAddresses = {
+					from: req.user.email,
+					to: [incexp.owner.email, req.user.email]
+        	};
+            var placeHolders = {
+                changedBy: req.user.displayName,
+                addressedTo: incexp.owner.displayName,
+                item: incexp,
+                oldItem: oldIncexp
+            };
+        	mailer.sendMail(res, onError, onComplete, 
+        			'approve-changes-incexp-emailsubject', 
+        			'approve-changes-incexp-emailbody',
+                placeHolders, mailAddresses);
         } else {
-            res.jsonp(incexp);
+        	onError(err);
         }
     });
 };
