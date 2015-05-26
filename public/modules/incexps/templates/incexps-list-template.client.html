@@ -49,27 +49,27 @@
                 <td>
                     <span class="fa fa-trash-o icon-btn text-danger"
                     		data-tooltip="{{incexpsCtrl.labelsObj['app.incexps.lbl.deleteIncexp']}}"
-                    		data-ng-click="incexpsCtrl.remove(incexp)"
+                    		data-ng-click="incexpsCtrl.remove(incexp, $event)"
                     		data-ng-show="incexpsCtrl.canDelete(incexp)">
                     </span>
                     <span class="fa fa-pencil icon-btn text-warning"
                             data-tooltip="{{incexpsCtrl.labelsObj['app.incexps.lbl.updateIncexp']}}"
-                    		data-ng-click="incexpsCtrl.editIncexp(incexp)"
+                    		data-ng-click="incexpsCtrl.editIncexp(incexp, $event)"
                     		data-ng-show="incexpsCtrl.canEdit(incexp)">
                     </span>
  					<span class="fa fa-question-circle icon-btn text-info"
                             data-tooltip="{{incexpsCtrl.labelsObj['app.incexps.lbl.reqEditAccess']}}"
-                    		data-ng-click="! incexpsCtrl.requestForEdit(incexp)"
+                    		data-ng-click="! incexpsCtrl.requestForEdit(incexp, $event)"
                     		data-ng-show="incexpsCtrl.canRequestEditAccess(incexp)">
                     </span>
                     <span class="fa fa-unlock icon-btn text-success"
                             data-tooltip="{{incexpsCtrl.labelsObj['app.incexps.lbl.approveEditAccess']}}"
-                            data-ng-click="incexpsCtrl.approveEditAccessRequest(incexp)"
+                            data-ng-click="incexpsCtrl.approveEditAccessRequest(incexp, $event)"
                             data-ng-show="incexpsCtrl.canApproveEditRequest(incexp)">
                     </span>
                     <span class="fa fa-lock icon-btn text-danger"
                             data-tooltip="{{incexpsCtrl.labelsObj['app.incexps.lbl.rejectEditAccess']}}"
-                            data-ng-click="incexpsCtrl.rejectEditAccessRequest(incexp)"
+                            data-ng-click="incexpsCtrl.rejectEditAccessRequest(incexp, $event)"
                             data-ng-show="incexpsCtrl.canApproveEditRequest(incexp)">
                     </span>
                 </td>

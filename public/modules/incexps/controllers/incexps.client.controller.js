@@ -255,7 +255,9 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 _this.incexp = {};
                 $state.go(INCEXP_CONST.CREATE_INCEXP_STATE_NAME, $stateParams);
             };
-            _this.editIncexp = function(updatedIncexp){
+            _this.editIncexp = function(updatedIncexp, $event){
+                $event.preventDefault();
+                $event.stopPropagation();
                 $state.go(INCEXP_CONST.EDIT_INCEXP_STATE_NAME, {
                     trackerId: $stateParams.trackerId,
                     incexpId: updatedIncexp._id
@@ -319,7 +321,16 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 });
             };
             _this.cancel = function(){
-                $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
+
+                var current = moment(new Date());
+                var month = current.format('MM');
+                var year = current.format('YYYY');
+                $state.go(INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_NAME, {
+                    trackerId: $stateParams.trackerId,
+                    month : month,
+                    year: year
+                });
+                //$state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
             };
             _this.updateIncexp = function(updatedIncexp){
                 var incexp = updatedIncexp;
@@ -358,13 +369,23 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 delete incexp.pendingMsg;
                 delete incexp.tracker;
                 incexp.$approveIncexpChanges($stateParams, function() {
-                    $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
+                    var current = moment(incexp.evDate);
+                    var month = current.format('MM');
+                    var year = current.format('YYYY');
+                    $state.go(INCEXP_CONST.LIST_INCEXPS_BY_MONTH_STATE_NAME, {
+                        trackerId: $stateParams.trackerId,
+                        month : month,
+                        year: year
+                    });
+                    //$state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams);
                     AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.approveIncexpChanges']);
                 }, function(errorResponse) {
                     $scope.error = errorResponse.data.message;
                 });
             };
-            _this.requestForEdit = function(incexp){
+            _this.requestForEdit = function(incexp, $event){
+                $event.preventDefault();
+                $event.stopPropagation();
                 incexp.$requestEditAccess({
                     incexpId : incexp._id
                 }, function(response){
@@ -373,7 +394,9 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.reqEditAccess']);
                 });
             };
-            _this.approveEditAccessRequest = function(incexp){
+            _this.approveEditAccessRequest = function(incexp, $event){
+                $event.preventDefault();
+                $event.stopPropagation();
                 incexp.$approveEditAccessRequest({
                     incexpId : incexp._id
                 }, function(response){
@@ -382,7 +405,9 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.approveIncexpEditAccReq']);
                 });
             };
-            _this.rejectEditAccessRequest = function(incexp){
+            _this.rejectEditAccessRequest = function(incexp, $event){
+                $event.preventDefault();
+                $event.stopPropagation();
                 incexp.$rejectEditAccessRequest({
                     incexpId : incexp._id
                 }, function(response){
@@ -391,7 +416,9 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                     AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.rejectIncexpEditAccReq']);
                 });
             };
-    		_this.remove = function(incexp) {
+    		_this.remove = function(incexp, $event) {
+                $event.preventDefault();
+                $event.stopPropagation();
     			if ( incexp ) {
     				incexp.$remove({
     						incexpId : incexp._id,
