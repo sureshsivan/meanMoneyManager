@@ -446,16 +446,17 @@ exports.approveEditIncexpAccess = function(req, res) {
         if(!err){
         	var mailAddresses = {
 					from: req.user.email,
-					to: [incexp.owner.email, req.user.email]
+					to: [incexp.requestedBy.email, req.user.email]
         	};
             var placeHolders = {
-                requestTo: incexp.owner.displayName,
-                requestedBy: req.user.displayName,
+                actionTo: incexp.requestedBy.displayName,
+                actionBy: req.user.displayName,
+                action: 'APPROVED',
                 item: incexp
             };
         	mailer.sendMail(res, onError, onComplete, 
-        			'approve-edit-incexp-request-emailsubject', 
-        			'approve-edit-incexp-request-emailbody',
+        			'approve-reject-edit-incexp-request-emailsubject', 
+        			'approve-reject-edit-incexp-request-emailbody',
                 placeHolders, mailAddresses);
         } else {
         	onError(err);
@@ -473,13 +474,33 @@ exports.rejectEditIncexpAccess = function(req, res) {
     incexp.pendingMsg = null;
     incexp.requestedBy = null;
 
+    var onError = function(e){
+    	return res.status(400).send({
+            message: errorHandler.getErrorMessage(e)
+        });
+    };
+    var onComplete = function(){
+    	res.jsonp(incexp);
+    };
+    
     incexp.save(function(err) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
+        if(!err){
+        	var mailAddresses = {
+					from: req.user.email,
+					to: [incexp.requestedBy.email, req.user.email]
+        	};
+            var placeHolders = {
+                actionTo: incexp.requestedBy.displayName,
+                actionBy: req.user.displayName,
+                action: 'REJECTED',
+                item: incexp
+            };
+        	mailer.sendMail(res, onError, onComplete, 
+        			'approve-reject-edit-incexp-request-emailsubject', 
+        			'approve-reject-edit-incexp-request-emailbody',
+                placeHolders, mailAddresses);
         } else {
-            res.jsonp(incexp);
+        	onError(err);
         }
     });
 };
