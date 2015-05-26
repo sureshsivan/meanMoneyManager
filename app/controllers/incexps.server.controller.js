@@ -8,11 +8,9 @@ var mongoose = require('mongoose'),
 	Incexp = mongoose.model('Incexp'),
 	_ = require('lodash'),
 	Q = require('q'),
-//    config = require('../../config/config'),
-//    nodemailer = require('nodemailer'),
-//    mg = require('nodemailer-mailgun-transport'),
 	mailer = require('../util/mailer'),
-    async = require('async');
+    async = require('async'),
+    clone = require('clone');
 
 /**
  * Create a Incexp
@@ -264,11 +262,15 @@ exports.incexpByID = function(req, res, next, id) {
 	})
 	.populate({
 		'path' : 'pendingWith',
-		'select' : 'displayName _id'
+		'select' : 'displayName _id email'
 	})
     .populate({
         'path' : 'tracker',
         'select' : 'displayName _id'
+    })
+    .populate({
+        'path' : 'requestedBy',
+        'select' : 'displayName email _id'
     })
 	.exec(function(err, incexp) {
 		if (err) return next(err);
@@ -469,12 +471,13 @@ exports.requestEditIncexpAccess = function(req, res) {
 
 
 exports.approveEditIncexpAccess = function(req, res) {
-    var incexp = req.incexp ;
+    var incexp = req.incexp,
+        oldIncexp = clone(req.incexp);
 
     //incexp = _.extend(incexp , req.body);
     incexp.isPending = true;
     incexp.pendingType = 'UPD_REQ';
-    incexp.pendingWith = mongoose.Types.ObjectId(incexp.requestedBy);
+    incexp.pendingWith = mongoose.Types.ObjectId(incexp.requestedBy._id);
     incexp.pendingMsg = 'Approved Edit Income/Expense Access';
     incexp.requestedBy = null;
 
@@ -492,10 +495,10 @@ exports.approveEditIncexpAccess = function(req, res) {
         if(!err){
         	var mailAddresses = {
 					from: req.user.email,
-					to: [incexp.requestedBy.email, req.user.email]
+					to: [oldIncexp.requestedBy.email, req.user.email]
         	};
             var placeHolders = {
-                actionTo: incexp.requestedBy.displayName,
+                actionTo: oldIncexp.requestedBy.displayName,
                 actionBy: req.user.displayName,
                 action: 'APPROVED',
                 item: incexp
@@ -511,7 +514,8 @@ exports.approveEditIncexpAccess = function(req, res) {
 };
 
 exports.rejectEditIncexpAccess = function(req, res) {
-    var incexp = req.incexp ;
+    var incexp = req.incexp,
+        oldIncexp = clone(req.incexp);
 
     //incexp = _.extend(incexp , req.body);
     incexp.isPending = false;
@@ -533,10 +537,10 @@ exports.rejectEditIncexpAccess = function(req, res) {
         if(!err){
         	var mailAddresses = {
 					from: req.user.email,
-					to: [incexp.requestedBy.email, req.user.email]
+					to: [oldIncexp.requestedBy.email, req.user.email]
         	};
             var placeHolders = {
-                actionTo: incexp.requestedBy.displayName,
+                actionTo: oldIncexp.requestedBy.displayName,
                 actionBy: req.user.displayName,
                 action: 'REJECTED',
                 item: incexp
@@ -553,7 +557,7 @@ exports.rejectEditIncexpAccess = function(req, res) {
 
 exports.approveIncexpChanges = function(req, res) {
     var incexp = req.incexp,
-    	oldIncexp = req.incexp;
+        oldIncexp = clone(req.incexp);
 
     incexp = _.extend(incexp , req.body);
 
