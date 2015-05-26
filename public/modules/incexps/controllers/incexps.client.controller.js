@@ -368,7 +368,8 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 incexp.$requestEditAccess({
                     incexpId : incexp._id
                 }, function(response){
-                    $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams, {reload: true});
+                    $state.go($state.current.name, $stateParams, {reload: true});
+                    //$state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams, {reload: true});
                     AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.reqEditAccess']);
                 });
             };
@@ -376,7 +377,8 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 incexp.$approveEditAccessRequest({
                     incexpId : incexp._id
                 }, function(response){
-                    $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams, {reload: true});
+                    $state.go($state.current.name, $stateParams, {reload: true});
+                    //$state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams, {reload: true});
                     AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.approveIncexpEditAccReq']);
                 });
             };
@@ -384,7 +386,8 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 incexp.$rejectEditAccessRequest({
                     incexpId : incexp._id
                 }, function(response){
-                    $state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams, {reload: true});
+                    $state.go($state.current.name, $stateParams, {reload: true});
+                    //$state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams, {reload: true});
                     AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.rejectIncexpEditAccReq']);
                 });
             };
@@ -394,7 +397,8 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
     						incexpId : incexp._id,
     						trackerId: $stateParams.trackerId
     					}, function(res){
-    					$state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams, {reload: true});
+                        $state.go($state.current.name, $stateParams, {reload: true});
+    					//$state.go(INCEXP_CONST.LIST_INCEXPS_STATE_NAME, $stateParams, {reload: true});
     		            AppMessenger.sendInfoMsg(_this.labelsObj['app.vaults.info.msg.deletedIncexp']);
                     });
     			}
