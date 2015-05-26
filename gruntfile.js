@@ -11,6 +11,8 @@ module.exports = function(grunt) {
 		mochaTests: ['app/tests/**/*.js']
 	};
 
+	require('time-grunt')(grunt);
+	
 	// Project Configuration
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),

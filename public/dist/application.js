@@ -142,6 +142,21 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 	function($scope, Authentication) {
 		// This provides Authentication context.
 		$scope.authentication = Authentication;
+		$scope.hasLogin = function(){
+			return (typeof Authentication.user.displayName !== 'undefined');
+		};
+		
+		$scope.slides = [];
+		
+		$scope.slides.push({
+			heading: 'AAAAAAAAAAAAAAAAAAAA'
+		});
+		$scope.slides.push({
+			heading: 'BBBBBBBBBBBBBBBBBBBBB'
+		});
+		$scope.slides.push({
+			heading: 'CCCCCCCCCCCCCCCCCCCCC'
+		});
 		$scope.alerts = [{
 			iconCls: 'glyphicon-user',
 			btnStyle: 'btn-success',
@@ -647,14 +662,15 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
         _this.appStatics = AppStatics;
         _this.incexpStatics = IncexpStatics;
         $scope.$stateParams = $stateParams;
-        var minDate = new Date();
+        var minDate = new Date(); 
         minDate.setDate(minDate.getDate() - 60);
-        $scope.minDate = minDate;
+        $scope.minDate = minDate; 
         $scope.maxDate = new Date();
         //	TODO - bootstrapping the module only if the dependencies are loaded 
         //	Not sure whether this is correct way - but it works.
 
         var pullMsgs = function(){
+        	//	dummy comment
 			var deferred = $q.defer();
 			IncexpLocaleMessages.pullMessages().then(function(labels){
     			_this.labelsObj = labels;
@@ -896,11 +912,19 @@ angular.module('incexps').controller('IncexpsController', ['$scope', '$statePara
                 });
             };
             _this.showNextMonth = function(){
+            	if((parseInt($stateParams.month) === parseInt($scope.now.getMonth()+1)) && (parseInt($stateParams.year) === parseInt($scope.now.getFullYear()))){
+            		AppMessenger.sendInfoMsg('Cannot move to Future');
+            		return;
+            	}
             	var nav = $filter('navmonths')($stateParams.month, $stateParams.year, 1);
             	nav.trackerId = $stateParams.trackerId;
                 $state.go($state.current.name, nav, {reload: true});
             };
             _this.showPrevMonth = function(){
+            	if((parseInt($stateParams.month) === parseInt($scope.now.getMonth()+1)) && (parseInt($stateParams.year) === parseInt($scope.now.getFullYear()-1))){
+            		AppMessenger.sendInfoMsg('Cannot move beyond 1 Yr');
+            		return;
+            	}
                 var nav = $filter('navmonths')($stateParams.month, $stateParams.year, -1);
                 nav.trackerId = $stateParams.trackerId;
                 $state.go($state.current.name, nav, {reload: true});
@@ -1371,7 +1395,7 @@ angular.module('incexps').service('ChartService', [ '$http', '$q', '$stateParams
             	var isFakeIncome = false;
             	angular.forEach(item.tags, function(val, key){
             		if(!isFakeIncome) {
-            			if(val.id === 'REF'){
+            			if((val.id === 'REF') || (val.id === 'SWAP')){
             				isFakeIncome = true;	
             			}
             		}
@@ -1400,7 +1424,7 @@ angular.module('incexps').service('ChartService', [ '$http', '$q', '$stateParams
             	var isFakeExpense = false;
             	angular.forEach(item.tags, function(val, key){
             		if(!isFakeExpense) {
-            			if((val.id === 'CCP') || (val.id === 'CAN')){
+            			if((val.id === 'CCP') || (val.id === 'CAN') || (val.id === 'SWAP')){
             				isFakeExpense = true;	
             			}
             		}
