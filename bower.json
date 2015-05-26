@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "description": "Money Manager application - Fullstacj javascript web app powered by MEAN",
   "dependencies": {
-  	"jquery":"*",
-  	"slick.js": "*",
+    "jquery": "*",
+    "slick.js": "*",
     "bootstrap": "~3",
     "angular": "~1.2",
     "angular-resource": "~1.2",
@@ -25,6 +25,9 @@
     "angular-loading-bar": "*",
     "ng-tags-input": "~2.3.0",
     "angular-strap": "~2.2.1",
-    "angular-slick": "*"
+    "angular-slick": "~0.2.1"
+  },
+  "resolutions": {
+    "angular": "1.2"
   }
 }
