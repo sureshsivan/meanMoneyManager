@@ -12,7 +12,9 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 		$scope.slides = [];
 		
 		$scope.slides.push({
-			heading: 'AAAAAAAAAAAAAAAAAAAA'
+			title: 'AAAAAAAAAAAAAAAAAAAA',
+			img: 'http://v8-suresh.github.io/img/ipad.png',
+			text: '' 
 		});
 		$scope.slides.push({
 			heading: 'BBBBBBBBBBBBBBBBBBBBB'

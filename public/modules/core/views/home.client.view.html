@@ -1,16 +1,5 @@
 <section data-ng-controller="HomeController">
-
-<div data-ng-if="!hasLogin()">
-    <slick class="slider single-item" dots="true" 
-    	current-index="index" responsive="breakpoints"
-    	autoplay="true">
-        <div class="slick-car-slide" ng-repeat="i in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]">
-        	<h3>{{ i }}A</h3>
-        </div>
-    </slick>
-	
-</div>
-<div data-ng-if="hasLogin()">
+<div>
     <slick class="slick-cont slider single-item" dots="true" 
     	current-index="index" responsive="breakpoints"
     	autoplay="true" autoplaySpeed="1000" arrows="false" >
