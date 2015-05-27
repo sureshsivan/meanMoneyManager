@@ -48,11 +48,9 @@
     <section class=""  style="float: right;position: fixed; top: 60px; right: 25px"
              data-ng-include="'/modules/core/views/status-bar.client.view.html'"></section>
 	<section class="content">
-		<section class="container">
 			{% block content %}{% endblock %}
-		</section>
 	</section>
-
+    <footer data-ng-include="'/modules/core/views/footer.client.view.html'"></footer>
 	<!--Embedding The User Object-->
 	<script type="text/javascript">
 		var user = {{ user | json | safe }};

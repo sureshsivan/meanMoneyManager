@@ -27,8 +27,7 @@ body {
 .slick-car-slide{
 	border: 0px solid red;
 	margin-top: 10px;
-	padding: 10px;
-	min-height: 50%;
+	padding: 20px 50px;
 }
 
 .slick-dots{
