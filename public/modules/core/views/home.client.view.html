@@ -1,14 +1,36 @@
 <section data-ng-controller="HomeController">
 
 <div data-ng-if="!hasLogin()">
-    <slick class="slider single-item" current-index="index" responsive="breakpoints" slides-to-show=3 slides-to-scroll=3>
-        <div ng-repeat="i in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]"><h3>{{ i }}B</h3></div>
+    <slick class="slider single-item" dots="true" 
+    	current-index="index" responsive="breakpoints"
+    	autoplay="true">
+        <div class="slick-car-slide" ng-repeat="i in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]">
+        	<h3>{{ i }}A</h3>
+        </div>
     </slick>
 	
 </div>
 <div data-ng-if="hasLogin()">
-    <slick class="slider single-item" current-index="index" responsive="breakpoints" slides-to-show=3 slides-to-scroll=3>
-        <div ng-repeat="i in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]"><h3>{{ i }}B</h3></div>
+    <slick class="slick-cont slider single-item" dots="true" 
+    	current-index="index" responsive="breakpoints"
+    	autoplay="true" autoplaySpeed="1000" arrows="false" >
+
+        <div class="container slick-car-slide" data-ng-repeat="slide in slides">
+            <div class="row">
+                <div class="col-lg-5 col-sm-6">
+                	<h2 class="section-heading">Mean Money Manager App</h2>
+                    <hr class="section-heading-spacer">
+                    <div class="clearfix"></div>
+                    <p class="lead">A Money Manager webapp developed in <a target="_blank" href="http://google.com/">MEAN</a> stack.</p>
+                    <a target="_blank" href="https://github.com/v8-suresh/meanMoneyManager">View Source Code</a> &nbsp;&nbsp;&nbsp;&nbsp;
+                    <a target="_blank" href="http://prodmoneymanager.herokuapp.com">Go to App</a>
+                </div>
+                <div class="col-lg-5 col-lg-offset-2 col-sm-6">
+                    <img class="img-responsive" src="http://v8-suresh.github.io/img/ipad.png" alt="">
+                </div>
+            </div>
+
+        </div>
     </slick>
 </div>
 </section>

@@ -20,15 +20,30 @@ body {
 .ng-valid.ng-dirty {
 	border-color: #78FA89;
 }
+.slick-cont{
+	border: 0px solid blue;
+	margin-top: 10px;
+}
+.slick-car-slide{
+	border: 0px solid red;
+	margin-top: 10px;
+	padding: 10px;
+	min-height: 50%;
+}
 
-.carousal-slide-item{
-  	padding: 50px 0px;
+.slick-dots{
+	list-style-type: circle !important;
 }
-.cc-item{
-	background-image: none !important;
-	color: red !important;
+.slick-dots li{
+	margin: 0 !important;
 }
-.carousel-indicators li.cc-item{
-	background-color: blue !important;
-	border: 1px solid red !important;
+.slick-dots li button:before{
+	font-family: 'FontAwesome';
+	font-size: 12px !important;
+/* 	content: "\f111"; */
+	content: "\f10c";
+}
+
+.slick-active button:before{
+	content: "\f111" !important;
 }

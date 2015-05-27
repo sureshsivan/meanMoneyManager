@@ -19,7 +19,8 @@ module.exports = {
                 'public/lib/angular-loading-bar/build/loading-bar.css',
                 'public/lib/ng-tags-input/ng-tags-input.css',
                 'public/lib/ng-tags-input/ng-tags-input.bootstrap.css',
-                'public/lib/slick-carousel/slick/slick.css'
+                'public/lib/slick-carousel/slick/slick.css',
+                'public/lib/slick-carousel/slick/slick-theme.css'
 			],
 			js: [
 			    'public/lib/jquery/dist/jquery.js',

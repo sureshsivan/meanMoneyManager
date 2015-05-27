@@ -13,6 +13,7 @@ module.exports = {
                 'public/lib/ng-tags-input/ng-tags-input.min.css',
                 'public/lib/ng-tags-input/ng-tags-input.bootstrap.min.css',
                 'public/lib/slick-carousel/slick/slick.css',
+                'public/lib/slick-carousel/slick/slick-theme.css'
 			],
 			js: [
 			    'public/lib/jquery/dist/jquery.min.js',
